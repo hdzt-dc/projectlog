@@ -13,11 +13,227 @@
 <section class="page" id="issuesPage"><header class="top"><div><h1>问题与解决方案</h1><p>把排错过程沉淀成自己的知识库。</p></div><button class="btn primary" onclick="issueModal()">＋ 记录问题</button></header><div class="toolbar"><select id="issueFilter"><option value="">全部</option><option>未解决</option><option>处理中</option><option>已解决</option></select></div><div id="issueList" class="list"></div></section>
 <section class="page summary" id="summaryPage"><header class="top"><div><h1>项目总结</h1><p>沉淀成果、经验和不足。</p></div><button class="btn primary" onclick="saveSummary()">保存总结</button></header><div class="card panel"><div class="field"><label>项目成果</label><textarea id="sumResult"></textarea></div><div class="field"><label>学到的知识与技能</label><textarea id="sumLearned"></textarea></div><div class="field"><label>不足与改进</label><textarea id="sumImprove"></textarea></div><div class="field"><label>作品集 / GitHub / 演示链接</label><textarea id="sumLinks"></textarea></div></div></section>
 </main><div id="modalRoot"></div>
+<script type="text/plain" id="src-prepare_london_data.py">from pathlib import Path
+import shutil
+
+source_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project\hpm_la_2024"
+)
+
+output_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project\London"
+)
+
+output_folder.mkdir(exist_ok=True)
+
+london_boroughs = [
+    "Barking_and_Dagenham", "Barnet", "Bexley", "Brent", "Bromley", "Camden",
+    "City_of_London", "Croydon", "Ealing", "Enfield", "Greenwich", "Hackney",
+    "Hammersmith_and_Fulham", "Haringey", "Harrow", "Havering", "Hillingdon",
+    "Hounslow", "Islington", "Kensington_and_Chelsea", "Kingston_upon_Thames",
+    "Lambeth", "Lewisham", "Merton", "Newham", "Redbridge", "Richmond_upon_Thames",
+    "Southwark", "Sutton", "Tower_Hamlets", "Waltham_Forest", "Wandsworth", "Westminster"
+]
+
+found_count = 0
+missing = []
+
+for borough in london_boroughs:
+    matched_files = list(source_folder.glob(f"{borough}_link_*.csv"))
+    if matched_files:
+        for file in matched_files:
+            shutil.copy2(file, output_folder / file.name)
+            print(f"已复制: {file.name}")
+            found_count += 1
+    else:
+        print(f"未找到: {borough}")
+        missing.append(borough)
+
+print("\n--------------------")
+print(f"成功复制文件数量: {found_count}")
+print(f"未找到数量: {len(missing)}")
+
+if missing:
+    print("未找到的行政区:")
+    for borough in missing:
+        print(borough)</script>
+<script type="text/plain" id="src-inspect_london_data.py">from pathlib import Path
+import pandas as pd
+
+london_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project\London"
+)
+
+sample_file = london_folder / "Barking_and_Dagenham_link_26122024.csv"
+df = pd.read_csv(sample_file, nrows=5)
+
+print("文件名：")
+print(sample_file.name)
+
+print("\n列名：")
+for i, column in enumerate(df.columns, start=1):
+    print(i, column)
+
+print("\n前 5 行数据：")
+print(df)
+
+print("\n数据类型：")
+print(df.dtypes)</script>
+<script type="text/plain" id="src-merge_london_data.py">from pathlib import Path
+import pandas as pd
+
+london_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project\London"
+)
+
+output_file = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project\london_house_price_raw.csv"
+)
+
+all_data = []
+
+for file in london_folder.glob("*.csv"):
+    print("正在处理:", file.name)
+    df = pd.read_csv(file)
+    borough = file.name.replace("_link_26122024.csv", "")
+    df["borough"] = borough
+    all_data.append(df)
+
+london_df = pd.concat(all_data, ignore_index=True)
+
+print("\n===================")
+print("合并完成")
+print("===================")
+print("总行数:")
+print(len(london_df))
+print("\n字段:")
+print(london_df.columns)
+print("\n地区数量:")
+print(london_df["borough"].nunique())
+
+london_df.to_csv(output_file, index=False)
+print("\n文件保存:")
+print(output_file)</script>
+<script type="text/plain" id="src-data_quality_check.py">from pathlib import Path
+import pandas as pd
+
+file_path = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project\london_house_price_raw.csv"
+)
+
+print("======================")
+print("开始读取数据")
+print("======================")
+
+columns_needed = [
+    "price", "year", "dateoftransfer", "propertytype", "duration", "postcode",
+    "tfarea", "numberrooms", "CURRENT_ENERGY_EFFICIENCY",
+    "POTENTIAL_ENERGY_EFFICIENCY", "CONSTRUCTION_AGE_BAND", "borough"
+]
+
+df = pd.read_csv(file_path, usecols=columns_needed)
+
+print("\n数据规模")
+print("======================")
+print("行数:")
+print(len(df))
+print("列数:")
+print(len(df.columns))
+print("\n======================")
+print("1. 数据类型")
+print("======================")
+print(df.dtypes)
+print("\n======================")
+print("2. 缺失值检查")
+print("======================")
+missing = df.isnull().sum()
+print(missing[missing > 0])
+print("\n======================")
+print("3. 时间范围")
+print("======================")
+print("最早年份:", df["year"].min())
+print("最新年份:", df["year"].max())
+print("\n======================")
+print("4. 数值范围检查")
+print("======================")
+print("\nPrice:")
+print(df["price"].describe())
+print("\nArea:")
+print(df["tfarea"].describe())
+print("\nRooms:")
+print(df["numberrooms"].describe())
+print("\n======================")
+print("5. 重复数据")
+print("======================")
+duplicates = df.duplicated().sum()
+print("重复行数量:", duplicates)
+print("\n检查完成")</script>
+<script type="text/plain" id="src-data_leakage_check.py">from pathlib import Path
+import pandas as pd
+
+london_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project\London"
+)
+
+sample_file = list(london_folder.glob("*.csv"))[0]
+
+print("检查文件:")
+print(sample_file.name)
+
+df = pd.read_csv(sample_file)
+
+print("\n====================")
+print("1. 所有字段")
+print("====================")
+for col in df.columns:
+    print(col)
+
+print("\n====================")
+print("2. 可疑字段检查")
+print("====================")
+keywords = ["price", "value", "cost", "estimate", "target", "future"]
+for col in df.columns:
+    for word in keywords:
+        if word.lower() in col.lower():
+            print("注意:", col)
+
+print("\n====================")
+print("3. 唯一值数量")
+print("====================")
+for col in df.columns:
+    unique_count = df[col].nunique()
+    print(col, "唯一值:", unique_count, "/ 总行数:", len(df))
+
+print("\n====================")
+print("4. 检查 priceper 泄露")
+print("====================")
+if "priceper" in df.columns:
+    calculated = df["price"] / df["tfarea"]
+    difference = abs(calculated - df["priceper"])
+    print("最大误差:", difference.max())
+    print("平均误差:", difference.mean())
+
+print("\n检查完成")</script>
 <script>
 window.progressStat=document.getElementById("progressStat");
 const projectNav=document.createElement("button");projectNav.dataset.p="projects";projectNav.textContent="▦　项目中心";document.querySelector(".nav").prepend(projectNav);document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));projectsPage.classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));projectNav.classList.add("active");document.querySelectorAll(".nav button:not([data-p='projects'])").forEach(x=>{x.style.paddingLeft="25px";x.style.fontSize="13px"});document.querySelector("[data-p='home']").textContent="└　项目概览";document.querySelector("[data-p='stages']").textContent="└　分类与记录";document.querySelector("[data-p='logs']").textContent="└　详细日志";document.querySelector("[data-p='code']").textContent="└　代码与文件";document.querySelector("[data-p='experiments']").textContent="└　实验工具";document.querySelector("[data-p='issues']").textContent="└　问题工具";document.querySelector("[data-p='summary']").textContent="└　项目总结";stagesPage.querySelector("h1").textContent="分类与记录";stagesPage.querySelector("p").textContent="自己建立简单分类，然后连续添加标题和细节。";stagesPage.querySelector(".btn.primary").textContent="＋ 新建分类";
 const KEY="ProjectLogV2";let S={projects:[],active:null};const id=()=>crypto.randomUUID(),day=()=>new Date().toISOString().slice(0,10),E=(s="")=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
-function currentProgress(){return{category:"数据科学与机器学习",projectStatus:"进行中",goal:"分析影响伦敦房价的因素，并建立房价预测模型；在实践中学习 Python、概率统计、数据分析和机器学习。",stages:[{id:id(),name:"项目方向",desc:"已经确定的课题、目标与学习内容。",tasks:[{id:id(),title:"确定伦敦房价分析与预测课题",note:"围绕真实房价数据，逐步完成数据理解、清洗、探索、建模、评价与解释。",done:true},{id:id(),title:"明确项目目标",note:"分析影响伦敦房价的因素，并建立房价预测模型。",done:true},{id:id(),title:"确定学习内容",note:"练习 Python、pandas、概率统计、数据可视化、线性回归、训练集与测试集划分、模型比较和结果解释。",done:true}]},{id:id(),name:"数据准备",desc:"从原始数据到可供 Python 分析的伦敦数据。",tasks:[{id:id(),title:"下载 hpm_la_2024.zip",note:"已经下载推荐的原始房价数据集压缩包。数据约 1.24 GB，后续不应一次性直接载入全部数据。",done:true},{id:id(),title:"下载字段说明 PDF",note:"用于确认每一列的含义。目前尚未确认已经下载。",done:false},{id:id(),title:"解压并查看文件列表",note:"下一步解压 hpm_la_2024.zip，确认内部文件的名称、格式和大小。",done:false},{id:id(),title:"确认主数据文件与字段",note:"找到包含房价、日期、地区等信息的主文件，并对照说明确认列名。",done:false},{id:id(),title:"筛选伦敦地区数据",note:"尚未运行代码。建议分块读取原始文件，只保存伦敦记录，避免内存不足。",done:false},{id:id(),title:"使用 Python 读取筛选后的数据",note:"读取后检查行列数、前几行、字段类型、缺失值和重复值。",done:false}]},{id:id(),name:"分析与建模",desc:"获得可用的伦敦数据后开始。",tasks:[{id:id(),title:"清洗缺失值、重复值和异常值",note:"尚未开始。",done:false},{id:id(),title:"进行统计分析和数据可视化",note:"观察房价分布、区域差异、时间变化和变量相关性。",done:false},{id:id(),title:"建立第一个房价预测模型",note:"先用线性回归建立基线，再与其他模型比较。",done:false}]}],logs:[{id:id(),date:"2026-09-16",title:"确定伦敦房价机器学习项目",content:"选择伦敦房价分析与预测作为工程实践项目，用于综合练习 Python、概率统计、数据处理、可视化和机器学习。",status:"已完成",tags:"项目规划,伦敦房价,机器学习"},{id:id(),date:"2026-09-19",title:"下载 hpm_la_2024.zip",content:"已经下载推荐的房价数据集压缩包。目前还没有解压，也没有运行 Python 或筛选代码。",status:"已完成",tags:"数据下载,原始数据"}],experiments:[],issues:[{id:id(),date:"2026-09-19",title:"原始数据文件较大",detail:"数据约 1.24 GB，不适合直接一次性载入内存。应先查看压缩包内容，再分块读取并筛选伦敦记录。",status:"未解决",solution:""}],summary:{}}}
+function codeLog(filename,title,note,next,status="已完成"){let code=document.getElementById("src-"+filename).textContent.trim();return{id:id(),title,date:"2026-09-19",status,stageId:"",tags:["Python","pandas","数据工程"],note,problem:"",next,code,attachments:[{name:filename,size:new Blob([code]).size,type:"text/x-python",data:"data:text/x-python;charset=utf-8,"+encodeURIComponent(code)}]}}
+function currentProgress(){let logs=[
+{id:id(),title:"确定伦敦房价机器学习项目",date:"2026-09-16",status:"已完成",stageId:"",tags:["项目规划","伦敦房价","机器学习"],note:"确定以伦敦房价为对象，完成数据准备、质量检查、探索、建模、评价与解释。",problem:"",next:"",code:"",attachments:[]},
+{id:id(),title:"下载并解压原始数据",date:"2026-09-19",status:"已完成",stageId:"",tags:["数据下载","原始数据"],note:"已下载并解压 hpm_la_2024.zip。原始目录中共有 318 个 CSV 文件。",problem:"数据量约 1.24 GB，不适合无筛选地直接用于后续分析。",next:"只保留伦敦 33 个行政区的数据。",code:"",attachments:[]},
+codeLog("prepare_london_data.py","筛选 33 个伦敦行政区文件","脚本已运行：从 318 个 CSV 中成功复制 33 个伦敦行政区文件，缺失 0 个。","检查样本字段和数据类型。"),
+codeLog("inspect_london_data.py","抽样检查伦敦数据结构","已读取 Barking and Dagenham 文件前 5 行，确认数据共有 16 个字段，并查看了字段类型。","核对字段含义，并排查不能用于模型的字段。"),
+codeLog("data_leakage_check.py","编写数据泄漏检查脚本","已编写脚本，用于列出字段、扫描可疑字段、统计唯一值，并验证 priceper 与 price ÷ tfarea 的关系。已确认 priceper 存在明显目标泄漏风险。","运行并保存完整检查结果；建模时从特征中排除 priceper。","进行中"),
+codeLog("merge_london_data.py","编写 33 个行政区数据合并脚本","已完成合并脚本：逐个读取 CSV、从文件名提取 borough、添加地区列并输出 london_house_price_raw.csv。","运行脚本，确认总行数、字段和地区数量。","进行中"),
+codeLog("data_quality_check.py","编写全量数据质量检查脚本","已完成质量检查脚本：检查数据规模、类型、缺失值、年份范围、价格、面积、房间数和重复行。","待合并完成后运行，并保存检查结果。","进行中")];
+return{category:"数据科学与机器学习",projectStatus:"进行中",goal:"分析影响伦敦房价的因素，并建立可靠的房价预测模型；在实践中学习 Python、概率统计、数据工程和机器学习。",stages:[
+{id:id(),name:"项目方向",desc:"课题、目标与学习范围。",tasks:[{id:id(),title:"确定伦敦房价分析与预测课题",note:"完成从真实数据到模型解释的完整工程流程。",done:true},{id:id(),title:"明确研究目标与学习内容",note:"分析影响房价的因素，练习 Python、pandas、概率统计、可视化和机器学习。",done:true}]},
+{id:id(),name:"数据获取与筛选",desc:"从全国原始文件中得到伦敦数据。",tasks:[{id:id(),title:"下载并解压 hpm_la_2024.zip",note:"已完成；原始目录包含 318 个 CSV，约 1.24 GB。",done:true},{id:id(),title:"筛选 33 个伦敦行政区文件",note:"prepare_london_data.py 已运行成功：找到 33 个，缺失 0 个。",done:true},{id:id(),title:"抽样读取并确认数据结构",note:"已读取前 5 行并确认 16 个字段。",done:true},{id:id(),title:"核对官方字段说明",note:"继续对照字段说明确认各列定义、单位和生成时间。",done:false}]},
+{id:id(),name:"数据合并与质量检查",desc:"生成可复现的伦敦原始数据文件并验证质量。",tasks:[{id:id(),title:"编写数据合并脚本",note:"merge_london_data.py 已完成，但尚无成功运行结果。",done:true},{id:id(),title:"运行合并脚本并验证输出",note:"应确认 london_house_price_raw.csv 的总行数、16+borough 字段和 33 个地区。",done:false},{id:id(),title:"编写数据质量检查脚本",note:"data_quality_check.py 已完成。",done:true},{id:id(),title:"运行全量数据质量检查",note:"检查缺失值、年份范围、价格/面积/房间数异常和重复行。",done:false}]},
+{id:id(),name:"泄漏防护与建模准备",desc:"在训练模型前消除会让评价结果虚高的风险。",tasks:[{id:id(),title:"发现 priceper 目标泄漏风险",note:"priceper 由 price ÷ tfarea 计算；预测 price 时不能作为输入特征。",done:true},{id:id(),title:"编写数据泄漏检查脚本",note:"data_leakage_check.py 已完成。",done:true},{id:id(),title:"运行并保存全量泄漏检查结果",note:"检查数学派生字段、ID、重复记录和时间泄漏。",done:false},{id:id(),title:"确定最终特征和时间切分方案",note:"先按时间划分训练集与测试集，再拟合清洗和编码步骤，防止验证信息泄漏。",done:false}]},
+{id:id(),name:"分析与建模",desc:"完成数据检查后开始。",tasks:[{id:id(),title:"清洗缺失值、重复值和异常值",note:"尚未开始。",done:false},{id:id(),title:"完成探索性数据分析",note:"观察房价分布、行政区差异、时间趋势和变量关系。",done:false},{id:id(),title:"建立基线模型并评价",note:"先建立简单基线，再比较模型；保留独立测试集。",done:false}]}
+],logs,experiments:[],issues:[{id:id(),date:"2026-09-19",title:"priceper 会造成目标泄漏",status:"处理中",error:"priceper 基本等于 price ÷ tfarea；如果用它预测 price，模型会间接看到目标答案，评价指标会虚高。",tried:"通过字段扫描和数学关系检查确认风险。",solution:"建模时从输入特征中删除 priceper；继续检查其他派生字段、ID、重复记录和时间泄漏。"},{id:id(),date:"2026-09-19",title:"大文件直接处理可能占用过多内存",status:"处理中",error:"原始数据约 1.24 GB，共 318 个 CSV。",tried:"先运行 prepare_london_data.py，只复制伦敦 33 个行政区文件。",solution:"分阶段处理；合并时关注内存占用，必要时改为分块读取并追加写入。"}],summary:{result:"已完成原始数据下载与解压、伦敦 33 个行政区筛选、样本结构检查，并编写 5 个数据准备与验证脚本。",learned:"使用 pathlib 管理路径、glob 匹配文件、shutil 复制文件、pandas 读取与合并数据；理解目标泄漏会让模型评价失真。",improve:"下一步先运行合并脚本，再执行全量质量与泄漏检查。任何清洗、编码和特征选择都必须只在训练数据上拟合。",links:"https://github.com/hdzt-dc/projectlog"}}}
 function sample(){return{id:id(),name:"London Housing Market Analysis & Machine Learning",...currentProgress()}}
 function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x?.projects?.length)S=x}catch(e){}if(!S.projects.length){let p=sample();S={projects:[p],active:p.id};save()}if(!S.projects.some(p=>p.id===S.active))S.active=S.projects[0].id}function save(){localStorage.setItem(KEY,JSON.stringify(S))}function P(){return S.projects.find(x=>x.id===S.active)}function empty(t){return '<div class="card empty">'+t+"</div>"}function badge(s){let c=s==="已完成"||s==="已解决"?"done":s==="受阻"||s==="未解决"?"bad":"";return '<span class="badge '+c+'">'+E(s)+"</span>"}
 document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===b.dataset.p+"Page"));document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x===b));render()});projectSelect.onchange=()=>{S.active=projectSelect.value;save();render()};search.oninput=statusFilter.onchange=()=>renderLogs();issueFilter.onchange=()=>renderIssues();
@@ -38,5 +254,5 @@ function experimentModal(xid){let x=P().experiments.find(x=>x.id===xid);modal(x?
 function issueModal(xid){let x=P().issues.find(x=>x.id===xid);modal(x?"编辑问题":"记录问题",'<div class="field full"><label>问题标题 *</label><input id="mTitle" value="'+E(x?.title||"")+'"></div><div class="field"><label>日期</label><input id="mDate" type="date" value="'+(x?.date||day())+'"></div><div class="field"><label>状态</label><select id="mStatus">'+["未解决","处理中","已解决"].map(s=>'<option '+(x?.status===s?"selected":"")+">"+s+"</option>")+'</select></div><div class="field full"><label>错误信息 / 现象</label><textarea id="mError">'+E(x?.error||"")+'</textarea></div><div class="field full"><label>尝试过什么</label><textarea id="mTried">'+E(x?.tried||"")+'</textarea></div><div class="field full"><label>最终方案与原因</label><textarea id="mSolution">'+E(x?.solution||"")+"</textarea></div>",()=>{if(!v("mTitle"))return alert("请填写问题标题");let o={id:x?.id||id(),title:v("mTitle"),date:mDate.value,status:mStatus.value,error:v("mError"),tried:v("mTried"),solution:v("mSolution")};x?Object.assign(x,o):P().issues.push(o);save();closeModal();render()})}function renderIssues(){let f=issueFilter.value;issueList.innerHTML=P().issues.filter(x=>!f||x.status===f).map(x=>'<article class="item"><div class="item-head"><div><h3>'+E(x.title)+'</h3><div class="meta">'+x.date+" · "+badge(x.status)+'</div></div><div><button class="btn small" onclick="issueModal(\''+x.id+'\')">编辑</button> <button class="btn small danger" onclick="remove(\'issues\',\''+x.id+'\')">删除</button></div></div><div class="notice"><b>现象：</b>'+E(x.error)+'</div><div class="body"><b>尝试：</b>'+E(x.tried)+'</div><div class="body"><b>解决：</b>'+E(x.solution)+"</div></article>").join("")||empty("遇到报错或思路受阻时记录下来。")}
 function remove(k,x){if(confirm("确定删除？")){P()[k]=P()[k].filter(a=>a.id!==x);save();render()}}function renderSummary(){let s=P().summary||{};sumResult.value=s.result||"";sumLearned.value=s.learned||"";sumImprove.value=s.improve||"";sumLinks.value=s.links||""}function saveSummary(){P().summary={result:sumResult.value,learned:sumLearned.value,improve:sumImprove.value,links:sumLinks.value};save();alert("项目总结已保存")}
 function exportData(){let b=new Blob([JSON.stringify({...S,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="ProjectLog-"+day()+".json";a.click()}importFile.onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader;r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.projects?.length)throw 0;if(confirm("导入会替换当前浏览器中的全部数据，继续吗？")){S=x;save();render()}}catch(e){alert("备份格式不正确")}};r.readAsText(f)}
-document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:none}@media(min-width:901px){#homePage>.grid{grid-template-columns:repeat(3,1fr)}}</style>");progressStat.parentElement.remove();const renderWorkspace=render;render=function(){renderProjects();renderWorkspace()};load();if(!S.simpleCategoriesV1){S.projects.forEach(p=>{if(p.stages?.length===4&&p.stages.every(s=>!(s.tasks||[]).length)&&p.stages[0]?.name.includes("问题定义"))p.stages=[]});S.simpleCategoriesV1=true;save()}if(!S.realProgress20260919){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0],progress=currentProgress();Object.assign(p,progress);S.active=p.id;S.realProgress20260919=true;save()}roadmap.closest(".panel").querySelector("h2").textContent="内容分类";next.closest(".panel").querySelector("h2").textContent="未完成内容";taskStat.previousElementSibling.textContent="已完成内容";render();
+document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:none}@media(min-width:901px){#homePage>.grid{grid-template-columns:repeat(3,1fr)}}</style>");progressStat.parentElement.remove();const renderWorkspace=render;render=function(){renderProjects();renderWorkspace()};load();if(!S.simpleCategoriesV1){S.projects.forEach(p=>{if(p.stages?.length===4&&p.stages.every(s=>!(s.tasks||[]).length)&&p.stages[0]?.name.includes("问题定义"))p.stages=[]});S.simpleCategoriesV1=true;save()}if(!S.progressWithCode20260919){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0],progress=currentProgress();Object.assign(p,progress);S.active=p.id;S.realProgress20260919=true;S.progressWithCode20260919=true;save()}roadmap.closest(".panel").querySelector("h2").textContent="内容分类";next.closest(".panel").querySelector("h2").textContent="未完成内容";taskStat.previousElementSibling.textContent="已完成内容";render();
 </script></body></html>
