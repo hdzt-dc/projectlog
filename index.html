@@ -4,7 +4,7 @@
 </style><style>.project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}.project-card{padding:18px;min-height:220px;display:flex;flex-direction:column;transition:.18s}.project-card:hover{transform:translateY(-2px);box-shadow:0 14px 34px #17203318}.project-card .category{align-self:flex-start;background:#eef2ff;color:#4338ca;border-radius:7px;padding:4px 8px;font-size:12px;font-weight:700}.project-card h2{font-size:18px;margin:13px 0 7px}.project-card .goal-text{color:#566176;flex:1}.project-card .card-foot{border-top:1px solid var(--line);padding-top:13px;margin-top:13px;display:flex;justify-content:space-between;align-items:center}.project-card.add{border:2px dashed #c8cbd7;box-shadow:none;align-items:center;justify-content:center;text-align:center;color:var(--muted);cursor:pointer}.project-card.add strong{font-size:40px;color:var(--brand);line-height:1}</style></head><body>
 <aside class="side"><div class="brand">Project<i>Log</i></div><button id="langToggle" class="lang-toggle" type="button" aria-label="Switch language">English</button><div class="now"><small>当前项目</small><b id="sideName">—</b></div><nav class="nav"><button class="active" data-p="home">◫　项目总览</button><button data-p="stages">✓　阶段与任务</button><button data-p="logs">✎　学习日志</button><button data-p="code">⌘　代码与文件</button><button data-p="experiments">⌁　实验记录</button><button data-p="issues">!　问题与方案</button><button data-p="summary">▤　项目总结</button></nav><div class="hint">数据保存在当前浏览器<br>请定期导出完整备份</div></aside>
 <main class="main">
-<section class="page active" id="projectsPage"><header class="top"><div><h1>我的工程项目</h1><p>每个项目拥有独立的阶段、任务、日志、代码、实验和问题记录。</p></div><button class="btn primary" onclick="projectModal()">＋ 新建项目</button></header><div id="projectGrid" class="project-grid"></div></section>
+<section class="page active" id="projectsPage"><header class="top"><div><h1>我的工程项目</h1><p>每个项目拥有独立的分类、记录、日志、代码和总结。</p></div><button class="btn primary" onclick="projectModal()">＋ 新建项目</button></header><div id="projectGrid" class="project-grid"></div></section>
 <section class="page active" id="homePage"><header class="top"><div><h1>工程学习工作台</h1><p id="goal"></p></div><div class="actions"><select id="projectSelect" class="project-select"></select><button class="btn" onclick="projectModal()">＋ 项目</button><button class="btn primary" onclick="logModal()">＋ 记录进度</button></div></header><div class="grid"><div class="card stat"><small>整体进度</small><strong id="progressStat">0%</strong></div><div class="card stat"><small>已完成任务</small><strong id="taskStat">0/0</strong></div><div class="card stat"><small>学习日志</small><strong id="logStat">0</strong></div><div class="card stat"><small>实验 / 问题</small><strong id="workStat">0</strong></div></div><div class="cols"><div><div class="card panel"><h2>项目路线</h2><div id="roadmap"></div></div><div class="card panel"><h2>最近动态</h2><div id="recent" class="list"></div></div></div><div><div class="card panel"><h2>下一步任务</h2><div id="next"></div></div><div class="card panel"><h2>数据管理</h2><p class="muted">备份包含所有项目、代码、注释和小型附件。</p><div class="actions"><button class="btn" onclick="exportData()">导出 JSON</button><button class="btn" onclick="importFile.click()">导入备份</button><input id="importFile" class="hidden" type="file" accept=".json"></div></div></div></div></section>
 <section class="page" id="stagesPage"><header class="top"><div><h1>阶段与任务</h1><p>把大项目拆成可以逐步完成的小任务。</p></div><button class="btn primary" onclick="stageModal()">＋ 新增阶段</button></header><div id="stageList" class="list"></div></section>
 <section class="page" id="logsPage"><header class="top"><div><h1>学习日志</h1><p>记录做了什么、为什么这样做以及下一步。</p></div><button class="btn primary" onclick="logModal()">＋ 新增日志</button></header><div class="toolbar"><input id="search" placeholder="搜索标题、笔记、代码或标签"><select id="statusFilter"><option value="">全部状态</option><option>进行中</option><option>已完成</option><option>受阻</option></select></div><div id="logList" class="list"></div></section>
@@ -214,6 +214,2011 @@ if "priceper" in df.columns:
     print("平均误差:", difference.mean())
 
 print("\n检查完成")</script>
++<script type="text/plain" id="src-today-clean" data-filename="clean_london_data(4).py">from pathlib import Path
+import pandas as pd
+import numpy as np
+
+
+# ==================================================
+# 1. 文件路径
+# ==================================================
+
+project_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project"
+)
+
+input_file = project_folder / "london_house_price_raw.csv"
+output_file = project_folder / "london_house_price_clean.csv"
+report_file = project_folder / "cleaning_report.txt"
+
+
+print("======================")
+print("开始读取原始数据")
+print("======================")
+
+df = pd.read_csv(input_file)
+
+original_rows = len(df)
+
+print("原始行数:", original_rows)
+print("原始列数:", len(df.columns))
+
+
+# ==================================================
+# 2. 删除明确不应该保留的字段
+# ==================================================
+
+print("\n======================")
+print("删除泄露 / 无用字段")
+print("======================")
+
+columns_to_drop = [
+    "priceper",   # price / tfarea，包含目标变量信息
+    "classt"      # 数据匹配类型，不作为模型特征
+]
+
+existing_drop_columns = [
+    col for col in columns_to_drop
+    if col in df.columns
+]
+
+df = df.drop(columns=existing_drop_columns)
+
+print("已删除字段:")
+for col in existing_drop_columns:
+    print("-", col)
+
+
+print("\n审计字段保留:")
+print("- transactionid")
+print("- lmk_key")
+
+print(
+    "注意：transactionid 和 lmk_key "
+    "只用于数据审计、分组和防止数据泄漏，"
+    "不能作为模型输入特征。"
+)
+
+
+# ==================================================
+# 3. 删除明显不合理面积
+# ==================================================
+
+print("\n======================")
+print("面积清洗")
+print("======================")
+
+invalid_area_mask = (
+    df["tfarea"].isna()
+    |
+    (df["tfarea"] < 10)
+)
+
+invalid_area_count = invalid_area_mask.sum()
+
+print("tfarea 缺失或 < 10 的数量:")
+print(invalid_area_count)
+
+df = df[~invalid_area_mask].copy()
+
+
+# ==================================================
+# 4. numberrooms = 0 改为缺失值
+# ==================================================
+
+print("\n======================")
+print("房间数清洗")
+print("======================")
+
+zero_rooms_count = (
+    df["numberrooms"] == 0
+).sum()
+
+print("numberrooms = 0 的数量:")
+print(zero_rooms_count)
+
+df.loc[
+    df["numberrooms"] == 0,
+    "numberrooms"
+] = np.nan
+
+
+# ==================================================
+# 5. 面积 / 房间一致性检查
+# ==================================================
+
+print("\n======================")
+print("面积 / 房间一致性清洗")
+print("======================")
+
+valid_room_mask = (
+    df["numberrooms"].notna()
+    &
+    (df["numberrooms"] > 0)
+)
+
+df["area_per_room"] = np.nan
+
+df.loc[
+    valid_room_mask,
+    "area_per_room"
+] = (
+    df.loc[valid_room_mask, "tfarea"]
+    /
+    df.loc[valid_room_mask, "numberrooms"]
+)
+
+invalid_ratio_mask = (
+    df["area_per_room"].notna()
+    &
+    (
+        (df["area_per_room"] < 3)
+        |
+        (df["area_per_room"] > 100)
+    )
+)
+
+invalid_ratio_count = (
+    invalid_ratio_mask.sum()
+)
+
+print(
+    "area_per_room < 3 或 > 100 的数量:"
+)
+print(invalid_ratio_count)
+
+df = df[~invalid_ratio_mask].copy()
+
+
+# ==================================================
+# 6. 标记超低价格，但暂不删除
+# ==================================================
+
+print("\n======================")
+print("低价交易标记")
+print("======================")
+
+df["low_price_flag"] = (
+    df["price"] <= 10000
+)
+
+low_price_count = (
+    df["low_price_flag"].sum()
+)
+
+print("price <= 10000 的记录:")
+print(low_price_count)
+
+
+# ==================================================
+# 7. 标记可疑单位面积价格
+# 仅用于质量检查，绝不能进入模型
+# ==================================================
+
+df["price_per_sqm_check"] = (
+    df["price"]
+    /
+    df["tfarea"]
+)
+
+df["suspicious_price_per_sqm"] = (
+    (df["price_per_sqm_check"] < 100)
+    |
+    (df["price_per_sqm_check"] > 100000)
+)
+
+suspicious_ppsqm_count = (
+    df["suspicious_price_per_sqm"].sum()
+)
+
+print("\n可疑单位面积价格记录:")
+print(suspicious_ppsqm_count)
+
+
+# ==================================================
+# 8. transactionid 唯一性检查
+# ==================================================
+
+print("\n======================")
+print("transactionid 唯一性检查")
+print("======================")
+
+transaction_duplicate_count = (
+    df["transactionid"]
+    .duplicated()
+    .sum()
+)
+
+print("重复 transactionid 数量:")
+print(transaction_duplicate_count)
+
+
+# ==================================================
+# 9. lmk_key 重复情况
+# ==================================================
+
+print("\n======================")
+print("lmk_key 重复情况")
+print("======================")
+
+lmk_repeated_rows = (
+    df["lmk_key"]
+    .duplicated(keep=False)
+    .sum()
+)
+
+unique_lmk = (
+    df["lmk_key"]
+    .nunique()
+)
+
+print("唯一 lmk_key 数量:")
+print(unique_lmk)
+
+print("属于重复 lmk_key 的记录数量:")
+print(lmk_repeated_rows)
+
+
+# ==================================================
+# 10. 删除临时计算列
+# ==================================================
+
+df = df.drop(
+    columns=[
+        "area_per_room",
+        "price_per_sqm_check"
+    ]
+)
+
+
+# ==================================================
+# 11. 最终结果
+# ==================================================
+
+final_rows = len(df)
+
+removed_rows = (
+    original_rows - final_rows
+)
+
+removed_percentage = (
+    removed_rows
+    /
+    original_rows
+    * 100
+)
+
+
+print("\n======================")
+print("清洗完成")
+print("======================")
+
+print("原始行数:")
+print(original_rows)
+
+print("\n最终行数:")
+print(final_rows)
+
+print("\n删除行数:")
+print(removed_rows)
+
+print("\n删除比例:")
+print(f"{removed_percentage:.4f}%")
+
+print("\n最终字段:")
+for col in df.columns:
+    print("-", col)
+
+
+# ==================================================
+# 12. 保存 clean 数据
+# ==================================================
+
+print("\n开始保存 clean 数据...")
+
+df.to_csv(
+    output_file,
+    index=False
+)
+
+print("保存完成:")
+print(output_file)
+
+
+# ==================================================
+# 13. 保存清洗报告
+# ==================================================
+
+with open(
+    report_file,
+    "w",
+    encoding="utf-8"
+) as f:
+
+    f.write(
+        "London Housing Data Cleaning Report\n"
+    )
+
+    f.write("=" * 40 + "\n\n")
+
+    f.write(
+        f"Original rows: {original_rows}\n"
+    )
+
+    f.write(
+        f"Final rows: {final_rows}\n"
+    )
+
+    f.write(
+        f"Removed rows: {removed_rows}\n"
+    )
+
+    f.write(
+        f"Removed percentage: "
+        f"{removed_percentage:.4f}%\n\n"
+    )
+
+    f.write(
+        f"Invalid/missing tfarea removed: "
+        f"{invalid_area_count}\n"
+    )
+
+    f.write(
+        f"numberrooms == 0 converted to NaN: "
+        f"{zero_rooms_count}\n"
+    )
+
+    f.write(
+        f"Invalid area_per_room removed: "
+        f"{invalid_ratio_count}\n"
+    )
+
+    f.write(
+        f"Low price records retained and flagged: "
+        f"{low_price_count}\n"
+    )
+
+    f.write(
+        f"Suspicious price-per-sqm retained and flagged: "
+        f"{suspicious_ppsqm_count}\n"
+    )
+
+    f.write(
+        f"Duplicate transactionid count: "
+        f"{transaction_duplicate_count}\n"
+    )
+
+    f.write(
+        f"Unique lmk_key count: "
+        f"{unique_lmk}\n"
+    )
+
+    f.write(
+        f"Rows belonging to repeated lmk_key: "
+        f"{lmk_repeated_rows}\n\n"
+    )
+
+    f.write(
+        "IMPORTANT:\n"
+    )
+
+    f.write(
+        "transactionid and lmk_key are audit columns only.\n"
+    )
+
+    f.write(
+        "They must NOT be used as machine-learning features.\n"
+    )
+
+    f.write(
+        "suspicious_price_per_sqm and low_price_flag "
+        "must also be excluded from the final model.\n"
+    )
+
+
+print("\n清洗报告已保存:")
+print(report_file)</script>
+<script type="text/plain" id="src-today-transaction-duplicate" data-filename="transaction_duplicate_check(4).py">from pathlib import Path
+import pandas as pd
+
+
+project_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project"
+)
+
+file_path = project_folder / "london_house_price_raw.csv"
+
+
+columns_needed = [
+    "transactionid",
+    "lmk_key",
+    "dateoftransfer",
+    "price",
+    "postcode",
+    "propertytype",
+    "duration",
+    "tfarea",
+    "numberrooms",
+    "CURRENT_ENERGY_EFFICIENCY",
+    "POTENTIAL_ENERGY_EFFICIENCY",
+    "CONSTRUCTION_AGE_BAND",
+    "borough"
+]
+
+
+print("======================")
+print("读取原始数据")
+print("======================")
+
+df = pd.read_csv(
+    file_path,
+    usecols=columns_needed
+)
+
+print("总行数:", len(df))
+
+
+# ==================================================
+# 1. transactionid 是否重复
+# ==================================================
+
+print("\n======================")
+print("1. transactionid 重复情况")
+print("======================")
+
+transaction_counts = (
+    df["transactionid"]
+    .value_counts()
+)
+
+print("唯一 transactionid 数量:")
+print(df["transactionid"].nunique())
+
+print("\n出现超过1次的 transactionid 数量:")
+print(
+    (transaction_counts > 1).sum()
+)
+
+print("\n涉及重复 transactionid 的总行数:")
+print(
+    transaction_counts[
+        transaction_counts > 1
+    ].sum()
+)
+
+print("\n单个 transactionid 最多出现次数:")
+print(
+    transaction_counts.max()
+)
+
+
+# ==================================================
+# 2. 每笔交易对应多少个 EPC
+# ==================================================
+
+print("\n======================")
+print("2. transactionid → lmk_key")
+print("======================")
+
+epc_per_transaction = (
+    df.groupby("transactionid")["lmk_key"]
+    .nunique()
+)
+
+print("一笔交易对应多个 lmk_key 的 transaction 数量:")
+print(
+    (epc_per_transaction > 1).sum()
+)
+
+print("\n最多一笔交易对应多少个 lmk_key:")
+print(
+    epc_per_transaction.max()
+)
+
+print("\n对应 EPC 最多的20笔交易:")
+print(
+    epc_per_transaction
+    .sort_values(ascending=False)
+    .head(20)
+    .to_string()
+)
+
+
+# ==================================================
+# 3. 查看重复交易具体长什么样
+# ==================================================
+
+print("\n======================")
+print("3. 重复交易案例")
+print("======================")
+
+problem_transactions = (
+    epc_per_transaction[
+        epc_per_transaction > 1
+    ]
+    .sort_values(ascending=False)
+    .head(20)
+    .index
+)
+
+sample = df[
+    df["transactionid"].isin(
+        problem_transactions
+    )
+].sort_values(
+    ["transactionid", "lmk_key"]
+)
+
+print(
+    sample.to_string(index=False)
+)
+
+
+# ==================================================
+# 4. 同一交易的核心成交信息是否一致
+# ==================================================
+
+print("\n======================")
+print("4. 成交信息一致性")
+print("======================")
+
+for col in [
+    "dateoftransfer",
+    "price",
+    "postcode",
+    "propertytype",
+    "duration"
+]:
+
+    conflicts = (
+        df.groupby("transactionid")[col]
+        .nunique()
+    )
+
+    print(
+        f"{col} 出现冲突的 transactionid 数量:",
+        (conflicts > 1).sum()
+    )
+
+
+# ==================================================
+# 5. EPC 属性冲突
+# ==================================================
+
+print("\n======================")
+print("5. EPC 属性差异")
+print("======================")
+
+for col in [
+    "tfarea",
+    "numberrooms",
+    "CURRENT_ENERGY_EFFICIENCY",
+    "POTENTIAL_ENERGY_EFFICIENCY",
+    "CONSTRUCTION_AGE_BAND"
+]:
+
+    differences = (
+        df.groupby("transactionid")[col]
+        .nunique()
+    )
+
+    print(
+        f"{col} 存在多个值的 transactionid 数量:",
+        (differences > 1).sum()
+    )
+
+
+print("\n======================")
+print("Transaction Duplicate Diagnosis 完成")
+print("======================")</script>
+<script type="text/plain" id="src-today-validate-clean" data-filename="validate_clean_data(4).py">from pathlib import Path
+import pandas as pd
+
+
+project_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project"
+)
+
+file_path = project_folder / "london_house_price_clean.csv"
+
+
+print("======================")
+print("读取 clean 数据")
+print("======================")
+
+df = pd.read_csv(file_path)
+
+print("总行数:", len(df))
+print("总列数:", len(df.columns))
+
+
+# ==================================================
+# 1. 确认泄露字段已经删除
+# ==================================================
+
+print("\n======================")
+print("1. 泄露 / ID 字段检查")
+print("======================")
+
+for col in [
+    "priceper",
+    "transactionid",
+    "lmk_key",
+    "classt"
+]:
+    print(
+        col,
+        "是否存在:",
+        col in df.columns
+    )
+
+
+# ==================================================
+# 2. 面积检查
+# ==================================================
+
+print("\n======================")
+print("2. 面积检查")
+print("======================")
+
+print("tfarea 最小值:")
+print(df["tfarea"].min())
+
+print("tfarea 最大值:")
+print(df["tfarea"].max())
+
+print("tfarea < 10:")
+print((df["tfarea"] < 10).sum())
+
+
+# ==================================================
+# 3. 房间 / 面积一致性
+# ==================================================
+
+print("\n======================")
+print("3. 面积 / 房间一致性")
+print("======================")
+
+valid = df[
+    df["numberrooms"].notna()
+    &
+    (df["numberrooms"] > 0)
+].copy()
+
+valid["area_per_room"] = (
+    valid["tfarea"]
+    /
+    valid["numberrooms"]
+)
+
+print("area_per_room < 3:")
+print(
+    (valid["area_per_room"] < 3).sum()
+)
+
+print("area_per_room > 100:")
+print(
+    (valid["area_per_room"] > 100).sum()
+)
+
+
+# ==================================================
+# 4. 缺失值
+# ==================================================
+
+print("\n======================")
+print("4. 缺失值")
+print("======================")
+
+missing = df.isnull().sum()
+
+print(
+    missing[missing > 0]
+    .sort_values(ascending=False)
+)
+
+
+# ==================================================
+# 5. 时间范围
+# ==================================================
+
+print("\n======================")
+print("5. 时间范围")
+print("======================")
+
+print("最早年份:", df["year"].min())
+print("最新年份:", df["year"].max())
+
+
+# ==================================================
+# 6. Borough 检查
+# ==================================================
+
+print("\n======================")
+print("6. Borough 检查")
+print("======================")
+
+print("Borough 数量:")
+print(df["borough"].nunique())
+
+print("\n每个 Borough 的记录数量:")
+print(
+    df["borough"]
+    .value_counts()
+    .sort_index()
+    .to_string()
+)
+
+
+# ==================================================
+# 7. 标记字段检查
+# ==================================================
+
+print("\n======================")
+print("7. 可疑数据标记")
+print("======================")
+
+print("low_price_flag = True:")
+print(df["low_price_flag"].sum())
+
+print("suspicious_price_per_sqm = True:")
+print(
+    df["suspicious_price_per_sqm"].sum()
+)
+
+
+# ==================================================
+# 8. 重复记录检查
+# ==================================================
+
+print("\n======================")
+print("8. 潜在业务重复检查")
+print("======================")
+
+duplicate_columns = [
+    "dateoftransfer",
+    "postcode",
+    "price",
+    "propertytype",
+    "tfarea"
+]
+
+business_duplicates = (
+    df.duplicated(
+        subset=duplicate_columns,
+        keep=False
+    )
+)
+
+print("涉及潜在重复的记录数量:")
+print(business_duplicates.sum())
+
+print("\n前20条潜在重复记录:")
+
+print(
+    df[business_duplicates]
+    .sort_values(duplicate_columns)
+    .head(20)
+    .to_string(index=False)
+)
+
+
+print("\n======================")
+print("Clean Data Validation 完成")
+print("======================")</script>
+<script type="text/plain" id="src-today-internal-consistency" data-filename="internal_consistency_check(4).py">from pathlib import Path
+import pandas as pd
+
+
+file_path = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project\london_house_price_raw.csv"
+)
+
+
+columns_needed = [
+    "price",
+    "year",
+    "postcode",
+    "propertytype",
+    "tfarea",
+    "numberrooms",
+    "lmk_key",
+    "borough"
+]
+
+
+print("======================")
+print("开始读取数据")
+print("======================")
+
+df = pd.read_csv(
+    file_path,
+    usecols=columns_needed
+)
+
+print("读取完成")
+print("总行数:", len(df))
+
+
+# ==================================================
+# 1. 每个房间对应的面积
+# ==================================================
+
+print("\n======================")
+print("1. 面积 / 房间数一致性检查")
+print("======================")
+
+valid_rooms = df[
+    (df["numberrooms"].notna()) &
+    (df["numberrooms"] > 0) &
+    (df["tfarea"] > 0)
+].copy()
+
+valid_rooms["area_per_room"] = (
+    valid_rooms["tfarea"] /
+    valid_rooms["numberrooms"]
+)
+
+print("\narea_per_room 统计:")
+print(
+    valid_rooms["area_per_room"].describe()
+)
+
+print("\narea_per_room < 3 的数量:")
+print(
+    (valid_rooms["area_per_room"] < 3).sum()
+)
+
+print("\narea_per_room > 100 的数量:")
+print(
+    (valid_rooms["area_per_room"] > 100).sum()
+)
+
+print("\n每房间面积最小的20条:")
+print(
+    valid_rooms
+    .sort_values("area_per_room")
+    .head(20)
+    .to_string(index=False)
+)
+
+print("\n每房间面积最大的20条:")
+print(
+    valid_rooms
+    .sort_values("area_per_room", ascending=False)
+    .head(20)
+    .to_string(index=False)
+)
+
+
+# ==================================================
+# 2. 每平方米价格
+# 只用于异常检测，绝不进入预测模型
+# ==================================================
+
+print("\n======================")
+print("2. Price / Area 一致性检查")
+print("======================")
+
+valid_price_area = df[
+    (df["price"] > 0) &
+    (df["tfarea"] > 0)
+].copy()
+
+valid_price_area["price_per_sqm_check"] = (
+    valid_price_area["price"] /
+    valid_price_area["tfarea"]
+)
+
+print("\nprice_per_sqm_check 统计:")
+print(
+    valid_price_area["price_per_sqm_check"].describe()
+)
+
+print("\n每平方米价格 < 100 的数量:")
+print(
+    (valid_price_area["price_per_sqm_check"] < 100).sum()
+)
+
+print("\n每平方米价格 > 100000 的数量:")
+print(
+    (valid_price_area["price_per_sqm_check"] > 100000).sum()
+)
+
+print("\n每平方米价格最低的20条:")
+print(
+    valid_price_area
+    .sort_values("price_per_sqm_check")
+    .head(20)
+    .to_string(index=False)
+)
+
+print("\n每平方米价格最高的20条:")
+print(
+    valid_price_area
+    .sort_values("price_per_sqm_check", ascending=False)
+    .head(20)
+    .to_string(index=False)
+)
+
+
+# ==================================================
+# 3. 同一个 EPC 是否对应多个 postcode
+# ==================================================
+
+print("\n======================")
+print("3. lmk_key 与 postcode 一致性检查")
+print("======================")
+
+postcode_per_lmk = (
+    df.groupby("lmk_key")["postcode"]
+    .nunique()
+)
+
+problem_postcode_lmk = postcode_per_lmk[
+    postcode_per_lmk > 1
+]
+
+print("\n一个 lmk_key 对应多个 postcode 的数量:")
+print(len(problem_postcode_lmk))
+
+print("\n最严重的20个:")
+print(
+    problem_postcode_lmk
+    .sort_values(ascending=False)
+    .head(20)
+    .to_string()
+)
+
+
+# ==================================================
+# 4. 同一个 EPC 的房屋属性是否冲突
+# ==================================================
+
+print("\n======================")
+print("4. lmk_key 房屋属性一致性检查")
+print("======================")
+
+propertytype_per_lmk = (
+    df.groupby("lmk_key")["propertytype"]
+    .nunique()
+)
+
+area_per_lmk = (
+    df.groupby("lmk_key")["tfarea"]
+    .nunique()
+)
+
+rooms_per_lmk = (
+    df.groupby("lmk_key")["numberrooms"]
+    .nunique()
+)
+
+print("\n一个 lmk_key 对应多个 propertytype 的数量:")
+print(
+    (propertytype_per_lmk > 1).sum()
+)
+
+print("\n一个 lmk_key 对应多个 tfarea 的数量:")
+print(
+    (area_per_lmk > 1).sum()
+)
+
+print("\n一个 lmk_key 对应多个 numberrooms 的数量:")
+print(
+    (rooms_per_lmk > 1).sum()
+)
+
+
+# ==================================================
+# 5. 查看具体冲突案例
+# ==================================================
+
+problem_keys = set(
+    propertytype_per_lmk[propertytype_per_lmk > 1].index
+)
+
+problem_keys.update(
+    postcode_per_lmk[postcode_per_lmk > 1].index
+)
+
+problem_keys = list(problem_keys)
+
+print("\n======================")
+print("5. 冲突案例")
+print("======================")
+
+print("存在 postcode 或 propertytype 冲突的 lmk_key 数量:")
+print(len(problem_keys))
+
+if problem_keys:
+    sample_problem_keys = problem_keys[:20]
+
+    problem_records = df[
+        df["lmk_key"].isin(sample_problem_keys)
+    ].sort_values(
+        ["lmk_key", "year"]
+    )
+
+    print("\n前20个冲突 EPC 的记录:")
+    print(
+        problem_records.to_string(index=False)
+    )
+
+
+print("\n======================")
+print("内部一致性检查完成")
+print("======================")</script>
+<script type="text/plain" id="src-today-outlier-diagnosis" data-filename="outlier_diagnosis(4).py">from pathlib import Path
+import pandas as pd
+
+
+file_path = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project\london_house_price_raw.csv"
+)
+
+print("======================")
+print("开始读取诊断字段")
+print("======================")
+
+columns_needed = [
+    "year",
+    "dateoftransfer",
+    "propertytype",
+    "duration",
+    "price",
+    "postcode",
+    "lad23cd",
+    "transactionid",
+    "lmk_key",
+    "tfarea",
+    "numberrooms",
+    "classt",
+    "borough"
+]
+
+df = pd.read_csv(
+    file_path,
+    usecols=columns_needed
+)
+
+print("读取完成")
+print("总行数:", len(df))
+
+
+# ==================================================
+# 1. 超低价格诊断
+# ==================================================
+
+print("\n======================")
+print("1. 超低价格诊断")
+print("======================")
+
+low_price = df[df["price"] <= 10000].copy()
+
+print("price <= 10000 的数量:")
+print(len(low_price))
+
+print("\n按年份分布:")
+print(
+    low_price["year"]
+    .value_counts()
+    .sort_index()
+    .to_string()
+)
+
+print("\n按房屋类型分布:")
+print(
+    low_price["propertytype"]
+    .value_counts(dropna=False)
+    .to_string()
+)
+
+print("\n按 Borough 分布（前20）:")
+print(
+    low_price["borough"]
+    .value_counts()
+    .head(20)
+    .to_string()
+)
+
+print("\n最低价格记录:")
+print(
+    low_price.sort_values("price")
+    .head(30)
+    .to_string(index=False)
+)
+
+
+# ==================================================
+# 2. 超大面积诊断
+# ==================================================
+
+print("\n======================")
+print("2. 超大面积诊断")
+print("======================")
+
+large_area = df[df["tfarea"] > 1000].copy()
+
+print("tfarea > 1000 的数量:")
+print(len(large_area))
+
+print("\n最常出现的超大面积值:")
+print(
+    large_area["tfarea"]
+    .value_counts()
+    .head(20)
+    .to_string()
+)
+
+print("\n最常出现的 postcode + 面积组合:")
+print(
+    large_area
+    .groupby(["postcode", "tfarea"])
+    .size()
+    .sort_values(ascending=False)
+    .head(30)
+    .to_string()
+)
+
+print("\nclasst 分布:")
+print(
+    large_area["classt"]
+    .value_counts(dropna=False)
+    .to_string()
+)
+
+print("\n面积最大的30条记录:")
+print(
+    large_area
+    .sort_values("tfarea", ascending=False)
+    .head(30)
+    .to_string(index=False)
+)
+
+
+# ==================================================
+# 3. 超大房间数诊断
+# ==================================================
+
+print("\n======================")
+print("3. 超大房间数诊断")
+print("======================")
+
+large_rooms = df[df["numberrooms"] > 20].copy()
+
+print("numberrooms > 20 的数量:")
+print(len(large_rooms))
+
+print("\n异常房间数的频率:")
+print(
+    large_rooms["numberrooms"]
+    .value_counts()
+    .sort_index()
+    .to_string()
+)
+
+print("\npostcode + 房间数组合:")
+print(
+    large_rooms
+    .groupby(["postcode", "numberrooms"])
+    .size()
+    .sort_values(ascending=False)
+    .head(30)
+    .to_string()
+)
+
+print("\nclasst 分布:")
+print(
+    large_rooms["classt"]
+    .value_counts(dropna=False)
+    .to_string()
+)
+
+print("\n房间数最大的30条记录:")
+print(
+    large_rooms
+    .sort_values("numberrooms", ascending=False)
+    .head(30)
+    .to_string(index=False)
+)
+
+
+# ==================================================
+# 4. 检查同一个 EPC 是否反复产生异常
+# ==================================================
+
+print("\n======================")
+print("4. EPC / 匹配重复诊断")
+print("======================")
+
+print("\n超大面积中重复最多的 lmk_key:")
+print(
+    large_area["lmk_key"]
+    .value_counts()
+    .head(20)
+    .to_string()
+)
+
+print("\n超大房间数中重复最多的 lmk_key:")
+print(
+    large_rooms["lmk_key"]
+    .value_counts()
+    .head(20)
+    .to_string()
+)
+
+
+# ==================================================
+# 5. 保存异常记录，方便以后进一步看
+# ==================================================
+
+output_folder = file_path.parent / "diagnostics"
+output_folder.mkdir(exist_ok=True)
+
+low_price.to_csv(
+    output_folder / "low_price_records.csv",
+    index=False
+)
+
+large_area.to_csv(
+    output_folder / "large_area_records.csv",
+    index=False
+)
+
+large_rooms.to_csv(
+    output_folder / "large_room_records.csv",
+    index=False
+)
+
+print("\n======================")
+print("异常诊断完成")
+print("======================")
+
+print("诊断文件已保存到:")
+print(output_folder)</script>
+<script type="text/plain" id="src-today-outlier-analysis" data-filename="outlier_analysis(5).py">from pathlib import Path
+import pandas as pd
+
+
+file_path = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project\london_house_price_raw.csv"
+)
+
+
+print("======================")
+print("读取需要的字段")
+print("======================")
+
+
+columns_needed = [
+    "price",
+    "year",
+    "dateoftransfer",
+    "propertytype",
+    "postcode",
+    "tfarea",
+    "numberrooms",
+    "borough"
+]
+
+
+df = pd.read_csv(
+    file_path,
+    usecols=columns_needed
+)
+
+
+print("读取完成")
+print("总行数:", len(df))
+
+
+# --------------------------------------------------
+# 1. 房价异常
+# --------------------------------------------------
+
+print("\n======================")
+print("1. 房价异常检查")
+print("======================")
+
+
+print("\nprice <= 1000 的数量:")
+print((df["price"] <= 1000).sum())
+
+
+print("\nprice <= 10000 的数量:")
+print((df["price"] <= 10000).sum())
+
+
+print("\n最低价格的20条记录:")
+print(
+    df.sort_values("price")
+      .head(20)
+      .to_string(index=False)
+)
+
+
+print("\n最高价格的20条记录:")
+print(
+    df.sort_values("price", ascending=False)
+      .head(20)
+      .to_string(index=False)
+)
+
+
+
+# --------------------------------------------------
+# 2. 面积异常
+# --------------------------------------------------
+
+print("\n======================")
+print("2. 面积异常检查")
+print("======================")
+
+
+print("\ntfarea <= 0 的数量:")
+print((df["tfarea"] <= 0).sum())
+
+
+print("\ntfarea < 10 的数量:")
+print((df["tfarea"] < 10).sum())
+
+
+print("\ntfarea > 1000 的数量:")
+print((df["tfarea"] > 1000).sum())
+
+
+print("\n面积最大的20条记录:")
+print(
+    df.sort_values("tfarea", ascending=False)
+      .head(20)
+      .to_string(index=False)
+)
+
+
+
+# --------------------------------------------------
+# 3. 房间数量异常
+# --------------------------------------------------
+
+print("\n======================")
+print("3. 房间数量异常检查")
+print("======================")
+
+
+print("\nnumberrooms == 0 的数量:")
+print((df["numberrooms"] == 0).sum())
+
+
+print("\nnumberrooms > 20 的数量:")
+print((df["numberrooms"] > 20).sum())
+
+
+print("\n房间数最大的20条记录:")
+print(
+    df.sort_values("numberrooms", ascending=False)
+      .head(20)
+      .to_string(index=False)
+)
+
+
+print("\n======================")
+print("异常值检查完成")
+print("======================")</script>
+<script type="text/plain" id="src-today-year-coverage" data-filename="year_coverage_analysis(3).py">from pathlib import Path
+import pandas as pd
+
+
+# ==================================================
+# 1. 文件路径
+# ==================================================
+
+project_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project"
+)
+
+file_path = project_folder / "london_house_price_clean.csv"
+
+
+print("======================")
+print("读取 clean 数据")
+print("======================")
+
+columns_needed = [
+    "year",
+    "price",
+    "tfarea",
+    "numberrooms",
+    "CONSTRUCTION_AGE_BAND",
+    "low_price_flag",
+    "suspicious_price_per_sqm",
+    "transactionid",
+    "lmk_key"
+]
+
+df = pd.read_csv(
+    file_path,
+    usecols=columns_needed
+)
+
+print("总行数:", len(df))
+print(
+    "年份范围:",
+    df["year"].min(),
+    "-",
+    df["year"].max()
+)
+
+
+# ==================================================
+# 2. 每年交易数量
+# ==================================================
+
+print("\n======================")
+print("1. 每年记录数量")
+print("======================")
+
+year_counts = (
+    df.groupby("year")
+    .size()
+    .rename("records")
+)
+
+print(
+    year_counts.to_string()
+)
+
+
+# ==================================================
+# 3. 每年占全部数据的比例
+# ==================================================
+
+year_percentage = (
+    year_counts
+    / len(df)
+    * 100
+)
+
+print("\n======================")
+print("2. 每年数据占比")
+print("======================")
+
+for year, pct in year_percentage.items():
+    print(
+        f"{year}: "
+        f"{pct:.2f}%"
+    )
+
+
+# ==================================================
+# 4. 每年低价异常率
+# ==================================================
+
+print("\n======================")
+print("3. 每年低价记录")
+print("======================")
+
+low_price_by_year = (
+    df.groupby("year")["low_price_flag"]
+    .agg(["sum", "mean"])
+)
+
+low_price_by_year["percentage"] = (
+    low_price_by_year["mean"] * 100
+)
+
+print(
+    low_price_by_year[
+        ["sum", "percentage"]
+    ].to_string()
+)
+
+
+# ==================================================
+# 5. 每年可疑单位面积价格率
+# ==================================================
+
+print("\n======================")
+print("4. 每年可疑单位面积价格")
+print("======================")
+
+suspicious_by_year = (
+    df.groupby("year")[
+        "suspicious_price_per_sqm"
+    ]
+    .agg(["sum", "mean"])
+)
+
+suspicious_by_year["percentage"] = (
+    suspicious_by_year["mean"] * 100
+)
+
+print(
+    suspicious_by_year[
+        ["sum", "percentage"]
+    ].to_string()
+)
+
+
+# ==================================================
+# 6. numberrooms 每年缺失率
+# ==================================================
+
+print("\n======================")
+print("5. numberrooms 每年缺失率")
+print("======================")
+
+rooms_missing = (
+    df["numberrooms"]
+    .isna()
+    .groupby(df["year"])
+    .mean()
+    * 100
+)
+
+print(
+    rooms_missing.to_string()
+)
+
+
+# ==================================================
+# 7. 建筑年代每年缺失率
+# ==================================================
+
+print("\n======================")
+print("6. 建筑年代每年缺失率")
+print("======================")
+
+age_missing = (
+    df["CONSTRUCTION_AGE_BAND"]
+    .isna()
+    .groupby(df["year"])
+    .mean()
+    * 100
+)
+
+print(
+    age_missing.to_string()
+)
+
+
+# ==================================================
+# 8. 每年的价格中位数
+# 这里只用于观察历史走势
+# ==================================================
+
+print("\n======================")
+print("7. 每年房价中位数")
+print("======================")
+
+median_price = (
+    df.groupby("year")["price"]
+    .median()
+)
+
+print(
+    median_price.to_string()
+)
+
+
+# ==================================================
+# 9. 每年唯一 lmk_key 数量
+# ==================================================
+
+print("\n======================")
+print("8. 每年唯一 lmk_key")
+print("======================")
+
+unique_lmk_year = (
+    df.groupby("year")["lmk_key"]
+    .nunique()
+)
+
+print(
+    unique_lmk_year.to_string()
+)
+
+
+# ==================================================
+# 10. 汇总成一个表
+# ==================================================
+
+summary = pd.DataFrame({
+    "records": year_counts,
+    "data_percentage": year_percentage,
+    "low_price_count": low_price_by_year["sum"],
+    "low_price_percentage": low_price_by_year["percentage"],
+    "suspicious_ppsqm_count": suspicious_by_year["sum"],
+    "suspicious_ppsqm_percentage": suspicious_by_year["percentage"],
+    "rooms_missing_percentage": rooms_missing,
+    "age_missing_percentage": age_missing,
+    "median_price": median_price,
+    "unique_lmk_key": unique_lmk_year
+})
+
+
+print("\n======================")
+print("9. 年份质量汇总")
+print("======================")
+
+print(
+    summary.round(2).to_string()
+)
+
+
+# ==================================================
+# 11. 保存结果
+# ==================================================
+
+output_file = (
+    project_folder
+    / "year_coverage_summary.csv"
+)
+
+summary.to_csv(
+    output_file
+)
+
+print("\n======================")
+print("年份覆盖分析完成")
+print("======================")
+
+print(
+    "结果已保存到:"
+)
+
+print(
+    output_file
+)</script>
+<script type="text/plain" id="src-today-lmk-repeat" data-filename="lmk_repeat_analysis(3).py">from pathlib import Path
+import pandas as pd
+
+
+project_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project"
+)
+
+file_path = (
+    project_folder /
+    "london_house_price_clean.csv"
+)
+
+
+print("======================")
+print("读取 clean 数据")
+print("======================")
+
+columns_needed = [
+    "year",
+    "dateoftransfer",
+    "price",
+    "postcode",
+    "propertytype",
+    "transactionid",
+    "lmk_key",
+    "tfarea",
+    "numberrooms",
+    "borough"
+]
+
+df = pd.read_csv(
+    file_path,
+    usecols=columns_needed
+)
+
+print("总行数:", len(df))
+
+
+# ==================================================
+# 1. 每个 lmk_key 出现多少次
+# ==================================================
+
+print("\n======================")
+print("1. lmk_key 出现次数")
+print("======================")
+
+lmk_counts = (
+    df["lmk_key"]
+    .value_counts()
+)
+
+print("唯一 lmk_key 数量:")
+print(len(lmk_counts))
+
+print("\n只出现1次的 lmk_key:")
+print(
+    (lmk_counts == 1).sum()
+)
+
+print("\n出现2次的 lmk_key:")
+print(
+    (lmk_counts == 2).sum()
+)
+
+print("\n出现3次的 lmk_key:")
+print(
+    (lmk_counts == 3).sum()
+)
+
+print("\n出现4次及以上的 lmk_key:")
+print(
+    (lmk_counts >= 4).sum()
+)
+
+print("\n单个 lmk_key 最多出现:")
+print(
+    lmk_counts.max()
+)
+
+
+# ==================================================
+# 2. 出现次数最多的房产
+# ==================================================
+
+print("\n======================")
+print("2. 重复次数最多的 lmk_key")
+print("======================")
+
+print(
+    lmk_counts
+    .head(20)
+    .to_string()
+)
+
+
+# ==================================================
+# 3. 同一 lmk_key 跨多少年
+# ==================================================
+
+print("\n======================")
+print("3. lmk_key 时间跨度")
+print("======================")
+
+year_stats = (
+    df.groupby("lmk_key")["year"]
+    .agg(["min", "max", "nunique"])
+)
+
+year_stats["year_span"] = (
+    year_stats["max"]
+    -
+    year_stats["min"]
+)
+
+print("\n时间跨度统计:")
+print(
+    year_stats["year_span"]
+    .describe()
+)
+
+print("\n跨10年以上的 lmk_key 数量:")
+print(
+    (year_stats["year_span"] >= 10).sum()
+)
+
+print("\n跨20年以上的 lmk_key 数量:")
+print(
+    (year_stats["year_span"] >= 20).sum()
+)
+
+
+# ==================================================
+# 4. 查看重复销售案例
+# ==================================================
+
+print("\n======================")
+print("4. 重复销售案例")
+print("======================")
+
+repeat_keys = (
+    lmk_counts[
+        lmk_counts >= 3
+    ]
+    .head(10)
+    .index
+)
+
+sample = (
+    df[
+        df["lmk_key"].isin(repeat_keys)
+    ]
+    .sort_values(
+        ["lmk_key", "dateoftransfer"]
+    )
+)
+
+print(
+    sample.to_string(index=False)
+)
+
+
+# ==================================================
+# 5. 检查同一个 lmk_key 是否跨年份
+# ==================================================
+
+print("\n======================")
+print("5. 多年份交易情况")
+print("======================")
+
+years_per_lmk = (
+    df.groupby("lmk_key")["year"]
+    .nunique()
+)
+
+print("只在一个年份出现:")
+print(
+    (years_per_lmk == 1).sum()
+)
+
+print("\n跨多个年份出现:")
+print(
+    (years_per_lmk > 1).sum()
+)
+
+
+# ==================================================
+# 6. 为以后 train/test split 做准备
+# ==================================================
+
+print("\n======================")
+print("6. 2019年前后重叠检查")
+print("======================")
+
+train_keys = set(
+    df.loc[
+        df["year"] <= 2019,
+        "lmk_key"
+    ]
+)
+
+future_keys = set(
+    df.loc[
+        df["year"] >= 2020,
+        "lmk_key"
+    ]
+)
+
+overlap_keys = (
+    train_keys
+    &
+    future_keys
+)
+
+print(
+    "2019及以前 与 2020及以后 "
+    "共同出现的 lmk_key 数量:"
+)
+
+print(
+    len(overlap_keys)
+)
+
+
+print("\n======================")
+print("lmk_key 分析完成")
+print("======================")</script>
+<script type="text/plain" id="src-today-prepare-model" data-filename="prepare_model_data(3).py">from pathlib import Path
+import pandas as pd
+
+
+project_folder = Path(
+    r"C:\Users\33996\Desktop\project\London Housing Price Intelligence Project"
+)
+
+input_file = (
+    project_folder /
+    "london_house_price_clean.csv"
+)
+
+output_file = (
+    project_folder /
+    "london_house_price_model.csv"
+)
+
+
+print("======================")
+print("读取 clean 数据")
+print("======================")
+
+df = pd.read_csv(input_file)
+
+print("原始 clean 行数:")
+print(len(df))
+
+
+# ==================================================
+# 1. 选择正式研究年份
+# ==================================================
+
+model_df = df[
+    (df["year"] >= 2010)
+    &
+    (df["year"] <= 2023)
+].copy()
+
+
+print("\n======================")
+print("年份筛选完成")
+print("======================")
+
+print("建模数据行数:")
+print(len(model_df))
+
+print(
+    "年份范围:",
+    model_df["year"].min(),
+    "-",
+    model_df["year"].max()
+)
+
+
+# ==================================================
+# 2. 不删除审计字段
+# ==================================================
+
+print("\n审计字段:")
+
+print(
+    "transactionid 存在:",
+    "transactionid" in model_df.columns
+)
+
+print(
+    "lmk_key 存在:",
+    "lmk_key" in model_df.columns
+)
+
+
+# ==================================================
+# 3. 标记字段继续保留
+# 但以后禁止进入模型
+# ==================================================
+
+print("\n质量标记:")
+
+print(
+    "low_price_flag:",
+    model_df["low_price_flag"].sum()
+)
+
+print(
+    "suspicious_price_per_sqm:",
+    model_df[
+        "suspicious_price_per_sqm"
+    ].sum()
+)
+
+
+# ==================================================
+# 4. 各年份数量
+# ==================================================
+
+print("\n======================")
+print("每年记录数量")
+print("======================")
+
+print(
+    model_df["year"]
+    .value_counts()
+    .sort_index()
+    .to_string()
+)
+
+
+# ==================================================
+# 5. 保存
+# ==================================================
+
+model_df.to_csv(
+    output_file,
+    index=False
+)
+
+print("\n======================")
+print("建模数据已保存")
+print("======================")
+
+print(output_file)</script>
 <script>
 window.progressStat=document.getElementById("progressStat");
 const projectNav=document.createElement("button");projectNav.dataset.p="projects";projectNav.textContent="▦　项目中心";document.querySelector(".nav").prepend(projectNav);document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));projectsPage.classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));projectNav.classList.add("active");document.querySelectorAll(".nav button:not([data-p='projects'])").forEach(x=>{x.style.paddingLeft="25px";x.style.fontSize="13px"});document.querySelector("[data-p='home']").textContent="└　项目概览";document.querySelector("[data-p='stages']").textContent="└　分类与记录";document.querySelector("[data-p='logs']").textContent="└　详细日志";document.querySelector("[data-p='code']").textContent="└　代码与文件";document.querySelector("[data-p='experiments']").textContent="└　实验工具";document.querySelector("[data-p='issues']").textContent="└　问题工具";document.querySelector("[data-p='summary']").textContent="└　项目总结";stagesPage.querySelector("h1").textContent="分类与记录";stagesPage.querySelector("p").textContent="自己建立简单分类，然后连续添加标题和细节。";stagesPage.querySelector(".btn.primary").textContent="＋ 新建分类";
@@ -234,10 +2239,43 @@ return{category:"数据科学与机器学习",projectStatus:"进行中",goal:"�
 {id:id(),name:"泄漏防护与建模准备",desc:"在训练模型前消除会让评价结果虚高的风险。",tasks:[{id:id(),title:"发现 priceper 目标泄漏风险",note:"priceper 由 price ÷ tfarea 计算；预测 price 时不能作为输入特征。",done:true},{id:id(),title:"编写数据泄漏检查脚本",note:"data_leakage_check.py 已完成。",done:true},{id:id(),title:"运行并保存全量泄漏检查结果",note:"检查数学派生字段、ID、重复记录和时间泄漏。",done:false},{id:id(),title:"确定最终特征和时间切分方案",note:"先按时间划分训练集与测试集，再拟合清洗和编码步骤，防止验证信息泄漏。",done:false}]},
 {id:id(),name:"分析与建模",desc:"完成数据检查后开始。",tasks:[{id:id(),title:"清洗缺失值、重复值和异常值",note:"尚未开始。",done:false},{id:id(),title:"完成探索性数据分析",note:"观察房价分布、行政区差异、时间趋势和变量关系。",done:false},{id:id(),title:"建立基线模型并评价",note:"先建立简单基线，再比较模型；保留独立测试集。",done:false}]}
 ],logs,experiments:[],issues:[{id:id(),date:"2026-09-19",title:"priceper 会造成目标泄漏",status:"处理中",error:"priceper 基本等于 price ÷ tfarea；如果用它预测 price，模型会间接看到目标答案，评价指标会虚高。",tried:"通过字段扫描和数学关系检查确认风险。",solution:"建模时从输入特征中删除 priceper；继续检查其他派生字段、ID、重复记录和时间泄漏。"},{id:id(),date:"2026-09-19",title:"大文件直接处理可能占用过多内存",status:"处理中",error:"原始数据约 1.24 GB，共 318 个 CSV。",tried:"先运行 prepare_london_data.py，只复制伦敦 33 个行政区文件。",solution:"分阶段处理；合并时关注内存占用，必要时改为分块读取并追加写入。"}],summary:{result:"已完成原始数据下载与解压、伦敦 33 个行政区筛选、样本结构检查，并编写 5 个数据准备与验证脚本。",learned:"使用 pathlib 管理路径、glob 匹配文件、shutil 复制文件、pandas 读取与合并数据；理解目标泄漏会让模型评价失真。",improve:"下一步先运行合并脚本，再执行全量质量与泄漏检查。任何清洗、编码和特征选择都必须只在训练数据上拟合。",links:"https://github.com/hdzt-dc/projectlog"}}}
+function todayCodeLog(sourceId,filename,title,note,next,status="已完成"){let code=document.getElementById("src-"+sourceId).textContent.trim();return{id:id(),title,date:"2026-09-20",status,stageId:"",tags:["Python","pandas","数据清洗"],note,problem:"",next,code,attachments:[{name:filename,size:new Blob([code]).size,type:"text/x-python",data:"data:text/x-python;charset=utf-8,"+encodeURIComponent(code)}],todayUpdate:true}}
+function applyTodayUpdate(p){
+let completed={"运行合并脚本并验证输出":"已成功合并：2,806,764 行、33 个行政区、年份覆盖 1995–2024。","运行全量数据质量检查":"已检查：numberrooms 缺失 214,597，建筑年代缺失 30,067，完全重复行 4 条。"};p.stages.forEach(s=>s.tasks.forEach(t=>{if(completed[t.title]){t.done=true;t.note=completed[t.title]}}));
+p.stages=p.stages.filter(s=>!s.todayUpdate);p.stages.push(
+{id:id(),name:"2026-09-20：异常诊断与清洗",desc:"今天完成的分析、代码和仍需验证的步骤。",todayUpdate:true,tasks:[
+{id:id(),title:"运行异常值诊断",note:"已确认：price ≤ £10,000 共 879 条，其中 836 条集中在 1995–1999；tfarea > 1000㎡ 共 244 条；numberrooms > 20 共 214 条。",done:true},
+{id:id(),title:"定位内部矛盾样本",note:"发现 53,041㎡/3 rooms、10,815.25㎡/8 rooms，以及 99/97 rooms 等明显矛盾，需要用面积/房间一致性规则处理。",done:true},
+{id:id(),title:"编写内部一致性检查",note:"检查 area_per_room、诊断用 price_per_sqm，以及同一 lmk_key 的 postcode、房型、面积和房间数是否一致。",done:true},
+{id:id(),title:"编写清洗脚本并生成审计规则",note:"删除 priceper 与 classt 字段；删除 tfarea 缺失或 <10 的行；numberrooms=0 改为缺失；删除 area_per_room <3 或 >100 的行；低价和可疑每平方米价格只标记。",done:true},
+{id:id(),title:"运行清洗脚本并保存 clean 数据",note:"脚本已写好，但目前没有可核实的终端输出；运行后需确认最终行数、删除比例和 cleaning_report.txt。",done:false},
+{id:id(),title:"运行清洗后验证",note:"核对泄漏字段、面积阈值、缺失值、33 个行政区、年份范围、质量标记和业务重复。",done:false},
+{id:id(),title:"完成年份覆盖与 LMK 重复分析",note:"脚本已完成；需要保存实际输出，决定正式建模年份和分组切分策略。",done:false},
+{id:id(),title:"生成 2010–2023 建模数据",note:"prepare_model_data 脚本已完成；待清洗验证通过后运行并确认输出。",done:false}]},
+{id:id(),name:"问题与注意事项",desc:"项目过程中发现的坑、疑问和必须遵守的规则。",todayUpdate:true,tasks:[
+{id:id(),title:"低价记录不能直接当错误删除",note:"879 条低价交易中有 836 条集中在 1995–1999，可能与历史交易、特殊产权或数据口径有关。当前做法是 low_price_flag 标记，暂不删除。",done:true},
+{id:id(),title:"异常值必须结合字段关系判断",note:"仅看 tfarea 或 numberrooms 的单列阈值会误删真实的大型住宅；使用 area_per_room <3 或 >100 识别明显内部矛盾，并保留审计报告。",done:true},
+{id:id(),title:"classt 不能作为删行依据",note:"异常同时出现在 classt=11 和 classt=12。可以不把 classt 用作模型特征，但不能按 classt 机械删除记录。",done:true},
+{id:id(),title:"priceper 和诊断派生列禁止进入模型",note:"priceper=price÷tfarea，直接包含目标 price；price_per_sqm_check、suspicious_price_per_sqm、low_price_flag 也只用于质量审计，不能作为预测输入。",done:true},
+{id:id(),title:"transactionid 与 lmk_key 只用于审计和分组",note:"ID 可能让模型记住样本，不能作为特征。同一 transactionid 可能关联多个 EPC，需要先检查成交核心信息是否一致。",done:true},
+{id:id(),title:"lmk_key 重复不等于重复数据",note:"同一房产可以跨年份多次出售。应区分真实重复销售与同一交易重复匹配，并在训练/测试切分时防止同一 lmk_key 跨集合造成泄漏。",done:true},
+{id:id(),title:"numberrooms 为 float64 不代表房间数有小数",note:"该列含 NaN，pandas 传统数值类型会把整数列提升为 float64；清洗时应保留缺失信息，不能直接把 NaN 强制变成 0。",done:true},
+{id:id(),title:"先按时间/房产分组切分，再拟合预处理",note:"编码、缺失值填充、标准化和异常处理只能在训练集上拟合；测试集只应用已学规则，防止验证信息泄漏。",done:true}]});
+p.logs=p.logs.filter(x=>!x.todayUpdate);p.logs.push(
+todayCodeLog("today-outlier-analysis","outlier_analysis(5).py","完成异常值初步统计","统计低价、异常面积和异常房间数，并查看极端样本。","结合年份、行政区、房型和字段关系继续诊断。"),
+todayCodeLog("today-outlier-diagnosis","outlier_diagnosis(4).py","完成异常值深入诊断","实际运行并保存三类诊断记录：低价 879 条、大面积 244 条、大房间数 214 条。","使用内部一致性检查确定清洗规则。"),
+todayCodeLog("today-internal-consistency","internal_consistency_check(4).py","编写内部一致性检查","检查面积/房间比、诊断用每平方米价格和同一 lmk_key 的关键字段一致性。","运行并保存完整结果。","进行中"),
+todayCodeLog("today-transaction-duplicate","transaction_duplicate_check(4).py","编写交易重复诊断","区分 transactionid 重复、多 EPC 匹配、成交信息冲突和 EPC 属性差异。","运行后决定业务去重规则。","进行中"),
+todayCodeLog("today-clean","clean_london_data(4).py","编写正式数据清洗脚本","落实泄漏字段删除、面积与房间一致性规则、审计标记和清洗报告输出。","运行并核对 cleaning_report.txt。","进行中"),
+todayCodeLog("today-validate-clean","validate_clean_data(4).py","编写清洗后验证脚本","验证泄漏字段、面积阈值、缺失值、年份、行政区、标记与潜在业务重复。","清洗完成后运行。","进行中"),
+todayCodeLog("today-year-coverage","year_coverage_analysis(3).py","编写年份覆盖分析","按年份统计记录占比、低价率、可疑单位面积价格率、缺失率、中位价和唯一 lmk_key。","运行并保存 year_coverage_summary.csv。","进行中"),
+todayCodeLog("today-lmk-repeat","lmk_repeat_analysis(3).py","编写 LMK 重复与跨期分析","分析房产重复出现次数、时间跨度、重复销售，以及 2019 前后 lmk_key 重叠。","运行后确定分组切分策略。","进行中"),
+todayCodeLog("today-prepare-model","prepare_model_data(3).py","编写建模数据准备脚本","筛选 2010–2023 年，保留审计字段与质量标记，但禁止其进入模型。","待验证通过后生成 london_house_price_model.csv。","进行中"));
+p.experiments=[];p.issues=[];p.summary={result:"已合并 2,806,764 行伦敦房价数据，完成异常值诊断，并编写清洗、重复检查、验证、年份覆盖、LMK 分析和建模数据准备脚本。",learned:"异常值不能只按单列阈值删除；需要结合年份、房型、面积/房间关系、交易 ID 与房产 ID 判断。审计字段和质量标记必须与模型特征分开。",improve:"下一步运行正式清洗并核对 cleaning_report，再运行清洗验证、年份覆盖、交易重复和 LMK 跨期分析；确认无泄漏后生成 2010–2023 建模数据。",links:"https://github.com/hdzt-dc/projectlog"};}
 function sample(){return{id:id(),name:"London Housing Market Analysis & Machine Learning",...currentProgress()}}
 function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x?.projects?.length)S=x}catch(e){}if(!S.projects.length){let p=sample();S={projects:[p],active:p.id};save()}if(!S.projects.some(p=>p.id===S.active))S.active=S.projects[0].id}function save(){localStorage.setItem(KEY,JSON.stringify(S))}function P(){return S.projects.find(x=>x.id===S.active)}function empty(t){return '<div class="card empty">'+t+"</div>"}function badge(s){let c=s==="已完成"||s==="已解决"?"done":s==="受阻"||s==="未解决"?"bad":"";return '<span class="badge '+c+'">'+E(s)+"</span>"}
 document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===b.dataset.p+"Page"));document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x===b));render()});projectSelect.onchange=()=>{S.active=projectSelect.value;save();render()};search.oninput=statusFilter.onchange=()=>renderLogs();issueFilter.onchange=()=>renderIssues();
-function render(){let p=P(),ts=p.stages.flatMap(s=>s.tasks),dn=ts.filter(t=>t.done).length,pc=ts.length?Math.round(dn/ts.length*100):0;sideName.textContent=p.name;goal.textContent=p.goal||"未填写项目目标";projectSelect.innerHTML=S.projects.map(x=>'<option value="'+x.id+'" '+(x.id===p.id?"selected":"")+">"+E(x.name)+"</option>").join("");progressStat.textContent=pc+"%";taskStat.textContent=dn+"/"+ts.length;logStat.textContent=p.logs.length;workStat.textContent=p.experiments.length+p.issues.length;roadmap.innerHTML=p.stages.map(s=>{let d=s.tasks.filter(t=>t.done).length,q=s.tasks.length?Math.round(d/s.tasks.length*100):0;return '<div style="margin:12px 0"><div class="row"><b>'+E(s.name)+'</b><span class="meta">'+d+"/"+s.tasks.length+'</span></div><div class="progress"><i style="width:'+q+'%"></i></div></div>'}).join("")||empty("暂无阶段");let acts=[...p.logs.map(x=>({...x,type:"日志"})),...p.experiments.map(x=>({...x,type:"实验"})),...p.issues.map(x=>({...x,type:"问题"}))].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);recent.innerHTML=acts.map(x=>'<div class="item"><b>'+E(x.title)+'</b><div class="meta">'+x.date+" · "+x.type+"</div></div>").join("")||empty("添加第一条记录后，这里会出现项目动态。");let nt=[];p.stages.forEach(s=>s.tasks.filter(t=>!t.done).forEach(t=>nt.push({...t,stage:s.name})));next.innerHTML=nt.slice(0,5).map(t=>'<div class="item"><b>'+E(t.title)+'</b><div class="meta">'+E(t.stage)+"</div></div>").join("")||empty("暂无待办任务");renderStages();renderLogs();renderCode();renderExperiments();renderIssues();renderSummary()}
+function render(){let p=P(),ts=p.stages.flatMap(s=>s.tasks),dn=ts.filter(t=>t.done).length,pc=ts.length?Math.round(dn/ts.length*100):0;sideName.textContent=p.name;goal.textContent=p.goal||"未填写项目目标";projectSelect.innerHTML=S.projects.map(x=>'<option value="'+x.id+'" '+(x.id===p.id?"selected":"")+">"+E(x.name)+"</option>").join("");progressStat.textContent=pc+"%";taskStat.textContent=dn+"/"+ts.length;logStat.textContent=p.logs.length;roadmap.innerHTML=p.stages.map(s=>{let d=s.tasks.filter(t=>t.done).length,q=s.tasks.length?Math.round(d/s.tasks.length*100):0;return '<div style="margin:12px 0"><div class="row"><b>'+E(s.name)+'</b><span class="meta">'+d+"/"+s.tasks.length+'</span></div><div class="progress"><i style="width:'+q+'%"></i></div></div>'}).join("")||empty("暂无阶段");let acts=p.logs.map(x=>({...x,type:"日志"})).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);recent.innerHTML=acts.map(x=>'<div class="item"><b>'+E(x.title)+'</b><div class="meta">'+x.date+" · "+x.type+"</div></div>").join("")||empty("添加第一条记录后，这里会出现项目动态。");let nt=[];p.stages.forEach(s=>s.tasks.filter(t=>!t.done).forEach(t=>nt.push({...t,stage:s.name})));next.innerHTML=nt.slice(0,5).map(t=>'<div class="item"><b>'+E(t.title)+'</b><div class="meta">'+E(t.stage)+"</div></div>").join("")||empty("暂无待办任务");renderStages();renderLogs();renderCode();renderSummary()}
 function modal(title,body,fn){modalRoot.innerHTML='<div class="modal-wrap" id="wrap"><div class="modal"><h2>'+title+'</h2><div class="form">'+body+'</div><div class="modal-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" id="saveBtn">保存</button></div></div></div>';saveBtn.onclick=fn;wrap.onclick=e=>{if(e.target===wrap)closeModal()};requestAnimationFrame(applyLanguage)}function closeModal(){modalRoot.innerHTML=""}function v(x){return document.getElementById(x).value.trim()}
 function showPage(n){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===n+"Page"));document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.p===n));render()}
 function openProject(pid){S.active=pid;save();showPage("home")}
@@ -257,7 +2295,7 @@ function exportData(){let b=new Blob([JSON.stringify({...S,exportedAt:new Date()
 const I18N={
 "当前项目":"Current project","数据保存在当前浏览器":"Data is stored in this browser","请定期导出完整备份":"Export a full backup regularly",
 "▦　项目中心":"▦  Project center","└　项目概览":"└  Project overview","└　分类与记录":"└  Categories & notes","└　详细日志":"└  Detailed logs","└　代码与文件":"└  Code & files","└　实验工具":"└  Experiments","└　问题工具":"└  Issues","└　项目总结":"└  Project summary",
-"我的工程项目":"My engineering projects","每个项目拥有独立的阶段、任务、日志、代码、实验和问题记录。":"Each project keeps its own categories, notes, code, experiments and issues.","＋ 新建项目":"＋ New project",
+"我的工程项目":"My engineering projects","每个项目拥有独立的分类、记录、日志、代码和总结。":"Each project keeps its own categories, notes, logs, code and summary.","＋ 新建项目":"＋ New project",
 "工程学习工作台":"Engineering learning workspace","＋ 项目":"＋ Project","＋ 记录进度":"＋ Log progress","已完成内容":"Completed items","学习日志":"Learning logs","实验 / 问题":"Experiments / issues","内容分类":"Content categories","最近动态":"Recent activity","未完成内容":"Open items","数据管理":"Data management","备份包含所有项目、代码、注释和小型附件。":"Backups include all projects, code, notes and small attachments.","导出 JSON":"Export JSON","导入备份":"Import backup",
 "分类与记录":"Categories & notes","自己建立简单分类，然后连续添加标题和细节。":"Create simple categories, then add titles and details.","＋ 新建分类":"＋ New category",
 "详细日志":"Detailed logs","记录做了什么、为什么这样做以及下一步。":"Record what you did, why, and what comes next.","＋ 新增日志":"＋ New log","全部状态":"All statuses","进行中":"In progress","已完成":"Completed","受阻":"Blocked",
@@ -273,11 +2311,15 @@ const I18N={
 "编辑项目":"Edit project","新建工程项目":"New engineering project","项目名称 *":"Project name *","项目类别":"Project category","项目状态":"Project status","项目目标":"Project goal","取消":"Cancel","保存":"Save","计划中":"Planned","暂停":"Paused",
 "编辑分类":"Edit category","分类名称 *":"Category name *","分类说明（可选）":"Category description (optional)","＋ 添加标题":"＋ Add item","编辑内容":"Edit item","添加内容":"Add item","标题 *":"Title *","细节":"Details","标记完成":"Mark completed",
 "编辑学习日志":"Edit learning log","新增学习日志":"New learning log","这次做了什么？*":"What did you do? *","日期":"Date","状态":"Status","关联阶段":"Related category","不关联阶段":"No related category","标签（逗号分隔）":"Tags (comma-separated)","学习 / 工程笔记":"Learning / engineering notes","遇到的问题":"Problems encountered","下一步计划":"Next step","关键代码（请写注释）":"Key code (include comments)","附件（单个 ≤ 3 MB）":"Attachments (≤ 3 MB each)","下一步：":"Next: ","问题：":"Issue: ","现象：":"Symptom: ","尝试：":"Tried: ","解决：":"Solution: ",
-"添加第一条记录后，这里会出现项目动态。":"Project activity will appear here after your first log.","暂无待办任务":"No open items","暂无阶段":"No categories","还没有分类。点击“新建分类”，再在分类中连续添加标题和细节。":"No categories yet. Create one, then add titles and details.","还没有符合条件的学习日志。":"No matching learning logs.","在学习日志中添加代码或附件后，会显示在这里。":"Code and attachments added to logs will appear here.","记录第一次模型或算法实验。":"Record your first model or algorithm experiment.","遇到报错或思路受阻时记录下来。":"Record errors and blockers here."
+"2026-09-20：异常诊断与清洗":"2026-09-20: Outlier diagnosis & cleaning","今天完成的分析、代码和仍需验证的步骤。":"Today's analysis, code and remaining validation steps.","问题与注意事项":"Issues & cautions","项目过程中发现的坑、疑问和必须遵守的规则。":"Pitfalls, questions and rules discovered during the project.",
+"运行异常值诊断":"Run outlier diagnostics","定位内部矛盾样本":"Identify internally inconsistent samples","编写内部一致性检查":"Write internal-consistency checks","编写清洗脚本并生成审计规则":"Write the cleaning script and audit rules","运行清洗脚本并保存 clean 数据":"Run cleaning and save clean data","运行清洗后验证":"Run post-cleaning validation","完成年份覆盖与 LMK 重复分析":"Complete year coverage and LMK repeat analysis","生成 2010–2023 建模数据":"Generate 2010–2023 modeling data",
+"低价记录不能直接当错误删除":"Do not automatically delete low-price records","异常值必须结合字段关系判断":"Judge outliers using relationships between fields","classt 不能作为删行依据":"Do not use classt as a row-deletion rule","priceper 和诊断派生列禁止进入模型":"Exclude priceper and diagnostic derived columns from the model","transactionid 与 lmk_key 只用于审计和分组":"Use transactionid and lmk_key only for auditing and grouping","lmk_key 重复不等于重复数据":"Repeated lmk_key does not automatically mean duplicate data","numberrooms 为 float64 不代表房间数有小数":"float64 numberrooms does not mean fractional rooms","先按时间/房产分组切分，再拟合预处理":"Split by time/property before fitting preprocessing",
+"完成异常值初步统计":"Complete initial outlier statistics","完成异常值深入诊断":"Complete detailed outlier diagnosis","编写交易重复诊断":"Write transaction-duplicate diagnostics","编写正式数据清洗脚本":"Write the formal data-cleaning script","编写清洗后验证脚本":"Write the post-cleaning validation script","编写年份覆盖分析":"Write year-coverage analysis","编写 LMK 重复与跨期分析":"Write LMK repeat and cross-period analysis","编写建模数据准备脚本":"Write the model-data preparation script",
+"添加第一条记录后，这里会出现项目动态。":"Project activity will appear here after your first log.","暂无待办任务":"No open items","暂无阶段":"No categories","还没有分类。点击“新建分类”，再在分类中连续添加标题和细节。":"No categories yet. Create one, then add titles and details.","还没有符合条件的学习日志。":"No matching learning logs.","在学习日志中添加代码或附件后，会显示在这里。":"Code and attachments added to logs will appear here."
 };
 const I18N_REV=Object.fromEntries(Object.entries(I18N).map(([a,b])=>[b,a]));let LANG=localStorage.getItem("ProjectLogLang")||"zh";
 function translateValue(value,map){let trimmed=value.trim(),translated=map[trimmed];if(!translated)return value;return value.replace(trimmed,translated)}
 function applyLanguage(){let map=LANG==="en"?I18N:I18N_REV;document.documentElement.lang=LANG==="en"?"en":"zh-CN";document.title=LANG==="en"?"ProjectLog · Engineering Learning Workspace":"ProjectLog · 工程学习工作台";langToggle.textContent=LANG==="en"?"中文":"English";langToggle.setAttribute("aria-label",LANG==="en"?"切换到中文":"Switch to English");let walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){return n.parentElement?.closest("pre,code,script,style")?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}});let nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(n=>n.nodeValue=translateValue(n.nodeValue,map));document.querySelectorAll("[placeholder],[title]").forEach(el=>["placeholder","title"].forEach(a=>{if(el.hasAttribute(a))el.setAttribute(a,translateValue(el.getAttribute(a),map))}));document.querySelectorAll(".meta").forEach(el=>{if(LANG==="en")el.textContent=el.textContent.replace(/条内容/g,"items").replace(/条已完成/g,"completed").replace(/条日志/g,"logs").replace(/总行数/g,"total rows");else el.textContent=el.textContent.replace(/items/g,"条内容").replace(/completed/g,"条已完成").replace(/logs/g,"条日志").replace(/total rows/g,"总行数")})}
 langToggle.onclick=()=>{LANG=LANG==="zh"?"en":"zh";localStorage.setItem("ProjectLogLang",LANG);applyLanguage()};
-document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:none}@media(min-width:901px){#homePage>.grid{grid-template-columns:repeat(3,1fr)}}</style>");progressStat.parentElement.remove();const renderWorkspace=render;render=function(){renderProjects();renderWorkspace();requestAnimationFrame(applyLanguage)};load();if(!S.simpleCategoriesV1){S.projects.forEach(p=>{if(p.stages?.length===4&&p.stages.every(s=>!(s.tasks||[]).length)&&p.stages[0]?.name.includes("问题定义"))p.stages=[]});S.simpleCategoriesV1=true;save()}if(!S.progressWithCode20260919){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0],progress=currentProgress();Object.assign(p,progress);S.active=p.id;S.realProgress20260919=true;S.progressWithCode20260919=true;save()}roadmap.closest(".panel").querySelector("h2").textContent="内容分类";next.closest(".panel").querySelector("h2").textContent="未完成内容";taskStat.previousElementSibling.textContent="已完成内容";render();
+document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:none}@media(min-width:901px){#homePage>.grid{grid-template-columns:repeat(2,1fr)}}</style>");progressStat.parentElement.remove();workStat.parentElement.remove();document.querySelector("[data-p='experiments']").remove();document.querySelector("[data-p='issues']").remove();experimentsPage.remove();issuesPage.remove();const renderWorkspace=render;render=function(){renderProjects();renderWorkspace();requestAnimationFrame(applyLanguage)};load();if(!S.simpleCategoriesV1){S.projects.forEach(p=>{if(p.stages?.length===4&&p.stages.every(s=>!(s.tasks||[]).length)&&p.stages[0]?.name.includes("问题定义"))p.stages=[]});S.simpleCategoriesV1=true;save()}if(!S.progressWithCode20260919){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0],progress=currentProgress();Object.assign(p,progress);S.active=p.id;S.realProgress20260919=true;S.progressWithCode20260919=true;save()}if(!S.todayUpdate20260920){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0];applyTodayUpdate(p);S.active=p.id;S.todayUpdate20260920=true;save()}roadmap.closest(".panel").querySelector("h2").textContent="内容分类";next.closest(".panel").querySelector("h2").textContent="未完成内容";taskStat.previousElementSibling.textContent="已完成内容";render();
 </script></body></html>
