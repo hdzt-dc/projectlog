@@ -1,18 +1,8 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ProjectLog · 工程学习工作台</title>
 <style>
 :root{--nav:#111827;--bg:#f5f7fb;--card:#fff;--text:#182033;--muted:#667085;--line:#e5e7eb;--brand:#5652d9;--green:#18794e;--red:#b42318}*{box-sizing:border-box}body{margin:0;font:14px/1.55 Inter,"Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text)}button,input,textarea,select{font:inherit}.side{position:fixed;inset:0 auto 0 0;width:235px;background:var(--nav);color:#fff;padding:22px 15px}.brand{font-size:20px;font-weight:900;padding:0 10px 14px}.lang-toggle{width:100%;border:1px solid #465269;background:#202b3c;color:#fff;padding:8px 10px;border-radius:9px;margin:0 0 12px;cursor:pointer;font-weight:700}.lang-toggle:hover{background:#303d52}.now{background:#202b3c;padding:11px;border-radius:10px;margin-bottom:15px}.now small{color:#98a4b5}.now b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.nav button{width:100%;text-align:left;border:0;background:none;color:#bdc7d5;padding:10px 12px;border-radius:9px;margin:2px 0;cursor:pointer}.nav button.active,.nav button:hover{background:#293548;color:#fff}.hint{position:absolute;bottom:20px;left:24px;color:#8795a8;font-size:11px}.main{margin-left:235px;padding:26px 30px}.page{display:none}.page.active{display:block}.top,.item-head,.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.top{margin-bottom:20px}.top h1{margin:0;font-size:27px}.top p{margin:3px 0;color:var(--muted)}.actions,.toolbar{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#fff;padding:8px 11px;border-radius:8px;cursor:pointer}.btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}.btn.small{font-size:12px;padding:5px 8px}.btn.danger{color:var(--red)}select,input,textarea{border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#fff;color:var(--text)}.project-select{min-width:230px;font-weight:700}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.card,.item{background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:0 8px 25px #1720330c}.stat{padding:16px}.stat small,.meta,.muted{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:27px;margin-top:4px}.cols{display:grid;grid-template-columns:1.25fr .75fr;gap:15px}.panel{padding:18px;margin-top:15px}.panel h2{font-size:17px;margin:0 0 12px}.list{display:grid;gap:10px}.item{padding:14px}.item h3{margin:0;font-size:15px}.body{white-space:pre-wrap;color:#475467;margin-top:9px}.badge,.tag{display:inline-block;padding:3px 7px;border-radius:99px;background:#eeedff;color:#4338ca;font-size:11px;font-weight:700}.badge.done{background:#dcfce7;color:#166534}.badge.bad{background:#fee2e2;color:#991b1b}.progress{height:8px;background:#edf0f5;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:var(--brand)}.stage{border-left:4px solid var(--brand)}.task{display:flex;gap:9px;padding:9px 0;border-top:1px solid var(--line)}.task:first-of-type{margin-top:10px}.task div{flex:1}.task.done div{text-decoration:line-through;color:var(--muted)}.toolbar{margin-bottom:13px}.toolbar input{min-width:260px;flex:1}.code{background:#101827;color:#dce7f5;padding:13px;border-radius:9px;white-space:pre-wrap;overflow:auto;font:12.5px/1.6 Consolas,monospace}.notice{background:#fff6df;color:#724c0a;padding:9px 11px;border-radius:8px;margin-top:9px}.empty{text-align:center;padding:35px;color:var(--muted)}.modal-wrap{display:flex;position:fixed;inset:0;background:#10182799;align-items:center;justify-content:center;padding:20px;z-index:10}.modal{background:white;width:min(820px,100%);max-height:92vh;overflow:auto;border-radius:15px;padding:21px}.modal h2{margin:0 0 16px}.form{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:700}.field textarea{min-height:95px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}.summary textarea{width:100%;min-height:140px}.files{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.hidden{display:none}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.side{width:200px}.main{margin-left:200px;padding:20px}}@media(max-width:650px){.side{position:static;width:auto}.hint{display:none}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap}.main{margin:0;padding:14px}.top{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr}.field.full{grid-column:auto}}
-</style><style>.project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}.project-card{padding:18px;min-height:220px;display:flex;flex-direction:column;transition:.18s}.project-card:hover{transform:translateY(-2px);box-shadow:0 14px 34px #17203318}.project-card .category{align-self:flex-start;background:#eef2ff;color:#4338ca;border-radius:7px;padding:4px 8px;font-size:12px;font-weight:700}.project-card h2{font-size:18px;margin:13px 0 7px}.project-card .goal-text{color:#566176;flex:1}.project-card .card-foot{border-top:1px solid var(--line);padding-top:13px;margin-top:13px;display:flex;justify-content:space-between;align-items:center}.project-card.add{border:2px dashed #c8cbd7;box-shadow:none;align-items:center;justify-content:center;text-align:center;color:var(--muted);cursor:pointer}.project-card.add strong{font-size:40px;color:var(--brand);line-height:1}</style>
-<style>
-/* Project-specific branch + demo */
-.project-branch-label{margin:8px 10px 4px;color:#7f8ca0;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.demo-shell{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:16px;align-items:start}
-.demo-card{padding:18px}.demo-card h2{margin:0 0 6px;font-size:18px}.demo-card p{margin:0 0 14px;color:var(--muted)}
-.demo-form{display:grid;grid-template-columns:1fr 1fr;gap:11px}.demo-form .field.full{grid-column:1/-1}.demo-form input,.demo-form select{width:100%}
-.demo-result{min-height:260px}.demo-price{font-size:38px;font-weight:900;margin:12px 0 4px}.demo-grade{font-size:22px;font-weight:900}.demo-meta{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}.demo-meta>div{padding:10px;border:1px solid var(--line);border-radius:9px;background:#fafbfc}.demo-meta small{display:block;color:var(--muted);font-size:11px}.demo-warning{margin-top:10px;padding:10px 12px;border-radius:9px;background:#fff6df;color:#724c0a}.demo-ok{background:#ecfdf3;color:#166534}.demo-config{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.demo-config input{min-width:300px;flex:1}.branch-badge{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:10px;font-weight:800}
-@media(max-width:900px){.demo-shell{grid-template-columns:1fr}}@media(max-width:650px){.demo-form{grid-template-columns:1fr}.demo-form .field.full{grid-column:auto}.demo-meta{grid-template-columns:1fr}}
-</style>
-</head><body>
-<aside class="side"><div class="brand">Project<i>Log</i></div><button id="langToggle" class="lang-toggle" type="button" aria-label="Switch language">English</button><div class="now"><small>当前项目</small><b id="sideName">—</b></div><nav class="nav"><button class="active" data-p="home">◫　项目总览</button><button data-p="stages">✓　阶段与任务</button><button data-p="logs">✎　学习日志</button><button data-p="code">⌘　代码与文件</button><button data-p="experiments">⌁　实验记录</button><button data-p="issues">!　问题与方案</button><button data-p="demo">▶　项目 Demo</button><button data-p="summary">▤　项目总结</button></nav><div class="hint">数据保存在当前浏览器<br>请定期导出完整备份</div></aside>
+</style><style>.project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}.project-card{padding:18px;min-height:220px;display:flex;flex-direction:column;transition:.18s}.project-card:hover{transform:translateY(-2px);box-shadow:0 14px 34px #17203318}.project-card .category{align-self:flex-start;background:#eef2ff;color:#4338ca;border-radius:7px;padding:4px 8px;font-size:12px;font-weight:700}.project-card h2{font-size:18px;margin:13px 0 7px}.project-card .goal-text{color:#566176;flex:1}.project-card .card-foot{border-top:1px solid var(--line);padding-top:13px;margin-top:13px;display:flex;justify-content:space-between;align-items:center}.project-card.add{border:2px dashed #c8cbd7;box-shadow:none;align-items:center;justify-content:center;text-align:center;color:var(--muted);cursor:pointer}.project-card.add strong{font-size:40px;color:var(--brand);line-height:1}</style></head><body>
+<aside class="side"><div class="brand">Project<i>Log</i></div><button id="langToggle" class="lang-toggle" type="button" aria-label="Switch language">English</button><div class="now"><small>当前项目</small><b id="sideName">—</b></div><nav class="nav"><button class="active" data-p="home">◫　项目总览</button><button data-p="stages">✓　阶段与任务</button><button data-p="logs">✎　学习日志</button><button data-p="code">⌘　代码与文件</button><button data-p="experiments">⌁　实验记录</button><button data-p="issues">!　问题与方案</button><button data-p="summary">▤　项目总结</button></nav><div class="hint">数据保存在当前浏览器<br>请定期导出完整备份</div></aside>
 <main class="main">
 <section class="page active" id="projectsPage"><header class="top"><div><h1>我的工程项目</h1><p>每个项目拥有独立的分类、记录、日志、代码和总结。</p></div><button class="btn primary" onclick="projectModal()">＋ 新建项目</button></header><div id="projectGrid" class="project-grid"></div></section>
 <section class="page active" id="homePage"><header class="top"><div><h1>工程学习工作台</h1><p id="goal"></p></div><div class="actions"><select id="projectSelect" class="project-select"></select><button class="btn" onclick="projectModal()">＋ 项目</button><button class="btn primary" onclick="logModal()">＋ 记录进度</button></div></header><div class="grid"><div class="card stat"><small>整体进度</small><strong id="progressStat">0%</strong></div><div class="card stat"><small>已完成任务</small><strong id="taskStat">0/0</strong></div><div class="card stat"><small>学习日志</small><strong id="logStat">0</strong></div><div class="card stat"><small>实验 / 问题</small><strong id="workStat">0</strong></div></div><div class="cols"><div><div class="card panel"><h2>项目路线</h2><div id="roadmap"></div></div><div class="card panel"><h2>最近动态</h2><div id="recent" class="list"></div></div></div><div><div class="card panel"><h2>下一步任务</h2><div id="next"></div></div><div class="card panel"><h2>数据管理</h2><p class="muted">备份包含所有项目、代码、注释和小型附件。</p><div class="actions"><button class="btn" onclick="exportData()">导出 JSON</button><button class="btn" onclick="importFile.click()">导入备份</button><input id="importFile" class="hidden" type="file" accept=".json"></div></div></div></div></section>
@@ -21,7 +11,6 @@
 <section class="page" id="codePage"><header class="top"><div><h1>代码与文件</h1><p>集中查看关键代码、注释和附件。</p></div></header><div id="codeList" class="list"></div></section>
 <section class="page" id="experimentsPage"><header class="top"><div><h1>实验记录</h1><p>保存模型、参数、指标和结论，方便可靠比较。</p></div><button class="btn primary" onclick="experimentModal()">＋ 新增实验</button></header><div id="experimentList" class="list"></div></section>
 <section class="page" id="issuesPage"><header class="top"><div><h1>问题与解决方案</h1><p>把排错过程沉淀成自己的知识库。</p></div><button class="btn primary" onclick="issueModal()">＋ 记录问题</button></header><div class="toolbar"><select id="issueFilter"><option value="">全部</option><option>未解决</option><option>处理中</option><option>已解决</option></select></div><div id="issueList" class="list"></div></section>
-<section class="page" id="demoPage"><header class="top"><div><h1>项目 Demo</h1><p id="demoSubtitle">这个分支只属于当前项目，不会影响其他项目。</p></div><div class="actions"><button class="btn" onclick="demoSettingsModal()">⚙ Demo 设置</button></div></header><div id="demoRoot"></div></section>
 <section class="page summary" id="summaryPage"><header class="top"><div><h1>项目总结</h1><p>沉淀成果、经验和不足。</p></div><button class="btn primary" onclick="saveSummary()">保存总结</button></header><div class="card panel"><div class="field"><label>项目成果</label><textarea id="sumResult"></textarea></div><div class="field"><label>学到的知识与技能</label><textarea id="sumLearned"></textarea></div><div class="field"><label>不足与改进</label><textarea id="sumImprove"></textarea></div><div class="field"><label>作品集 / GitHub / 演示链接</label><textarea id="sumLinks"></textarea></div></div></section>
 </main><div id="modalRoot"></div>
 <script type="text/plain" id="src-prepare_london_data.py">from pathlib import Path
@@ -2232,7 +2221,7 @@ print("======================")
 print(output_file)</script>
 <script>
 window.progressStat=document.getElementById("progressStat");
-const projectNav=document.createElement("button");projectNav.dataset.p="projects";projectNav.textContent="▦　项目中心";document.querySelector(".nav").prepend(projectNav);document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));projectsPage.classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));projectNav.classList.add("active");document.querySelectorAll(".nav button:not([data-p='projects'])").forEach(x=>{x.style.paddingLeft="25px";x.style.fontSize="13px"});document.querySelector("[data-p='demo']").textContent="└　项目 Demo";document.querySelector("[data-p='home']").textContent="└　项目概览";document.querySelector("[data-p='stages']").textContent="└　分类与记录";document.querySelector("[data-p='logs']").textContent="└　详细日志";document.querySelector("[data-p='code']").textContent="└　代码与文件";document.querySelector("[data-p='experiments']").textContent="└　实验工具";document.querySelector("[data-p='issues']").textContent="└　问题工具";document.querySelector("[data-p='summary']").textContent="└　项目总结";stagesPage.querySelector("h1").textContent="分类与记录";stagesPage.querySelector("p").textContent="自己建立简单分类，然后连续添加标题和细节。";stagesPage.querySelector(".btn.primary").textContent="＋ 新建分类";
+const projectNav=document.createElement("button");projectNav.dataset.p="projects";projectNav.textContent="▦　项目中心";document.querySelector(".nav").prepend(projectNav);document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));projectsPage.classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));projectNav.classList.add("active");document.querySelectorAll(".nav button:not([data-p='projects'])").forEach(x=>{x.style.paddingLeft="25px";x.style.fontSize="13px"});document.querySelector("[data-p='home']").textContent="└　项目概览";document.querySelector("[data-p='stages']").textContent="└　分类与记录";document.querySelector("[data-p='logs']").textContent="└　详细日志";document.querySelector("[data-p='code']").textContent="└　代码与文件";document.querySelector("[data-p='experiments']").textContent="└　实验工具";document.querySelector("[data-p='issues']").textContent="└　问题工具";document.querySelector("[data-p='summary']").textContent="└　项目总结";stagesPage.querySelector("h1").textContent="分类与记录";stagesPage.querySelector("p").textContent="自己建立简单分类，然后连续添加标题和细节。";stagesPage.querySelector(".btn.primary").textContent="＋ 新建分类";
 const KEY="ProjectLogV2";let S={projects:[],active:null};const id=()=>crypto.randomUUID(),day=()=>new Date().toISOString().slice(0,10),E=(s="")=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 function codeLog(filename,title,note,next,status="已完成"){let code=document.getElementById("src-"+filename).textContent.trim();return{id:id(),title,date:"2026-09-19",status,stageId:"",tags:["Python","pandas","数据工程"],note,problem:"",next,code,attachments:[{name:filename,size:new Blob([code]).size,type:"text/x-python",data:"data:text/x-python;charset=utf-8,"+encodeURIComponent(code)}]}}
 function currentProgress(){let logs=[
@@ -2286,12 +2275,12 @@ p.experiments=[];p.issues=[];p.summary={result:"已合并 2,806,764 行伦敦房
 function sample(){return{id:id(),name:"London Housing Market Analysis & Machine Learning",...currentProgress()}}
 function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x?.projects?.length)S=x}catch(e){}if(!S.projects.length){let p=sample();S={projects:[p],active:p.id};save()}if(!S.projects.some(p=>p.id===S.active))S.active=S.projects[0].id}function save(){localStorage.setItem(KEY,JSON.stringify(S))}function P(){return S.projects.find(x=>x.id===S.active)}function empty(t){return '<div class="card empty">'+t+"</div>"}function badge(s){let c=s==="已完成"||s==="已解决"?"done":s==="受阻"||s==="未解决"?"bad":"";return '<span class="badge '+c+'">'+E(s)+"</span>"}
 document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===b.dataset.p+"Page"));document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x===b));render()});projectSelect.onchange=()=>{S.active=projectSelect.value;save();render()};search.oninput=statusFilter.onchange=()=>renderLogs();issueFilter.onchange=()=>renderIssues();
-function render(){let p=P(),ts=p.stages.flatMap(s=>s.tasks),dn=ts.filter(t=>t.done).length,pc=ts.length?Math.round(dn/ts.length*100):0;sideName.textContent=p.name;goal.textContent=p.goal||"未填写项目目标";projectSelect.innerHTML=S.projects.map(x=>'<option value="'+x.id+'" '+(x.id===p.id?"selected":"")+">"+E(x.name)+"</option>").join("");progressStat.textContent=pc+"%";taskStat.textContent=dn+"/"+ts.length;logStat.textContent=p.logs.length;roadmap.innerHTML=p.stages.map(s=>{let d=s.tasks.filter(t=>t.done).length,q=s.tasks.length?Math.round(d/s.tasks.length*100):0;return '<div style="margin:12px 0"><div class="row"><b>'+E(s.name)+'</b><span class="meta">'+d+"/"+s.tasks.length+'</span></div><div class="progress"><i style="width:'+q+'%"></i></div></div>'}).join("")||empty("暂无阶段");let acts=p.logs.map(x=>({...x,type:"日志"})).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);recent.innerHTML=acts.map(x=>'<div class="item"><b>'+E(x.title)+'</b><div class="meta">'+x.date+" · "+x.type+"</div></div>").join("")||empty("添加第一条记录后，这里会出现项目动态。");let nt=[];p.stages.forEach(s=>s.tasks.filter(t=>!t.done).forEach(t=>nt.push({...t,stage:s.name})));next.innerHTML=nt.slice(0,5).map(t=>'<div class="item"><b>'+E(t.title)+'</b><div class="meta">'+E(t.stage)+"</div></div>").join("")||empty("暂无待办任务");renderStages();renderLogs();renderCode();renderSummary();renderDemo()}
+function render(){let p=P(),ts=p.stages.flatMap(s=>s.tasks),dn=ts.filter(t=>t.done).length,pc=ts.length?Math.round(dn/ts.length*100):0;sideName.textContent=p.name;goal.textContent=p.goal||"未填写项目目标";projectSelect.innerHTML=S.projects.map(x=>'<option value="'+x.id+'" '+(x.id===p.id?"selected":"")+">"+E(x.name)+"</option>").join("");progressStat.textContent=pc+"%";taskStat.textContent=dn+"/"+ts.length;logStat.textContent=p.logs.length;roadmap.innerHTML=p.stages.map(s=>{let d=s.tasks.filter(t=>t.done).length,q=s.tasks.length?Math.round(d/s.tasks.length*100):0;return '<div style="margin:12px 0"><div class="row"><b>'+E(s.name)+'</b><span class="meta">'+d+"/"+s.tasks.length+'</span></div><div class="progress"><i style="width:'+q+'%"></i></div></div>'}).join("")||empty("暂无阶段");let acts=p.logs.map(x=>({...x,type:"日志"})).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);recent.innerHTML=acts.map(x=>'<div class="item"><b>'+E(x.title)+'</b><div class="meta">'+x.date+" · "+x.type+"</div></div>").join("")||empty("添加第一条记录后，这里会出现项目动态。");let nt=[];p.stages.forEach(s=>s.tasks.filter(t=>!t.done).forEach(t=>nt.push({...t,stage:s.name})));next.innerHTML=nt.slice(0,5).map(t=>'<div class="item"><b>'+E(t.title)+'</b><div class="meta">'+E(t.stage)+"</div></div>").join("")||empty("暂无待办任务");renderStages();renderLogs();renderCode();renderSummary()}
 function modal(title,body,fn){modalRoot.innerHTML='<div class="modal-wrap" id="wrap"><div class="modal"><h2>'+title+'</h2><div class="form">'+body+'</div><div class="modal-actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" id="saveBtn">保存</button></div></div></div>';saveBtn.onclick=fn;wrap.onclick=e=>{if(e.target===wrap)closeModal()};requestAnimationFrame(applyLanguage)}function closeModal(){modalRoot.innerHTML=""}function v(x){return document.getElementById(x).value.trim()}
 function showPage(n){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===n+"Page"));document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.p===n));render()}
 function openProject(pid){S.active=pid;save();showPage("home")}
-function renderProjects(){projectGrid.innerHTML=S.projects.map(p=>{let all=p.stages.flatMap(s=>s.tasks||[]),total=all.length,done=all.filter(t=>t.done).length;return '<article class="card project-card"><span class="category">'+E(p.category||"工程项目")+'</span>'+(ensureDemo(p).type!=="none"?'<span class="branch-badge">Demo</span>':'')+'<h2>'+E(p.name)+'</h2><div class="goal-text">'+E(p.goal||"尚未填写项目目标")+'</div><div class="card-foot"><span class="meta">'+total+' 条内容 · '+done+' 条已完成 · '+p.logs.length+' 条日志</span><div><button class="btn small" onclick="projectModal(\''+p.id+'\')">编辑</button> <button class="btn small primary" onclick="openProject(\''+p.id+'\')">进入项目</button> <button class="btn small danger" onclick="deleteProject(\''+p.id+'\')">删除</button></div></div></article>'}).join("")+'<article class="card project-card add" onclick="projectModal()"><strong>＋</strong><b>新建项目</b><span>创建独立的工程项目分类</span></article>'}
-function projectModal(pid){let x=S.projects.find(p=>p.id===pid);modal(x?"编辑项目":"新建工程项目",'<div class="field full"><label>项目名称 *</label><input id="mName" value="'+E(x?.name||"")+'"></div><div class="field"><label>项目类别</label><input id="mCategory" placeholder="例如：数据科学、Web、游戏开发" value="'+E(x?.category||"")+'"></div><div class="field"><label>项目状态</label><select id="mProjectStatus">'+["计划中","进行中","已完成","暂停"].map(s=>'<option '+(x?.projectStatus===s?"selected":"")+">"+s+"</option>")+'</select></div><div class="field full"><label>项目目标</label><textarea id="mGoal">'+E(x?.goal||"")+'</textarea></div><div class="field"><label>Demo 类型</label><select id="mDemoType"><option value="none" '+((x?.demo?.type||"none")==="none"?"selected":"")+'>无 Demo</option><option value="housing" '+((x?.demo?.type||"none")==="housing"?"selected":"")+'>London House Price Predictor</option></select></div><div class="field"><label>Demo API</label><input id="mDemoApi" value="'+E(x?.demo?.api||"http://127.0.0.1:8000")+'"></div>',()=>{if(!v("mName"))return alert("请填写项目名称");if(x){x.name=v("mName");x.category=v("mCategory");x.projectStatus=mProjectStatus.value;x.goal=v("mGoal");x.demo={type:mDemoType.value,api:v("mDemoApi")||"http://127.0.0.1:8000"}}else{let p={id:id(),name:v("mName"),category:v("mCategory")||"工程项目",projectStatus:mProjectStatus.value,goal:v("mGoal"),stages:[],logs:[],experiments:[],issues:[],summary:{},demo:{type:mDemoType.value,api:v("mDemoApi")||"http://127.0.0.1:8000"}};S.projects.push(p);S.active=p.id}save();closeModal();render()})}
+function renderProjects(){projectGrid.innerHTML=S.projects.map(p=>{let all=p.stages.flatMap(s=>s.tasks||[]),total=all.length,done=all.filter(t=>t.done).length;return '<article class="card project-card"><span class="category">'+E(p.category||"工程项目")+'</span><h2>'+E(p.name)+'</h2><div class="goal-text">'+E(p.goal||"尚未填写项目目标")+'</div><div class="card-foot"><span class="meta">'+total+' 条内容 · '+done+' 条已完成 · '+p.logs.length+' 条日志</span><div><button class="btn small" onclick="projectModal(\''+p.id+'\')">编辑</button> <button class="btn small primary" onclick="openProject(\''+p.id+'\')">进入项目</button> <button class="btn small danger" onclick="deleteProject(\''+p.id+'\')">删除</button></div></div></article>'}).join("")+'<article class="card project-card add" onclick="projectModal()"><strong>＋</strong><b>新建项目</b><span>创建独立的工程项目分类</span></article>'}
+function projectModal(pid){let x=S.projects.find(p=>p.id===pid);modal(x?"编辑项目":"新建工程项目",'<div class="field full"><label>项目名称 *</label><input id="mName" value="'+E(x?.name||"")+'"></div><div class="field"><label>项目类别</label><input id="mCategory" placeholder="例如：数据科学、Web、游戏开发" value="'+E(x?.category||"")+'"></div><div class="field"><label>项目状态</label><select id="mProjectStatus">'+["计划中","进行中","已完成","暂停"].map(s=>'<option '+(x?.projectStatus===s?"selected":"")+">"+s+"</option>")+'</select></div><div class="field full"><label>项目目标</label><textarea id="mGoal">'+E(x?.goal||"")+'</textarea></div>',()=>{if(!v("mName"))return alert("请填写项目名称");if(x){x.name=v("mName");x.category=v("mCategory");x.projectStatus=mProjectStatus.value;x.goal=v("mGoal")}else{let p={id:id(),name:v("mName"),category:v("mCategory")||"工程项目",projectStatus:mProjectStatus.value,goal:v("mGoal"),stages:[],logs:[],experiments:[],issues:[],summary:{}};S.projects.push(p);S.active=p.id}save();closeModal();render()})}
 function deleteProject(pid){let x=S.projects.find(p=>p.id===pid);if(S.projects.length===1)return alert("至少保留一个项目");if(confirm("确定删除“"+x.name+"”及其全部记录吗？此操作无法撤销。")){S.projects=S.projects.filter(p=>p.id!==pid);if(S.active===pid)S.active=S.projects[0].id;save();render()}}
 function stageModal(sid){let x=P().stages.find(s=>s.id===sid);modal(x?"编辑分类":"新建分类",'<div class="field full"><label>分类名称 *</label><input id="mName" placeholder="例如：数据清洗、模型学习、报告写作" value="'+E(x?.name||"")+'"></div><div class="field full"><label>分类说明（可选）</label><textarea id="mDesc" placeholder="这个分类用来记录什么？">'+E(x?.desc||"")+"</textarea></div>",()=>{if(!v("mName"))return alert("请填写分类名称");if(x){x.name=v("mName");x.desc=v("mDesc")}else P().stages.push({id:id(),name:v("mName"),desc:v("mDesc"),tasks:[]});save();closeModal();render()})}
 function renderStages(){stageList.innerHTML=P().stages.map(s=>'<article class="item stage"><div class="item-head"><div><h3>'+E(s.name)+'</h3><div class="body">'+E(s.desc)+'</div></div><div><button class="btn small primary" onclick="taskModal(\''+s.id+'\')">＋ 添加标题</button> <button class="btn small" onclick="stageModal(\''+s.id+'\')">编辑分类</button> <button class="btn small danger" onclick="removeStage(\''+s.id+'\')">删除</button></div></div>'+s.tasks.map(t=>'<div class="task '+(t.done?"done":"")+'"><input title="标记完成" type="checkbox" '+(t.done?"checked":"")+' onchange="toggleTask(\''+s.id+"','"+t.id+'\')"><div><b>'+E(t.title)+'</b><div class="body">'+E(t.note||"")+'</div></div><button class="btn small" onclick="taskModal(\''+s.id+"','"+t.id+'\')">编辑</button><button class="btn small danger" onclick="removeTask(\''+s.id+"','"+t.id+'\')">删除</button></div>').join("")+"</article>").join("")||empty("还没有分类。点击“新建分类”，再在分类中连续添加标题和细节。")}
@@ -2301,15 +2290,6 @@ function logModal(lid){let x=P().logs.find(x=>x.id===lid);modal(x?"编辑学习�
 function logCard(x){let st=P().stages.find(s=>s.id===x.stageId);return '<article class="item"><div class="item-head"><div><h3>'+E(x.title)+'</h3><div class="meta">'+x.date+(st?" · "+E(st.name):"")+" · "+badge(x.status)+'</div></div><div><button class="btn small" onclick="logModal(\''+x.id+'\')">编辑</button> <button class="btn small danger" onclick="remove(\'logs\',\''+x.id+'\')">删除</button></div></div>'+(x.note?'<div class="body">'+E(x.note)+"</div>":"")+(x.problem?'<div class="notice"><b>问题：</b>'+E(x.problem)+"</div>":"")+(x.code?'<pre class="code">'+E(x.code)+"</pre>":"")+(x.next?'<div class="body"><b>下一步：</b>'+E(x.next)+"</div>":"")+'<div class="files">'+x.tags.map(t=>'<span class="tag">#'+E(t)+"</span>").join("")+x.attachments.map((a,i)=>'<button class="btn small" onclick="downloadFile(\''+x.id+"',"+i+')">📎 '+E(a.name)+"</button>").join("")+"</div></article>"}function renderLogs(){let q=(search.value||"").toLowerCase(),s=statusFilter.value,a=P().logs.filter(x=>(!s||x.status===s)&&JSON.stringify(x).toLowerCase().includes(q)).sort((a,b)=>b.date.localeCompare(a.date));logList.innerHTML=a.map(logCard).join("")||empty("还没有符合条件的学习日志。")}function renderCode(){let a=P().logs.filter(x=>x.code||x.attachments.length);codeList.innerHTML=a.map(logCard).join("")||empty("在学习日志中添加代码或附件后，会显示在这里。")}function downloadFile(l,i){let a=P().logs.find(x=>x.id===l).attachments[i],q=document.createElement("a");q.href=a.data;q.download=a.name;q.click()}
 function experimentModal(xid){let x=P().experiments.find(x=>x.id===xid);modal(x?"编辑实验":"新增实验",'<div class="field full"><label>实验名称 *</label><input id="mTitle" value="'+E(x?.title||"")+'"></div><div class="field"><label>日期</label><input id="mDate" type="date" value="'+(x?.date||day())+'"></div><div class="field"><label>模型 / 方法</label><input id="mModel" value="'+E(x?.model||"")+'"></div><div class="field full"><label>参数与设置</label><textarea id="mParams">'+E(x?.params||"")+'</textarea></div><div class="field full"><label>评价指标（每行一个）</label><textarea id="mMetrics">'+E(x?.metrics||"")+'</textarea></div><div class="field full"><label>结论与解释</label><textarea id="mConclusion">'+E(x?.conclusion||"")+"</textarea></div>",()=>{if(!v("mTitle"))return alert("请填写实验名称");let o={id:x?.id||id(),title:v("mTitle"),date:mDate.value,model:v("mModel"),params:v("mParams"),metrics:v("mMetrics"),conclusion:v("mConclusion")};x?Object.assign(x,o):P().experiments.push(o);save();closeModal();render()})}function renderExperiments(){experimentList.innerHTML=[...P().experiments].sort((a,b)=>b.date.localeCompare(a.date)).map(x=>'<article class="item"><div class="item-head"><div><h3>'+E(x.title)+'</h3><div class="meta">'+x.date+(x.model?" · "+E(x.model):"")+'</div></div><div><button class="btn small" onclick="experimentModal(\''+x.id+'\')">编辑</button> <button class="btn small danger" onclick="remove(\'experiments\',\''+x.id+'\')">删除</button></div></div><div class="body"><b>参数：</b>'+E(x.params)+'</div><pre class="code">'+E(x.metrics)+'</pre><div class="body"><b>结论：</b>'+E(x.conclusion)+"</div></article>").join("")||empty("记录第一次模型或算法实验。")}
 function issueModal(xid){let x=P().issues.find(x=>x.id===xid);modal(x?"编辑问题":"记录问题",'<div class="field full"><label>问题标题 *</label><input id="mTitle" value="'+E(x?.title||"")+'"></div><div class="field"><label>日期</label><input id="mDate" type="date" value="'+(x?.date||day())+'"></div><div class="field"><label>状态</label><select id="mStatus">'+["未解决","处理中","已解决"].map(s=>'<option '+(x?.status===s?"selected":"")+">"+s+"</option>")+'</select></div><div class="field full"><label>错误信息 / 现象</label><textarea id="mError">'+E(x?.error||"")+'</textarea></div><div class="field full"><label>尝试过什么</label><textarea id="mTried">'+E(x?.tried||"")+'</textarea></div><div class="field full"><label>最终方案与原因</label><textarea id="mSolution">'+E(x?.solution||"")+"</textarea></div>",()=>{if(!v("mTitle"))return alert("请填写问题标题");let o={id:x?.id||id(),title:v("mTitle"),date:mDate.value,status:mStatus.value,error:v("mError"),tried:v("mTried"),solution:v("mSolution")};x?Object.assign(x,o):P().issues.push(o);save();closeModal();render()})}function renderIssues(){let f=issueFilter.value;issueList.innerHTML=P().issues.filter(x=>!f||x.status===f).map(x=>'<article class="item"><div class="item-head"><div><h3>'+E(x.title)+'</h3><div class="meta">'+x.date+" · "+badge(x.status)+'</div></div><div><button class="btn small" onclick="issueModal(\''+x.id+'\')">编辑</button> <button class="btn small danger" onclick="remove(\'issues\',\''+x.id+'\')">删除</button></div></div><div class="notice"><b>现象：</b>'+E(x.error)+'</div><div class="body"><b>尝试：</b>'+E(x.tried)+'</div><div class="body"><b>解决：</b>'+E(x.solution)+"</div></article>").join("")||empty("遇到报错或思路受阻时记录下来。")}
-
-function ensureDemo(p){if(!p.demo)p.demo={type:(p.name||"").toLowerCase().includes("london housing")?"housing":"none",api:"http://127.0.0.1:8000"};if(!p.demo.api)p.demo.api="http://127.0.0.1:8000";return p.demo}
-function demoSettingsModal(){let d=ensureDemo(P());modal("Demo 设置",'<div class="field full"><label>Demo 类型</label><select id="mDemoType"><option value="none" '+(d.type==="none"?"selected":"")+'>无 Demo</option><option value="housing" '+(d.type==="housing"?"selected":"")+'>London House Price Predictor</option></select></div><div class="field full"><label>API 地址</label><input id="mDemoApi" value="'+E(d.api||"http://127.0.0.1:8000")+'"><div class="meta">每个项目保存自己的 Demo 配置，互不影响。</div></div>',()=>{P().demo={type:mDemoType.value,api:v("mDemoApi")||"http://127.0.0.1:8000"};save();closeModal();render()})}
-const BOROUGHS=["Barking_and_Dagenham","Barnet","Bexley","Brent","Bromley","Camden","City_of_London","Croydon","Ealing","Enfield","Greenwich","Hackney","Hammersmith_and_Fulham","Haringey","Harrow","Havering","Hillingdon","Hounslow","Islington","Kensington_and_Chelsea","Kingston_upon_Thames","Lambeth","Lewisham","Merton","Newham","Redbridge","Richmond_upon_Thames","Southwark","Sutton","Tower_Hamlets","Waltham_Forest","Wandsworth","Westminster"];
-const AGE_BANDS=["before 1900","1900-1929","1930-1949","1950-1966","1967-1975","1976-1982","1983-1990","1991-1995","1996-2002","2003-2006","2007-2011","2007 onwards","2012 onwards","Unknown"];
-function renderDemo(){if(!window.demoRoot)return;let d=ensureDemo(P());demoSubtitle.textContent="这个分支只属于“"+P().name+"”，不会影响其他项目。";if(d.type!=="housing"){demoRoot.innerHTML='<div class="card panel"><h2>这个项目还没有 Demo</h2><p class="muted">Demo 是项目自己的独立成果分支。点击右上角“Demo 设置”可以为当前项目配置，不会影响其他项目。</p><button class="btn primary" onclick="demoSettingsModal()">配置当前项目 Demo</button></div>';return}
-let boroughOpts=BOROUGHS.map(x=>'<option value="'+x+'">'+x.replaceAll("_"," ")+'</option>').join("");let ageOpts=AGE_BANDS.map(x=>'<option>'+x+'</option>').join("");demoRoot.innerHTML='<div class="demo-shell"><div class="card demo-card"><h2>London House Price Predictor <span class="branch-badge">Project-only</span></h2><p>当前 Demo 只读取这个项目的配置，并调用独立的预测 API。</p><div class="demo-form"><div class="field"><label>Year</label><input id="dYear" type="number" value="2023"></div><div class="field"><label>Postcode</label><input id="dPostcode" value="E14 9GU"></div><div class="field full"><label>Borough</label><select id="dBorough">'+boroughOpts+'</select></div><div class="field"><label>Property type</label><select id="dType"><option value="F">Flat</option><option value="T">Terraced</option><option value="S">Semi-detached</option><option value="D">Detached</option></select></div><div class="field"><label>Tenure</label><select id="dDuration"><option value="L">Leasehold</option><option value="F">Freehold</option></select></div><div class="field"><label>Floor area (m²)</label><input id="dArea" type="number" value="70" min="1"></div><div class="field"><label>Rooms (optional)</label><input id="dRooms" type="number" value="3" min="0"></div><div class="field"><label>Current EPC</label><input id="dCurrent" type="number" value="72" min="0" max="100"></div><div class="field"><label>Potential EPC</label><input id="dPotential" type="number" value="82" min="0" max="100"></div><div class="field full"><label>Construction age</label><select id="dAge">'+ageOpts+'</select></div><div class="field full"><button id="dPredictBtn" class="btn primary" onclick="runProjectDemo()">Predict Price</button><div class="meta" style="margin-top:7px">API: '+E(d.api)+'</div></div></div></div><div class="card demo-card demo-result" id="demoResult"><h2>Prediction result</h2><div class="empty" style="padding:45px 10px">Fill in the property details and click Predict Price.</div></div></div>';dBorough.value="Tower_Hamlets";dAge.value="2007 onwards"}
-async function runProjectDemo(){let d=ensureDemo(P()),btn=document.getElementById("dPredictBtn"),out=document.getElementById("demoResult");if(!btn||!out)return;btn.disabled=true;btn.textContent="Predicting...";out.innerHTML='<h2>Prediction result</h2><div class="empty">Calling model...</div>';let rooms=document.getElementById("dRooms").value;let payload={year:Number(dYear.value),postcode:dPostcode.value.trim(),borough:dBorough.value,propertytype:dType.value,duration:dDuration.value,tfarea:Number(dArea.value),numberrooms:rooms===""?null:Number(rooms),current_energy_efficiency:Number(dCurrent.value),potential_energy_efficiency:Number(dPotential.value),construction_age_clean:dAge.value};try{let res=await fetch((d.api||"http://127.0.0.1:8000").replace(/\/$/,"")+"/predict",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});let data=await res.json();if(!res.ok)throw new Error(data.detail||"Prediction request failed");let x=data.prediction;let warnings=[x.temporal_warning,x.market_warning,x.rooms_warning].filter(Boolean);out.innerHTML='<h2>Prediction result</h2><div class="demo-price">'+E(x.estimated_price_formatted)+'</div><div class="meta">Estimated property value</div><div class="demo-meta"><div><small>Reliability</small><b class="demo-grade">'+E(x.reliability_grade??"—")+'</b></div><div><small>Status</small><b>'+E(x.reliability_status||"—")+'</b></div><div><small>Evidence</small><b>'+E(x.evidence_strength||"—")+'</b></div><div><small>Model</small><b>'+E(x.model_used||"—")+'</b></div><div><small>Price band</small><b>'+E(x.predicted_price_band||"—")+'</b></div><div><small>Postcode sector</small><b>'+E(x.postcode_sector||"—")+'</b></div></div>'+(warnings.length?warnings.map(w=>'<div class="demo-warning">'+E(w)+'</div>').join(""):'<div class="demo-warning demo-ok">No additional warning for this prediction.</div>');}catch(err){out.innerHTML='<h2>Prediction result</h2><div class="demo-warning"><b>Cannot reach the prediction service.</b><div style="margin-top:6px">'+E(err.message)+'</div><div class="meta" style="margin-top:8px">Make sure FastAPI is running at '+E(d.api)+'</div></div>'}finally{btn.disabled=false;btn.textContent="Predict Price"}}
-
 function remove(k,x){if(confirm("确定删除？")){P()[k]=P()[k].filter(a=>a.id!==x);save();render()}}function renderSummary(){let s=P().summary||{};sumResult.value=s.result||"";sumLearned.value=s.learned||"";sumImprove.value=s.improve||"";sumLinks.value=s.links||""}function saveSummary(){P().summary={result:sumResult.value,learned:sumLearned.value,improve:sumImprove.value,links:sumLinks.value};save();alert("项目总结已保存")}
 function exportData(){let b=new Blob([JSON.stringify({...S,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="ProjectLog-"+day()+".json";a.click()}importFile.onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader;r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.projects?.length)throw 0;if(confirm("导入会替换当前浏览器中的全部数据，继续吗？")){S=x;save();render()}}catch(e){alert("备份格式不正确")}};r.readAsText(f)}
 const I18N={
@@ -2337,139 +2317,102 @@ const I18N={
 "完成异常值初步统计":"Complete initial outlier statistics","完成异常值深入诊断":"Complete detailed outlier diagnosis","编写交易重复诊断":"Write transaction-duplicate diagnostics","编写正式数据清洗脚本":"Write the formal data-cleaning script","编写清洗后验证脚本":"Write the post-cleaning validation script","编写年份覆盖分析":"Write year-coverage analysis","编写 LMK 重复与跨期分析":"Write LMK repeat and cross-period analysis","编写建模数据准备脚本":"Write the model-data preparation script",
 "添加第一条记录后，这里会出现项目动态。":"Project activity will appear here after your first log.","暂无待办任务":"No open items","暂无阶段":"No categories","还没有分类。点击“新建分类”，再在分类中连续添加标题和细节。":"No categories yet. Create one, then add titles and details.","还没有符合条件的学习日志。":"No matching learning logs.","在学习日志中添加代码或附件后，会显示在这里。":"Code and attachments added to logs will appear here."
 };
-
-Object.assign(I18N,{
-"└　项目 Demo":"└  Project Demo","项目 Demo":"Project Demo","这个分支只属于当前项目，不会影响其他项目。":"This branch belongs only to the current project and does not affect other projects.","Demo 设置":"Demo settings","这个项目还没有 Demo":"This project has no demo yet","Demo 是项目自己的独立成果分支。点击右上角“Demo 设置”可以为当前项目配置，不会影响其他项目。":"A demo is an independent output branch for this project. Configure it without affecting other projects.","配置当前项目 Demo":"Configure this project demo","Demo 类型":"Demo type","无 Demo":"No demo","Demo API":"Demo API","API 地址":"API address","每个项目保存自己的 Demo 配置，互不影响。":"Each project stores its own demo configuration independently.","预测结果":"Prediction result","预测房价":"Predict Price"
-});
 const I18N_REV=Object.fromEntries(Object.entries(I18N).map(([a,b])=>[b,a]));let LANG=localStorage.getItem("ProjectLogLang")||"zh";
 function translateValue(value,map){let trimmed=value.trim(),translated=map[trimmed];if(!translated)return value;return value.replace(trimmed,translated)}
 function applyLanguage(){let map=LANG==="en"?I18N:I18N_REV;document.documentElement.lang=LANG==="en"?"en":"zh-CN";document.title=LANG==="en"?"ProjectLog · Engineering Learning Workspace":"ProjectLog · 工程学习工作台";langToggle.textContent=LANG==="en"?"中文":"English";langToggle.setAttribute("aria-label",LANG==="en"?"切换到中文":"Switch to English");let walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){return n.parentElement?.closest("pre,code,script,style")?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}});let nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(n=>n.nodeValue=translateValue(n.nodeValue,map));document.querySelectorAll("[placeholder],[title]").forEach(el=>["placeholder","title"].forEach(a=>{if(el.hasAttribute(a))el.setAttribute(a,translateValue(el.getAttribute(a),map))}));document.querySelectorAll(".meta").forEach(el=>{if(LANG==="en")el.textContent=el.textContent.replace(/条内容/g,"items").replace(/条已完成/g,"completed").replace(/条日志/g,"logs").replace(/总行数/g,"total rows");else el.textContent=el.textContent.replace(/items/g,"条内容").replace(/completed/g,"条已完成").replace(/logs/g,"条日志").replace(/total rows/g,"总行数")})}
 langToggle.onclick=()=>{LANG=LANG==="zh"?"en":"zh";localStorage.setItem("ProjectLogLang",LANG);applyLanguage()};
-document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:none}@media(min-width:901px){#homePage>.grid{grid-template-columns:repeat(2,1fr)}}</style>");progressStat.parentElement.remove();workStat.parentElement.remove();document.querySelector("[data-p='experiments']").remove();document.querySelector("[data-p='issues']").remove();experimentsPage.remove();issuesPage.remove();const renderWorkspace=render;render=function(){renderProjects();renderWorkspace();requestAnimationFrame(applyLanguage)};load();S.projects.forEach(p=>ensureDemo(p));let _lp=S.projects.find(p=>(p.name||"").toLowerCase().includes("london housing"));if(_lp&&_lp.demo.type==="none")_lp.demo={type:"housing",api:"http://127.0.0.1:8000"};save();if(!S.simpleCategoriesV1){S.projects.forEach(p=>{if(p.stages?.length===4&&p.stages.every(s=>!(s.tasks||[]).length)&&p.stages[0]?.name.includes("问题定义"))p.stages=[]});S.simpleCategoriesV1=true;save()}if(!S.progressWithCode20260919){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0],progress=currentProgress();Object.assign(p,progress);S.active=p.id;S.realProgress20260919=true;S.progressWithCode20260919=true;save()}if(!S.todayUpdate20260920){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0];applyTodayUpdate(p);S.active=p.id;S.todayUpdate20260920=true;save()}roadmap.closest(".panel").querySelector("h2").textContent="内容分类";next.closest(".panel").querySelector("h2").textContent="未完成内容";taskStat.previousElementSibling.textContent="已完成内容";render();
+document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:none}@media(min-width:901px){#homePage>.grid{grid-template-columns:repeat(2,1fr)}}</style>");progressStat.parentElement.remove();workStat.parentElement.remove();document.querySelector("[data-p='experiments']").remove();document.querySelector("[data-p='issues']").remove();experimentsPage.remove();issuesPage.remove();const renderWorkspace=render;render=function(){renderProjects();renderWorkspace();requestAnimationFrame(applyLanguage)};load();if(!S.simpleCategoriesV1){S.projects.forEach(p=>{if(p.stages?.length===4&&p.stages.every(s=>!(s.tasks||[]).length)&&p.stages[0]?.name.includes("问题定义"))p.stages=[]});S.simpleCategoriesV1=true;save()}if(!S.progressWithCode20260919){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0],progress=currentProgress();Object.assign(p,progress);S.active=p.id;S.realProgress20260919=true;S.progressWithCode20260919=true;save()}if(!S.todayUpdate20260920){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0];applyTodayUpdate(p);S.active=p.id;S.todayUpdate20260920=true;save()}roadmap.closest(".panel").querySelector("h2").textContent="内容分类";next.closest(".panel").querySelector("h2").textContent="未完成内容";taskStat.previousElementSibling.textContent="已完成内容";render();
 </script>
-<style id="project-tree-v2-style">
-/* Project Center > Project > Project branches */
-.side{width:280px;padding:22px 14px}.main{margin-left:280px}
-.nav{display:block;max-height:calc(100vh - 190px);overflow:auto;padding-right:3px}
-.nav::-webkit-scrollbar{width:6px}.nav::-webkit-scrollbar-thumb{background:#344258;border-radius:99px}
-.tree-root,.tree-project,.tree-child{width:100%;border:0;color:#c5cfdd;cursor:pointer;border-radius:9px;text-align:left}
-.tree-root{background:#202b3c;color:#fff;padding:10px 12px;font-weight:800;margin-bottom:7px}
-.tree-root:hover,.tree-root.active{background:#303d52}
-.tree-project-wrap{margin:4px 0 6px}
-.tree-project{display:flex;align-items:center;gap:7px;background:transparent;padding:9px 9px;font-weight:750;color:#eef2f7}
-.tree-project:hover,.tree-project.current{background:#202b3c}
-.tree-caret{width:15px;flex:0 0 15px;color:#8997aa;font-size:11px;text-align:center}
-.tree-project-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
-.tree-project-status{width:7px;height:7px;border-radius:50%;background:#718096;flex:0 0 7px}.tree-project.current .tree-project-status{background:#8b87ff}
-.tree-children{display:none;margin:2px 0 6px 18px;padding-left:9px;border-left:1px solid #344258}.tree-project-wrap.expanded .tree-children{display:block}
-.tree-child{display:block;background:transparent;padding:7px 9px;color:#9eacbd;font-size:12.5px;margin:1px 0}
-.tree-child:hover{background:#202b3c;color:#fff}.tree-child.active{background:#293548;color:#fff;font-weight:700}
-.tree-demo-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#8b87ff;margin-left:5px;vertical-align:middle}
-.tree-empty-demo{opacity:.7}
-.now{display:none}
-.project-tree-caption{padding:3px 10px 7px;color:#7f8ca0;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
-@media(max-width:900px){.side{width:230px}.main{margin-left:230px}}
-@media(max-width:650px){.side{position:static;width:auto}.main{margin-left:0}.nav{max-height:none}.tree-project-wrap:not(.expanded) .tree-children{display:none}}
-</style>
-<script id="project-tree-v2-script">
+<script>
 (function(){
-  const nav=document.querySelector('.nav');
-  if(!nav) return;
-  let expandedProjectId=null;
+  function updateLondonProject(){
+    try{
+      const raw = localStorage.getItem("ProjectLog");
+      if(!raw) return;
+      const S = JSON.parse(raw);
+      const p = (S.projects||[]).find(x=>(x.name||"").includes("London Housing"));
+      if(!p) return;
 
-  function activePageName(){
-    const el=document.querySelector('.page.active');
-    return el ? el.id.replace(/Page$/,'') : 'projects';
+      p.logs = p.logs || [];
+      p.issues = p.issues || [];
+      p.codeFiles = p.codeFiles || [];
+
+      const addLog=(title,detail)=>{
+        if(!p.logs.some(x=>x.title===title)){
+          p.logs.push({id:Date.now()+Math.random(),date:"2026-09-21",title,detail,status:"已完成"});
+        }
+      };
+
+      addLog(
+        "完成模型部署与端到端测试",
+        "完成 build final deployment package、predict_house、FastAPI API，并通过 end-to-end smoke test 验证完整预测链路。"
+      );
+
+      addLog(
+        "完成可靠性分析体系",
+        "加入 Predictability Grade、Evidence Strength、Reliability Status，用于解释不同房型、价格区间和地段的预测可信度。"
+      );
+
+      addLog(
+        "完成模型实验总结",
+        "比较 Ridge、HistGradientBoosting、log(price)、location feature 等方案，最终选择 Enhanced Location HGB。"
+      );
+
+      const files=[
+        "api.py","predict_house.py","deployment_validation.py",
+        "build_final_deployment_package.py","final_test_2022_2023.py",
+        "enhanced_reliability_engine.py","hybrid_routing_experiment.py",
+        "postcode_sector_model_experiment.py",
+        "hierarchical_reliability_engine.py",
+        "three_way_reliability_matrix.py",
+        "location_risk_modifier.py",
+        "predictability_evidence_system.py",
+        "luxury_market_analysis.py",
+        "error_analysis.py"
+      ];
+
+      files.forEach(f=>{
+        if(!p.codeFiles.some(x=>x.title===f)){
+          p.codeFiles.push({
+            id:Date.now()+Math.random(),
+            title:f,
+            detail:"London Housing Price Intelligence 项目代码模块。",
+            status:"已完成"
+          });
+        }
+      });
+
+      const issues=[
+        ["高价房预测误差较大","分析luxury market后发现超高价房受特殊地段和不可观测因素影响较大，因此通过可靠性等级表达不确定性。"],
+        ["postcode特征可能造成数据泄漏","没有直接使用完整postcode，而采用past-only location features，只使用历史信息。"],
+        ["模型可用但缺少部署验证","增加FastAPI接口和end-to-end smoke test，验证输入、预测、错误处理完整流程。"]
+      ];
+
+      issues.forEach(([title,solution])=>{
+        if(!p.issues.some(x=>x.title===title)){
+          p.issues.push({
+            id:Date.now()+Math.random(),
+            date:"2026-09-21",
+            status:"已解决",
+            title,
+            error:title,
+            tried:"分析问题来源并进行实验验证。",
+            solution
+          });
+        }
+      });
+
+      p.summary=p.summary||{};
+      p.summary.result="完成 London Housing Price Intelligence 回归预测系统，包括数据处理、模型实验、可靠性分析和部署测试。";
+      p.summary.learned="掌握时间切分验证、数据泄漏控制、梯度提升模型、特征工程、可靠性评估和机器学习部署流程。";
+      p.summary.improve="未来可进行云端部署、新年份数据验证以及更多property-level features扩展。";
+
+      localStorage.setItem("ProjectLog",JSON.stringify(S));
+      if(typeof render==="function") render();
+    }catch(e){}
   }
-
-  function branchLabel(page){
-    const zh={home:'项目概览',stages:'分类与记录',logs:'详细日志',code:'代码与文件',demo:'项目 Demo',summary:'项目总结'};
-    const en={home:'Overview',stages:'Categories & notes',logs:'Detailed logs',code:'Code & files',demo:'Project Demo',summary:'Project summary'};
-    return (window.LANG==='en'?en:zh)[page]||page;
-  }
-
-  function centerLabel(){return window.LANG==='en'?'Project Center':'项目中心'}
-  function projectsCaption(){return window.LANG==='en'?'PROJECTS':'项目'}
-
-  function renderProjectTree(){
-    if(!window.S || !Array.isArray(S.projects)) return;
-    const page=activePageName();
-    if(!expandedProjectId) expandedProjectId=S.active;
-    let html='<button class="tree-root '+(page==='projects'?'active':'')+'" data-tree-action="center">▦&nbsp; '+centerLabel()+'</button>';
-    html+='<div class="project-tree-caption">'+projectsCaption()+'</div>';
-    for(const p of S.projects){
-      const current=p.id===S.active;
-      const expanded=p.id===expandedProjectId;
-      const demo=(typeof ensureDemo==='function'?ensureDemo(p):(p.demo||{type:'none'}));
-      html+='<div class="tree-project-wrap '+(expanded?'expanded':'')+'" data-project-wrap="'+p.id+'">';
-      html+='<button class="tree-project '+(current?'current':'')+'" data-tree-project="'+p.id+'" title="'+E(p.name)+'"><span class="tree-caret">'+(expanded?'▼':'▶')+'</span><span class="tree-project-status"></span><span class="tree-project-name">'+E(p.name)+'</span></button>';
-      html+='<div class="tree-children">';
-      for(const b of ['home','stages','logs','code','demo','summary']){
-        const isActive=current && page===b;
-        const demoClass=(b==='demo' && demo.type==='none')?' tree-empty-demo':'';
-        const dot=(b==='demo' && demo.type!=='none')?'<span class="tree-demo-dot"></span>':'';
-        html+='<button class="tree-child '+(isActive?'active':'')+demoClass+'" data-tree-branch="'+b+'" data-tree-project-id="'+p.id+'">'+branchLabel(b)+dot+'</button>';
-      }
-      html+='</div></div>';
-    }
-    nav.innerHTML=html;
-  }
-
-  function activatePage(page){
-    document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===page+'Page'));
-  }
-
-  nav.onclick=function(e){
-    const center=e.target.closest('[data-tree-action="center"]');
-    if(center){activatePage('projects');render();return;}
-    const pbtn=e.target.closest('[data-tree-project]');
-    if(pbtn){
-      const pid=pbtn.dataset.treeProject;
-      if(expandedProjectId===pid){
-        expandedProjectId=null;
-        renderProjectTree();
-      }else{
-        expandedProjectId=pid;
-        S.active=pid;save();activatePage('home');render();
-      }
-      return;
-    }
-    const child=e.target.closest('[data-tree-branch]');
-    if(child){
-      const pid=child.dataset.treeProjectId;
-      const page=child.dataset.treeBranch;
-      S.active=pid;expandedProjectId=pid;save();activatePage(page);render();
-    }
-  };
-
-  const oldRender=window.render;
-  window.render=function(){
-    oldRender();
-    renderProjectTree();
-  };
-
-  const oldApplyLanguage=window.applyLanguage;
-  window.applyLanguage=function(){
-    oldApplyLanguage();
-    renderProjectTree();
-  };
-
-  window.openProject=function(pid){
-    S.active=pid;expandedProjectId=pid;save();activatePage('home');render();
-  };
-
-  // Project selector remains functional but the tree is now the primary navigation.
-  if(window.projectSelect){
-    projectSelect.onchange=()=>{S.active=projectSelect.value;expandedProjectId=S.active;save();render()};
-  }
-
-  // Avoid duplicate project switching controls on the project overview header.
-  if(window.projectSelect){projectSelect.style.display='none';}
-  const addProjectBtn=document.querySelector('#homePage .actions .btn:not(.primary)');
-  if(addProjectBtn) addProjectBtn.style.display='none';
-
-  expandedProjectId=S.active;
-  renderProjectTree();
+  setTimeout(updateLondonProject,800);
 })();
 </script>
+
 </body></html>
