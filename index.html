@@ -2409,7 +2409,7 @@ const I18N_REV=Object.fromEntries(Object.entries(I18N).map(([a,b])=>[b,a]));let 
 function translateValue(value,map){let trimmed=value.trim(),translated=map[trimmed];if(!translated)return value;return value.replace(trimmed,translated)}
 function applyLanguage(){let map=LANG==="en"?I18N:I18N_REV;document.documentElement.lang=LANG==="en"?"en":"zh-CN";document.title=LANG==="en"?"ProjectLog · Engineering Learning Workspace":"ProjectLog · 工程学习工作台";langToggle.textContent=LANG==="en"?"中文":"English";langToggle.setAttribute("aria-label",LANG==="en"?"切换到中文":"Switch to English");let walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){return n.parentElement?.closest("pre,code,script,style")?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}});let nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(n=>n.nodeValue=translateValue(n.nodeValue,map));document.querySelectorAll("[placeholder],[title]").forEach(el=>["placeholder","title"].forEach(a=>{if(el.hasAttribute(a))el.setAttribute(a,translateValue(el.getAttribute(a),map))}));document.querySelectorAll(".meta").forEach(el=>{if(LANG==="en")el.textContent=el.textContent.replace(/条内容/g,"items").replace(/条已完成/g,"completed").replace(/条日志/g,"logs").replace(/总行数/g,"total rows");else el.textContent=el.textContent.replace(/items/g,"条内容").replace(/completed/g,"条已完成").replace(/logs/g,"条日志").replace(/total rows/g,"总行数")})}
 langToggle.onclick=()=>{LANG=LANG==="zh"?"en":"zh";localStorage.setItem("ProjectLogLang",LANG);applyLanguage()};
-document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:none}@media(min-width:901px){#homePage>.grid{grid-template-columns:repeat(2,1fr)}}</style>");progressStat.parentElement.remove();workStat.parentElement.remove();document.querySelector("[data-p='experiments']").remove();document.querySelector("[data-p='issues']").remove();experimentsPage.remove();issuesPage.remove();const renderWorkspace=render;render=function(){renderProjects();renderWorkspace();requestAnimationFrame(applyLanguage)};load();if(!S.simpleCategoriesV1){S.projects.forEach(p=>{if(p.stages?.length===4&&p.stages.every(s=>!(s.tasks||[]).length)&&p.stages[0]?.name.includes("问题定义"))p.stages=[]});S.simpleCategoriesV1=true;save()}if(!S.progressWithCode20260919){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0],progress=currentProgress();Object.assign(p,progress);S.active=p.id;S.realProgress20260919=true;S.progressWithCode20260919=true;save()}if(!S.todayUpdate20260920){let p=S.projects.find(x=>x.name.includes("London Housing"))||S.projects[0];applyTodayUpdate(p);S.active=p.id;S.todayUpdate20260920=true;save()}roadmap.closest(".panel").querySelector("h2").textContent="内容分类";next.closest(".panel").querySelector("h2").textContent="未完成内容";taskStat.previousElementSibling.textContent="已完成内容";render();
+document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:none}@media(min-width:901px){#homePage>.grid{grid-template-columns:repeat(2,1fr)}}</style>");progressStat.parentElement.remove();workStat.parentElement.remove();document.querySelector("[data-p='experiments']").remove();document.querySelector("[data-p='issues']").remove();experimentsPage.remove();issuesPage.remove();const renderWorkspace=render;render=function(){renderProjects();renderWorkspace();requestAnimationFrame(applyLanguage)};load();if(!S.simpleCategoriesV1){S.projects.forEach(p=>{if(p.stages?.length===4&&p.stages.every(s=>!(s.tasks||[]).length)&&p.stages[0]?.name.includes("问题定义"))p.stages=[]});S.simpleCategoriesV1=true;save()}if(!S.progressWithCode20260919){let p=S.projects.find(x=>/London Housing|伦敦房价/i.test((x.name||"")+" "+(x.goal||"")));if(p){let progress=currentProgress();Object.assign(p,progress);S.active=p.id;S.realProgress20260919=true}S.progressWithCode20260919=true;save()}if(!S.todayUpdate20260920){let p=S.projects.find(x=>/London Housing|伦敦房价/i.test((x.name||"")+" "+(x.goal||"")));if(p){applyTodayUpdate(p);S.active=p.id}S.todayUpdate20260920=true;save()}roadmap.closest(".panel").querySelector("h2").textContent="内容分类";next.closest(".panel").querySelector("h2").textContent="未完成内容";taskStat.previousElementSibling.textContent="已完成内容";render();
 </script>
 <script>
 (function(){
@@ -2600,7 +2600,10 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
       const raw=localStorage.getItem(KEY2);
       if(raw){
         const state=JSON.parse(raw);
-        const p=(state.projects||[]).find(x=>(x.name||"").includes("London Housing")) || state.projects?.[0];
+        const p=(state.projects||[]).find(x=>
+          x.id===state.londonProjectId ||
+          /London Housing|伦敦房价/i.test((x.name||"")+" "+(x.goal||""))
+        );
         if(p){
           p.logs=p.logs||[];
           p.issues=p.issues||[];
@@ -2750,7 +2753,7 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
 
 <script>
 (function(){
-  const V5_KEY = "ProjectLogLondonHousingV5";
+  const V5_KEY = "ProjectLogLondonHousingV7";
 
   function isCodeLog(x){
     const at = Array.isArray(x.attachments) ? x.attachments : [];
@@ -2781,8 +2784,12 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
   }
 
   function migrateV5(){
-    const p = P();
+    const p = (S.projects||[]).find(x=>
+      x.id===S.londonProjectId ||
+      /London Housing|伦敦房价/i.test((x.name||"")+" "+(x.goal||""))
+    );
     if(!p) return;
+    S.londonProjectId=p.id;
 
     p.codeRecords = Array.isArray(p.codeRecords) ? p.codeRecords : [];
 
@@ -3232,6 +3239,50 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
 
   langToggle.addEventListener("click",()=>requestAnimationFrame(updateSidebarNav));
   updateSidebarNav();
+})();
+</script>
+<script>
+(function(){
+  const REPAIR_KEY="ProjectLogProjectIsolationRepairV7";
+  if(localStorage.getItem(REPAIR_KEY))return;
+
+  const londonOnlyStageNames=new Set([
+    "模型、可靠性与部署",
+    "模型、可靠性与部署完成"
+  ]);
+  const londonOnlyLogTitles=new Set([
+    "完成数据清洗与 2010–2023 建模数据准备",
+    "完成 EDA 与第一轮基线建模",
+    "确定 Raw-price HistGradientBoosting 为基础主模型",
+    "发现豪宅市场的系统性预测困难",
+    "建立 Predictability Grade 与 Evidence Strength",
+    "加入 leakage-safe 历史地理特征",
+    "拒绝没有稳定收益的 Borough Modifier 与 Hybrid Router",
+    "完成 2022–2023 Final Test",
+    "完成部署包、FastAPI 与输入验证",
+    "End-to-End Smoke Test 全部通过",
+    "工程复盘：从“追求更高分数”转向“可信的预测系统”"
+  ]);
+
+  (S.projects||[]).forEach(p=>{
+    const isABC=(p.name||"").trim().toUpperCase()==="ABC";
+    if(!isABC)return;
+    const hasLondonStage=(p.stages||[]).some(s=>londonOnlyStageNames.has(s.name));
+    const hasLondonLogs=(p.logs||[]).some(x=>londonOnlyLogTitles.has(x.title));
+    if(!hasLondonStage && !hasLondonLogs)return;
+
+    p.stages=[];
+    p.logs=[];
+    p.codeRecords=[];
+    p.experiments=[];
+    p.issues=[];
+    p.summary={};
+    p.projectStatus="计划中";
+  });
+
+  localStorage.setItem(REPAIR_KEY,"1");
+  save();
+  render();
 })();
 </script>
 </body></html>
