@@ -1,0 +1,36 @@
+property_name,enhanced_predicted_price_band,predictability_grade,evidence_strength,deployment_status
+Detached,250k-500k,B,Medium,Generally reliable
+Detached,500k-750k,B,High,Generally reliable
+Detached,750k-1m,B,High,Generally reliable
+Detached,1m-1.5m,C,High,Use with caution
+Detached,1.5m-2m,C,Medium,Low confidence
+Detached,2m-3m,C,Medium,Low confidence
+Detached,3m-5m,D,Low,Very low confidence
+Detached,5m+,D,Very Low,Very low confidence
+Flat,<250k,B,High,Generally reliable
+Flat,250k-500k,B,High,Generally reliable
+Flat,500k-750k,B,High,Generally reliable
+Flat,750k-1m,C,High,Use with caution
+Flat,1m-1.5m,C,High,Use with caution
+Flat,1.5m-2m,C,Medium,Low confidence
+Flat,2m-3m,C,Medium,Low confidence
+Flat,3m-5m,C,Low,Low confidence
+Flat,5m+,C,Very Low,Insufficient evidence
+Semi-detached,<250k,B,Very Low,Insufficient evidence
+Semi-detached,250k-500k,B,High,Generally reliable
+Semi-detached,500k-750k,A,High,Reliable
+Semi-detached,750k-1m,B,High,Generally reliable
+Semi-detached,1m-1.5m,C,High,Use with caution
+Semi-detached,1.5m-2m,B,Medium,Generally reliable
+Semi-detached,2m-3m,C,Low,Low confidence
+Semi-detached,3m-5m,B,Very Low,Insufficient evidence
+Semi-detached,5m+,D,Very Low,Very low confidence
+Terraced,<250k,B,Low,Limited confidence
+Terraced,250k-500k,A,High,Reliable
+Terraced,500k-750k,B,High,Generally reliable
+Terraced,750k-1m,B,High,Generally reliable
+Terraced,1m-1.5m,B,High,Generally reliable
+Terraced,1.5m-2m,C,Medium,Low confidence
+Terraced,2m-3m,C,Medium,Low confidence
+Terraced,3m-5m,C,Low,Low confidence
+Terraced,5m+,C,Low,Low confidence

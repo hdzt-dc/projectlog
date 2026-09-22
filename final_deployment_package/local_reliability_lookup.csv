@@ -1,0 +1,765 @@
+property_name,enhanced_predicted_price_band,borough,final_grade,final_evidence,final_status
+Detached,250k-500k,Barking_and_Dagenham,B,Medium,Generally reliable
+Detached,250k-500k,Barnet,B,Medium,Generally reliable
+Detached,250k-500k,Bexley,B,Medium,Generally reliable
+Detached,250k-500k,Brent,B,Medium,Generally reliable
+Detached,250k-500k,Bromley,B,Medium,Generally reliable
+Detached,250k-500k,Croydon,B,Medium,Generally reliable
+Detached,250k-500k,Ealing,B,Medium,Generally reliable
+Detached,250k-500k,Enfield,B,Medium,Generally reliable
+Detached,250k-500k,Greenwich,B,Medium,Generally reliable
+Detached,250k-500k,Harrow,B,Medium,Generally reliable
+Detached,250k-500k,Havering,B,Low,Limited confidence
+Detached,250k-500k,Hillingdon,B,Medium,Generally reliable
+Detached,250k-500k,Hounslow,B,Medium,Generally reliable
+Detached,250k-500k,Kingston_upon_Thames,B,Medium,Generally reliable
+Detached,250k-500k,Lewisham,B,Medium,Generally reliable
+Detached,250k-500k,Merton,B,Medium,Generally reliable
+Detached,250k-500k,Newham,B,Medium,Generally reliable
+Detached,250k-500k,Redbridge,B,Medium,Generally reliable
+Detached,250k-500k,Richmond_upon_Thames,B,Medium,Generally reliable
+Detached,250k-500k,Southwark,B,Medium,Generally reliable
+Detached,250k-500k,Sutton,B,Medium,Generally reliable
+Detached,250k-500k,Waltham_Forest,B,Medium,Generally reliable
+Detached,500k-750k,Barking_and_Dagenham,B,High,Generally reliable
+Detached,500k-750k,Barnet,B,High,Generally reliable
+Detached,500k-750k,Bexley,B,Low,Limited confidence
+Detached,500k-750k,Brent,B,High,Generally reliable
+Detached,500k-750k,Bromley,B,Medium,Generally reliable
+Detached,500k-750k,Croydon,B,Medium,Generally reliable
+Detached,500k-750k,Ealing,B,High,Generally reliable
+Detached,500k-750k,Enfield,B,High,Generally reliable
+Detached,500k-750k,Greenwich,B,High,Generally reliable
+Detached,500k-750k,Hackney,B,High,Generally reliable
+Detached,500k-750k,Haringey,B,High,Generally reliable
+Detached,500k-750k,Harrow,B,High,Generally reliable
+Detached,500k-750k,Havering,B,Medium,Generally reliable
+Detached,500k-750k,Hillingdon,B,Medium,Generally reliable
+Detached,500k-750k,Hounslow,B,High,Generally reliable
+Detached,500k-750k,Kingston_upon_Thames,B,High,Generally reliable
+Detached,500k-750k,Lambeth,B,High,Generally reliable
+Detached,500k-750k,Lewisham,B,High,Generally reliable
+Detached,500k-750k,Merton,B,High,Generally reliable
+Detached,500k-750k,Newham,B,High,Generally reliable
+Detached,500k-750k,Redbridge,B,High,Generally reliable
+Detached,500k-750k,Richmond_upon_Thames,B,High,Generally reliable
+Detached,500k-750k,Southwark,B,High,Generally reliable
+Detached,500k-750k,Sutton,B,Low,Limited confidence
+Detached,500k-750k,Tower_Hamlets,B,High,Generally reliable
+Detached,500k-750k,Waltham_Forest,B,High,Generally reliable
+Detached,750k-1m,Barnet,B,Low,Limited confidence
+Detached,750k-1m,Bexley,B,High,Generally reliable
+Detached,750k-1m,Brent,B,High,Generally reliable
+Detached,750k-1m,Bromley,B,Medium,Generally reliable
+Detached,750k-1m,Croydon,B,Low,Limited confidence
+Detached,750k-1m,Ealing,B,High,Generally reliable
+Detached,750k-1m,Enfield,B,High,Generally reliable
+Detached,750k-1m,Greenwich,B,High,Generally reliable
+Detached,750k-1m,Hackney,B,High,Generally reliable
+Detached,750k-1m,Haringey,B,High,Generally reliable
+Detached,750k-1m,Harrow,B,Low,Limited confidence
+Detached,750k-1m,Havering,B,Low,Limited confidence
+Detached,750k-1m,Hillingdon,B,Low,Limited confidence
+Detached,750k-1m,Hounslow,B,High,Generally reliable
+Detached,750k-1m,Islington,B,High,Generally reliable
+Detached,750k-1m,Kingston_upon_Thames,C,Low,Low confidence
+Detached,750k-1m,Lambeth,B,High,Generally reliable
+Detached,750k-1m,Lewisham,B,High,Generally reliable
+Detached,750k-1m,Merton,B,High,Generally reliable
+Detached,750k-1m,Newham,B,High,Generally reliable
+Detached,750k-1m,Redbridge,B,High,Generally reliable
+Detached,750k-1m,Richmond_upon_Thames,B,High,Generally reliable
+Detached,750k-1m,Southwark,B,High,Generally reliable
+Detached,750k-1m,Sutton,B,Low,Limited confidence
+Detached,750k-1m,Waltham_Forest,B,High,Generally reliable
+Detached,750k-1m,Wandsworth,B,High,Generally reliable
+Detached,750k-1m,Westminster,B,High,Generally reliable
+Detached,1m-1.5m,Barnet,D,Low,Very low confidence
+Detached,1m-1.5m,Bexley,C,High,Use with caution
+Detached,1m-1.5m,Brent,C,High,Use with caution
+Detached,1m-1.5m,Bromley,C,Low,Low confidence
+Detached,1m-1.5m,Camden,C,High,Use with caution
+Detached,1m-1.5m,Croydon,D,Low,Very low confidence
+Detached,1m-1.5m,Ealing,C,High,Use with caution
+Detached,1m-1.5m,Enfield,C,High,Use with caution
+Detached,1m-1.5m,Greenwich,C,High,Use with caution
+Detached,1m-1.5m,Hackney,C,High,Use with caution
+Detached,1m-1.5m,Haringey,C,High,Use with caution
+Detached,1m-1.5m,Harrow,C,High,Use with caution
+Detached,1m-1.5m,Havering,C,High,Use with caution
+Detached,1m-1.5m,Hillingdon,D,Low,Very low confidence
+Detached,1m-1.5m,Hounslow,C,High,Use with caution
+Detached,1m-1.5m,Islington,C,High,Use with caution
+Detached,1m-1.5m,Kingston_upon_Thames,C,High,Use with caution
+Detached,1m-1.5m,Lambeth,C,High,Use with caution
+Detached,1m-1.5m,Lewisham,C,High,Use with caution
+Detached,1m-1.5m,Merton,C,High,Use with caution
+Detached,1m-1.5m,Redbridge,C,High,Use with caution
+Detached,1m-1.5m,Richmond_upon_Thames,C,High,Use with caution
+Detached,1m-1.5m,Southwark,C,High,Use with caution
+Detached,1m-1.5m,Sutton,C,High,Use with caution
+Detached,1m-1.5m,Waltham_Forest,C,High,Use with caution
+Detached,1m-1.5m,Wandsworth,C,High,Use with caution
+Detached,1m-1.5m,Westminster,C,High,Use with caution
+Detached,1.5m-2m,Barnet,C,Medium,Low confidence
+Detached,1.5m-2m,Brent,C,Medium,Low confidence
+Detached,1.5m-2m,Bromley,C,Medium,Low confidence
+Detached,1.5m-2m,Camden,C,Medium,Low confidence
+Detached,1.5m-2m,Croydon,C,Medium,Low confidence
+Detached,1.5m-2m,Ealing,C,Medium,Low confidence
+Detached,1.5m-2m,Enfield,C,Medium,Low confidence
+Detached,1.5m-2m,Greenwich,C,Medium,Low confidence
+Detached,1.5m-2m,Hackney,C,Medium,Low confidence
+Detached,1.5m-2m,Hammersmith_and_Fulham,C,Medium,Low confidence
+Detached,1.5m-2m,Haringey,C,Medium,Low confidence
+Detached,1.5m-2m,Harrow,C,Medium,Low confidence
+Detached,1.5m-2m,Havering,C,Medium,Low confidence
+Detached,1.5m-2m,Hillingdon,C,Medium,Low confidence
+Detached,1.5m-2m,Hounslow,C,Medium,Low confidence
+Detached,1.5m-2m,Kensington_and_Chelsea,C,Medium,Low confidence
+Detached,1.5m-2m,Kingston_upon_Thames,C,Medium,Low confidence
+Detached,1.5m-2m,Lambeth,C,Medium,Low confidence
+Detached,1.5m-2m,Lewisham,C,Medium,Low confidence
+Detached,1.5m-2m,Merton,C,Medium,Low confidence
+Detached,1.5m-2m,Redbridge,C,Medium,Low confidence
+Detached,1.5m-2m,Richmond_upon_Thames,C,Medium,Low confidence
+Detached,1.5m-2m,Southwark,C,Medium,Low confidence
+Detached,1.5m-2m,Sutton,C,Medium,Low confidence
+Detached,1.5m-2m,Waltham_Forest,C,Medium,Low confidence
+Detached,1.5m-2m,Wandsworth,C,Medium,Low confidence
+Detached,2m-3m,Barnet,C,Medium,Low confidence
+Detached,2m-3m,Brent,C,Medium,Low confidence
+Detached,2m-3m,Bromley,C,Medium,Low confidence
+Detached,2m-3m,Camden,C,Medium,Low confidence
+Detached,2m-3m,Croydon,C,Medium,Low confidence
+Detached,2m-3m,Ealing,C,Medium,Low confidence
+Detached,2m-3m,Enfield,C,Medium,Low confidence
+Detached,2m-3m,Greenwich,C,Medium,Low confidence
+Detached,2m-3m,Hackney,C,Medium,Low confidence
+Detached,2m-3m,Hammersmith_and_Fulham,C,Medium,Low confidence
+Detached,2m-3m,Haringey,C,Medium,Low confidence
+Detached,2m-3m,Harrow,C,Medium,Low confidence
+Detached,2m-3m,Havering,C,Medium,Low confidence
+Detached,2m-3m,Hillingdon,C,Medium,Low confidence
+Detached,2m-3m,Hounslow,C,Medium,Low confidence
+Detached,2m-3m,Islington,C,Medium,Low confidence
+Detached,2m-3m,Kingston_upon_Thames,C,Medium,Low confidence
+Detached,2m-3m,Lambeth,C,Medium,Low confidence
+Detached,2m-3m,Lewisham,C,Medium,Low confidence
+Detached,2m-3m,Merton,C,Medium,Low confidence
+Detached,2m-3m,Redbridge,C,Medium,Low confidence
+Detached,2m-3m,Richmond_upon_Thames,C,Medium,Low confidence
+Detached,2m-3m,Southwark,C,Medium,Low confidence
+Detached,2m-3m,Sutton,C,Medium,Low confidence
+Detached,2m-3m,Wandsworth,C,Medium,Low confidence
+Detached,2m-3m,Westminster,C,Medium,Low confidence
+Detached,3m-5m,Barnet,D,Low,Very low confidence
+Detached,3m-5m,Brent,D,Low,Very low confidence
+Detached,3m-5m,Bromley,D,Low,Very low confidence
+Detached,3m-5m,Camden,D,Low,Very low confidence
+Detached,3m-5m,Ealing,D,Low,Very low confidence
+Detached,3m-5m,Enfield,D,Low,Very low confidence
+Detached,3m-5m,Haringey,D,Low,Very low confidence
+Detached,3m-5m,Hillingdon,D,Low,Very low confidence
+Detached,3m-5m,Hounslow,D,Low,Very low confidence
+Detached,3m-5m,Kensington_and_Chelsea,D,Low,Very low confidence
+Detached,3m-5m,Kingston_upon_Thames,D,Low,Very low confidence
+Detached,3m-5m,Lambeth,D,Low,Very low confidence
+Detached,3m-5m,Merton,D,Low,Very low confidence
+Detached,3m-5m,Redbridge,D,Low,Very low confidence
+Detached,3m-5m,Richmond_upon_Thames,D,Low,Very low confidence
+Detached,3m-5m,Southwark,D,Low,Very low confidence
+Detached,3m-5m,Sutton,D,Low,Very low confidence
+Detached,3m-5m,Wandsworth,D,Low,Very low confidence
+Detached,3m-5m,Westminster,D,Low,Very low confidence
+Detached,5m+,Barnet,D,Very Low,Very low confidence
+Detached,5m+,Camden,D,Very Low,Very low confidence
+Detached,5m+,Hammersmith_and_Fulham,D,Very Low,Very low confidence
+Detached,5m+,Haringey,D,Very Low,Very low confidence
+Detached,5m+,Kensington_and_Chelsea,D,Very Low,Very low confidence
+Detached,5m+,Kingston_upon_Thames,D,Very Low,Very low confidence
+Detached,5m+,Merton,D,Very Low,Very low confidence
+Detached,5m+,Richmond_upon_Thames,D,Very Low,Very low confidence
+Detached,5m+,Southwark,D,Very Low,Very low confidence
+Detached,5m+,Wandsworth,D,Very Low,Very low confidence
+Detached,5m+,Westminster,D,Very Low,Very low confidence
+Flat,<250k,Barking_and_Dagenham,B,Low,Limited confidence
+Flat,<250k,Barnet,B,High,Generally reliable
+Flat,<250k,Bexley,B,Medium,Generally reliable
+Flat,<250k,Brent,B,High,Generally reliable
+Flat,<250k,Bromley,C,Medium,Low confidence
+Flat,<250k,Croydon,B,High,Generally reliable
+Flat,<250k,Ealing,B,High,Generally reliable
+Flat,<250k,Enfield,B,Medium,Generally reliable
+Flat,<250k,Greenwich,B,Low,Limited confidence
+Flat,<250k,Haringey,B,High,Generally reliable
+Flat,<250k,Harrow,B,High,Generally reliable
+Flat,<250k,Havering,B,Medium,Generally reliable
+Flat,<250k,Hillingdon,B,Low,Limited confidence
+Flat,<250k,Hounslow,B,Low,Limited confidence
+Flat,<250k,Kingston_upon_Thames,B,High,Generally reliable
+Flat,<250k,Lambeth,B,High,Generally reliable
+Flat,<250k,Lewisham,B,High,Generally reliable
+Flat,<250k,Merton,B,High,Generally reliable
+Flat,<250k,Newham,B,Low,Limited confidence
+Flat,<250k,Redbridge,B,Low,Limited confidence
+Flat,<250k,Richmond_upon_Thames,B,High,Generally reliable
+Flat,<250k,Southwark,B,High,Generally reliable
+Flat,<250k,Sutton,B,Medium,Generally reliable
+Flat,<250k,Tower_Hamlets,B,High,Generally reliable
+Flat,<250k,Waltham_Forest,B,High,Generally reliable
+Flat,<250k,Wandsworth,B,High,Generally reliable
+Flat,250k-500k,Barking_and_Dagenham,B,Low,Limited confidence
+Flat,250k-500k,Barnet,B,High,Generally reliable
+Flat,250k-500k,Bexley,B,High,Generally reliable
+Flat,250k-500k,Brent,B,High,Generally reliable
+Flat,250k-500k,Bromley,B,High,Generally reliable
+Flat,250k-500k,Camden,B,Medium,Generally reliable
+Flat,250k-500k,City_of_London,B,High,Generally reliable
+Flat,250k-500k,Croydon,B,High,Generally reliable
+Flat,250k-500k,Ealing,B,High,Generally reliable
+Flat,250k-500k,Enfield,B,High,Generally reliable
+Flat,250k-500k,Greenwich,B,High,Generally reliable
+Flat,250k-500k,Hackney,B,High,Generally reliable
+Flat,250k-500k,Hammersmith_and_Fulham,C,Medium,Low confidence
+Flat,250k-500k,Haringey,B,High,Generally reliable
+Flat,250k-500k,Harrow,B,High,Generally reliable
+Flat,250k-500k,Havering,B,High,Generally reliable
+Flat,250k-500k,Hillingdon,B,High,Generally reliable
+Flat,250k-500k,Hounslow,B,High,Generally reliable
+Flat,250k-500k,Islington,B,High,Generally reliable
+Flat,250k-500k,Kensington_and_Chelsea,C,Low,Low confidence
+Flat,250k-500k,Kingston_upon_Thames,B,High,Generally reliable
+Flat,250k-500k,Lambeth,B,High,Generally reliable
+Flat,250k-500k,Lewisham,B,High,Generally reliable
+Flat,250k-500k,Merton,B,High,Generally reliable
+Flat,250k-500k,Newham,B,High,Generally reliable
+Flat,250k-500k,Redbridge,B,High,Generally reliable
+Flat,250k-500k,Richmond_upon_Thames,B,High,Generally reliable
+Flat,250k-500k,Southwark,B,High,Generally reliable
+Flat,250k-500k,Sutton,B,High,Generally reliable
+Flat,250k-500k,Tower_Hamlets,B,High,Generally reliable
+Flat,250k-500k,Waltham_Forest,B,High,Generally reliable
+Flat,250k-500k,Wandsworth,B,High,Generally reliable
+Flat,250k-500k,Westminster,B,Medium,Generally reliable
+Flat,500k-750k,Barnet,B,High,Generally reliable
+Flat,500k-750k,Bexley,B,High,Generally reliable
+Flat,500k-750k,Brent,B,Medium,Generally reliable
+Flat,500k-750k,Bromley,C,Low,Low confidence
+Flat,500k-750k,Camden,B,High,Generally reliable
+Flat,500k-750k,City_of_London,B,High,Generally reliable
+Flat,500k-750k,Croydon,C,Low,Low confidence
+Flat,500k-750k,Ealing,B,Medium,Generally reliable
+Flat,500k-750k,Enfield,C,Low,Low confidence
+Flat,500k-750k,Greenwich,B,High,Generally reliable
+Flat,500k-750k,Hackney,B,High,Generally reliable
+Flat,500k-750k,Hammersmith_and_Fulham,C,High,Use with caution
+Flat,500k-750k,Haringey,B,Medium,Generally reliable
+Flat,500k-750k,Harrow,C,Low,Low confidence
+Flat,500k-750k,Havering,B,High,Generally reliable
+Flat,500k-750k,Hillingdon,B,High,Generally reliable
+Flat,500k-750k,Hounslow,C,Low,Low confidence
+Flat,500k-750k,Islington,B,High,Generally reliable
+Flat,500k-750k,Kensington_and_Chelsea,C,Medium,Low confidence
+Flat,500k-750k,Kingston_upon_Thames,C,Low,Low confidence
+Flat,500k-750k,Lambeth,B,High,Generally reliable
+Flat,500k-750k,Lewisham,B,Medium,Generally reliable
+Flat,500k-750k,Merton,B,Medium,Generally reliable
+Flat,500k-750k,Newham,B,Medium,Generally reliable
+Flat,500k-750k,Redbridge,B,High,Generally reliable
+Flat,500k-750k,Richmond_upon_Thames,C,Medium,Low confidence
+Flat,500k-750k,Southwark,B,High,Generally reliable
+Flat,500k-750k,Sutton,B,High,Generally reliable
+Flat,500k-750k,Tower_Hamlets,C,High,Use with caution
+Flat,500k-750k,Waltham_Forest,C,Low,Low confidence
+Flat,500k-750k,Wandsworth,B,High,Generally reliable
+Flat,500k-750k,Westminster,B,High,Generally reliable
+Flat,750k-1m,Barnet,D,Low,Very low confidence
+Flat,750k-1m,Brent,C,High,Use with caution
+Flat,750k-1m,Bromley,C,High,Use with caution
+Flat,750k-1m,Camden,D,Medium,Very low confidence
+Flat,750k-1m,City_of_London,C,High,Use with caution
+Flat,750k-1m,Croydon,C,High,Use with caution
+Flat,750k-1m,Ealing,C,High,Use with caution
+Flat,750k-1m,Enfield,C,High,Use with caution
+Flat,750k-1m,Greenwich,C,High,Use with caution
+Flat,750k-1m,Hackney,C,Low,Low confidence
+Flat,750k-1m,Hammersmith_and_Fulham,D,Medium,Very low confidence
+Flat,750k-1m,Haringey,C,High,Use with caution
+Flat,750k-1m,Harrow,C,High,Use with caution
+Flat,750k-1m,Havering,C,High,Use with caution
+Flat,750k-1m,Hillingdon,C,High,Use with caution
+Flat,750k-1m,Hounslow,C,High,Use with caution
+Flat,750k-1m,Islington,D,Medium,Very low confidence
+Flat,750k-1m,Kensington_and_Chelsea,C,Medium,Low confidence
+Flat,750k-1m,Kingston_upon_Thames,C,High,Use with caution
+Flat,750k-1m,Lambeth,C,Low,Low confidence
+Flat,750k-1m,Lewisham,C,High,Use with caution
+Flat,750k-1m,Merton,C,High,Use with caution
+Flat,750k-1m,Newham,C,High,Use with caution
+Flat,750k-1m,Redbridge,C,High,Use with caution
+Flat,750k-1m,Richmond_upon_Thames,D,Low,Very low confidence
+Flat,750k-1m,Southwark,D,Low,Very low confidence
+Flat,750k-1m,Tower_Hamlets,D,Medium,Very low confidence
+Flat,750k-1m,Waltham_Forest,C,High,Use with caution
+Flat,750k-1m,Wandsworth,D,Medium,Very low confidence
+Flat,750k-1m,Westminster,D,Medium,Very low confidence
+Flat,1m-1.5m,Barnet,C,High,Use with caution
+Flat,1m-1.5m,Brent,C,High,Use with caution
+Flat,1m-1.5m,Bromley,C,High,Use with caution
+Flat,1m-1.5m,Camden,D,Medium,Very low confidence
+Flat,1m-1.5m,City_of_London,C,High,Use with caution
+Flat,1m-1.5m,Croydon,C,High,Use with caution
+Flat,1m-1.5m,Ealing,C,High,Use with caution
+Flat,1m-1.5m,Enfield,C,High,Use with caution
+Flat,1m-1.5m,Greenwich,C,High,Use with caution
+Flat,1m-1.5m,Hackney,C,High,Use with caution
+Flat,1m-1.5m,Hammersmith_and_Fulham,D,Medium,Very low confidence
+Flat,1m-1.5m,Haringey,C,High,Use with caution
+Flat,1m-1.5m,Harrow,C,High,Use with caution
+Flat,1m-1.5m,Hillingdon,C,High,Use with caution
+Flat,1m-1.5m,Hounslow,C,High,Use with caution
+Flat,1m-1.5m,Islington,D,Low,Very low confidence
+Flat,1m-1.5m,Kensington_and_Chelsea,D,Medium,Very low confidence
+Flat,1m-1.5m,Kingston_upon_Thames,C,High,Use with caution
+Flat,1m-1.5m,Lambeth,C,High,Use with caution
+Flat,1m-1.5m,Lewisham,C,High,Use with caution
+Flat,1m-1.5m,Merton,C,High,Use with caution
+Flat,1m-1.5m,Newham,C,High,Use with caution
+Flat,1m-1.5m,Redbridge,C,High,Use with caution
+Flat,1m-1.5m,Richmond_upon_Thames,C,High,Use with caution
+Flat,1m-1.5m,Southwark,D,Low,Very low confidence
+Flat,1m-1.5m,Tower_Hamlets,C,High,Use with caution
+Flat,1m-1.5m,Wandsworth,D,Low,Very low confidence
+Flat,1m-1.5m,Westminster,D,Medium,Very low confidence
+Flat,1.5m-2m,Barnet,C,Medium,Low confidence
+Flat,1.5m-2m,Brent,C,Medium,Low confidence
+Flat,1.5m-2m,Bromley,C,Medium,Low confidence
+Flat,1.5m-2m,Camden,D,Low,Very low confidence
+Flat,1.5m-2m,City_of_London,C,Medium,Low confidence
+Flat,1.5m-2m,Enfield,C,Medium,Low confidence
+Flat,1.5m-2m,Greenwich,C,Medium,Low confidence
+Flat,1.5m-2m,Hackney,C,Medium,Low confidence
+Flat,1.5m-2m,Hammersmith_and_Fulham,C,Medium,Low confidence
+Flat,1.5m-2m,Haringey,C,Medium,Low confidence
+Flat,1.5m-2m,Hounslow,C,Medium,Low confidence
+Flat,1.5m-2m,Islington,C,Medium,Low confidence
+Flat,1.5m-2m,Kensington_and_Chelsea,D,Low,Very low confidence
+Flat,1.5m-2m,Lambeth,C,Medium,Low confidence
+Flat,1.5m-2m,Merton,C,Medium,Low confidence
+Flat,1.5m-2m,Redbridge,C,Medium,Low confidence
+Flat,1.5m-2m,Richmond_upon_Thames,C,Medium,Low confidence
+Flat,1.5m-2m,Southwark,C,Medium,Low confidence
+Flat,1.5m-2m,Tower_Hamlets,C,Medium,Low confidence
+Flat,1.5m-2m,Wandsworth,C,Medium,Low confidence
+Flat,1.5m-2m,Westminster,D,Low,Very low confidence
+Flat,2m-3m,Barnet,C,Medium,Low confidence
+Flat,2m-3m,Camden,C,Medium,Low confidence
+Flat,2m-3m,City_of_London,C,Medium,Low confidence
+Flat,2m-3m,Hackney,C,Medium,Low confidence
+Flat,2m-3m,Hammersmith_and_Fulham,C,Medium,Low confidence
+Flat,2m-3m,Haringey,C,Medium,Low confidence
+Flat,2m-3m,Hounslow,C,Medium,Low confidence
+Flat,2m-3m,Islington,C,Medium,Low confidence
+Flat,2m-3m,Kensington_and_Chelsea,D,Low,Very low confidence
+Flat,2m-3m,Lambeth,C,Medium,Low confidence
+Flat,2m-3m,Merton,C,Medium,Low confidence
+Flat,2m-3m,Richmond_upon_Thames,C,Medium,Low confidence
+Flat,2m-3m,Southwark,C,Medium,Low confidence
+Flat,2m-3m,Tower_Hamlets,C,Medium,Low confidence
+Flat,2m-3m,Wandsworth,C,Medium,Low confidence
+Flat,2m-3m,Westminster,D,Low,Very low confidence
+Flat,3m-5m,Barnet,C,Low,Low confidence
+Flat,3m-5m,Camden,C,Low,Low confidence
+Flat,3m-5m,City_of_London,C,Low,Low confidence
+Flat,3m-5m,Hammersmith_and_Fulham,C,Low,Low confidence
+Flat,3m-5m,Islington,C,Low,Low confidence
+Flat,3m-5m,Kensington_and_Chelsea,C,Low,Low confidence
+Flat,3m-5m,Lambeth,C,Low,Low confidence
+Flat,3m-5m,Southwark,C,Low,Low confidence
+Flat,3m-5m,Wandsworth,C,Low,Low confidence
+Flat,3m-5m,Westminster,D,Low,Very low confidence
+Flat,5m+,Camden,C,Very Low,Insufficient evidence
+Flat,5m+,Hammersmith_and_Fulham,C,Very Low,Insufficient evidence
+Flat,5m+,Kensington_and_Chelsea,C,Very Low,Insufficient evidence
+Flat,5m+,Lambeth,C,Very Low,Insufficient evidence
+Flat,5m+,Southwark,C,Very Low,Insufficient evidence
+Flat,5m+,Westminster,C,Very Low,Insufficient evidence
+Semi-detached,<250k,Bexley,B,Very Low,Insufficient evidence
+Semi-detached,<250k,Bromley,B,Very Low,Insufficient evidence
+Semi-detached,<250k,Enfield,B,Very Low,Insufficient evidence
+Semi-detached,<250k,Greenwich,B,Very Low,Insufficient evidence
+Semi-detached,<250k,Havering,B,Very Low,Insufficient evidence
+Semi-detached,<250k,Hillingdon,B,Very Low,Insufficient evidence
+Semi-detached,<250k,Redbridge,B,Very Low,Insufficient evidence
+Semi-detached,<250k,Sutton,B,Very Low,Insufficient evidence
+Semi-detached,250k-500k,Barking_and_Dagenham,B,Low,Limited confidence
+Semi-detached,250k-500k,Barnet,C,Low,Low confidence
+Semi-detached,250k-500k,Bexley,B,High,Generally reliable
+Semi-detached,250k-500k,Brent,B,High,Generally reliable
+Semi-detached,250k-500k,Bromley,B,High,Generally reliable
+Semi-detached,250k-500k,Croydon,B,High,Generally reliable
+Semi-detached,250k-500k,Ealing,B,Low,Limited confidence
+Semi-detached,250k-500k,Enfield,C,Low,Low confidence
+Semi-detached,250k-500k,Greenwich,B,Low,Limited confidence
+Semi-detached,250k-500k,Hackney,B,High,Generally reliable
+Semi-detached,250k-500k,Haringey,B,High,Generally reliable
+Semi-detached,250k-500k,Harrow,B,Low,Limited confidence
+Semi-detached,250k-500k,Havering,B,High,Generally reliable
+Semi-detached,250k-500k,Hillingdon,B,High,Generally reliable
+Semi-detached,250k-500k,Hounslow,B,Medium,Generally reliable
+Semi-detached,250k-500k,Kingston_upon_Thames,B,Low,Limited confidence
+Semi-detached,250k-500k,Lambeth,B,High,Generally reliable
+Semi-detached,250k-500k,Lewisham,B,High,Generally reliable
+Semi-detached,250k-500k,Merton,B,High,Generally reliable
+Semi-detached,250k-500k,Newham,B,High,Generally reliable
+Semi-detached,250k-500k,Redbridge,B,Low,Limited confidence
+Semi-detached,250k-500k,Richmond_upon_Thames,B,High,Generally reliable
+Semi-detached,250k-500k,Southwark,B,High,Generally reliable
+Semi-detached,250k-500k,Sutton,B,Medium,Generally reliable
+Semi-detached,250k-500k,Waltham_Forest,B,High,Generally reliable
+Semi-detached,250k-500k,Wandsworth,B,High,Generally reliable
+Semi-detached,500k-750k,Barking_and_Dagenham,A,High,Reliable
+Semi-detached,500k-750k,Barnet,A,Medium,Reliable
+Semi-detached,500k-750k,Bexley,A,Medium,Reliable
+Semi-detached,500k-750k,Brent,A,Medium,Reliable
+Semi-detached,500k-750k,Bromley,A,High,Reliable
+Semi-detached,500k-750k,Croydon,A,High,Reliable
+Semi-detached,500k-750k,Ealing,A,Low,Limited confidence
+Semi-detached,500k-750k,Enfield,A,Medium,Reliable
+Semi-detached,500k-750k,Greenwich,A,Medium,Reliable
+Semi-detached,500k-750k,Hackney,A,High,Reliable
+Semi-detached,500k-750k,Hammersmith_and_Fulham,A,High,Reliable
+Semi-detached,500k-750k,Haringey,A,High,Reliable
+Semi-detached,500k-750k,Harrow,A,Medium,Reliable
+Semi-detached,500k-750k,Havering,A,Medium,Reliable
+Semi-detached,500k-750k,Hillingdon,A,Medium,Reliable
+Semi-detached,500k-750k,Hounslow,A,Medium,Reliable
+Semi-detached,500k-750k,Islington,A,High,Reliable
+Semi-detached,500k-750k,Kingston_upon_Thames,A,Medium,Reliable
+Semi-detached,500k-750k,Lambeth,A,High,Reliable
+Semi-detached,500k-750k,Lewisham,A,Low,Limited confidence
+Semi-detached,500k-750k,Merton,A,Low,Limited confidence
+Semi-detached,500k-750k,Newham,A,High,Reliable
+Semi-detached,500k-750k,Redbridge,A,Medium,Reliable
+Semi-detached,500k-750k,Richmond_upon_Thames,A,Low,Limited confidence
+Semi-detached,500k-750k,Southwark,A,High,Reliable
+Semi-detached,500k-750k,Sutton,A,Medium,Reliable
+Semi-detached,500k-750k,Tower_Hamlets,A,High,Reliable
+Semi-detached,500k-750k,Waltham_Forest,A,Medium,Reliable
+Semi-detached,500k-750k,Wandsworth,A,High,Reliable
+Semi-detached,750k-1m,Barnet,B,Medium,Generally reliable
+Semi-detached,750k-1m,Bexley,B,High,Generally reliable
+Semi-detached,750k-1m,Brent,B,Low,Limited confidence
+Semi-detached,750k-1m,Bromley,B,Low,Limited confidence
+Semi-detached,750k-1m,Camden,B,High,Generally reliable
+Semi-detached,750k-1m,Croydon,B,High,Generally reliable
+Semi-detached,750k-1m,Ealing,B,Low,Limited confidence
+Semi-detached,750k-1m,Enfield,B,Low,Limited confidence
+Semi-detached,750k-1m,Greenwich,B,High,Generally reliable
+Semi-detached,750k-1m,Hackney,B,High,Generally reliable
+Semi-detached,750k-1m,Hammersmith_and_Fulham,B,High,Generally reliable
+Semi-detached,750k-1m,Haringey,B,High,Generally reliable
+Semi-detached,750k-1m,Harrow,B,Low,Limited confidence
+Semi-detached,750k-1m,Havering,B,High,Generally reliable
+Semi-detached,750k-1m,Hillingdon,B,High,Generally reliable
+Semi-detached,750k-1m,Hounslow,B,High,Generally reliable
+Semi-detached,750k-1m,Islington,B,High,Generally reliable
+Semi-detached,750k-1m,Kingston_upon_Thames,B,Medium,Generally reliable
+Semi-detached,750k-1m,Lambeth,B,High,Generally reliable
+Semi-detached,750k-1m,Lewisham,B,High,Generally reliable
+Semi-detached,750k-1m,Merton,B,High,Generally reliable
+Semi-detached,750k-1m,Newham,B,High,Generally reliable
+Semi-detached,750k-1m,Redbridge,B,Low,Limited confidence
+Semi-detached,750k-1m,Richmond_upon_Thames,C,Low,Low confidence
+Semi-detached,750k-1m,Southwark,B,High,Generally reliable
+Semi-detached,750k-1m,Sutton,B,High,Generally reliable
+Semi-detached,750k-1m,Tower_Hamlets,B,High,Generally reliable
+Semi-detached,750k-1m,Waltham_Forest,B,High,Generally reliable
+Semi-detached,750k-1m,Wandsworth,B,High,Generally reliable
+Semi-detached,1m-1.5m,Barking_and_Dagenham,C,High,Use with caution
+Semi-detached,1m-1.5m,Barnet,D,Medium,Very low confidence
+Semi-detached,1m-1.5m,Bexley,C,High,Use with caution
+Semi-detached,1m-1.5m,Brent,C,High,Use with caution
+Semi-detached,1m-1.5m,Bromley,C,High,Use with caution
+Semi-detached,1m-1.5m,Camden,C,High,Use with caution
+Semi-detached,1m-1.5m,Croydon,C,High,Use with caution
+Semi-detached,1m-1.5m,Ealing,C,Low,Low confidence
+Semi-detached,1m-1.5m,Enfield,C,High,Use with caution
+Semi-detached,1m-1.5m,Greenwich,C,High,Use with caution
+Semi-detached,1m-1.5m,Hackney,C,High,Use with caution
+Semi-detached,1m-1.5m,Hammersmith_and_Fulham,C,High,Use with caution
+Semi-detached,1m-1.5m,Haringey,C,High,Use with caution
+Semi-detached,1m-1.5m,Harrow,C,High,Use with caution
+Semi-detached,1m-1.5m,Havering,C,High,Use with caution
+Semi-detached,1m-1.5m,Hillingdon,C,High,Use with caution
+Semi-detached,1m-1.5m,Hounslow,C,High,Use with caution
+Semi-detached,1m-1.5m,Islington,C,High,Use with caution
+Semi-detached,1m-1.5m,Kingston_upon_Thames,C,High,Use with caution
+Semi-detached,1m-1.5m,Lambeth,C,High,Use with caution
+Semi-detached,1m-1.5m,Lewisham,C,High,Use with caution
+Semi-detached,1m-1.5m,Merton,C,Low,Low confidence
+Semi-detached,1m-1.5m,Newham,C,High,Use with caution
+Semi-detached,1m-1.5m,Redbridge,C,High,Use with caution
+Semi-detached,1m-1.5m,Richmond_upon_Thames,D,Low,Very low confidence
+Semi-detached,1m-1.5m,Southwark,C,High,Use with caution
+Semi-detached,1m-1.5m,Sutton,C,High,Use with caution
+Semi-detached,1m-1.5m,Tower_Hamlets,C,High,Use with caution
+Semi-detached,1m-1.5m,Waltham_Forest,C,High,Use with caution
+Semi-detached,1m-1.5m,Wandsworth,C,High,Use with caution
+Semi-detached,1.5m-2m,Barnet,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Brent,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Bromley,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Camden,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Croydon,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Ealing,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Enfield,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Greenwich,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Hackney,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Hammersmith_and_Fulham,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Haringey,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Hounslow,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Islington,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Kingston_upon_Thames,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Lambeth,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Lewisham,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Merton,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Redbridge,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Richmond_upon_Thames,B,Low,Limited confidence
+Semi-detached,1.5m-2m,Southwark,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Waltham_Forest,B,Medium,Generally reliable
+Semi-detached,1.5m-2m,Wandsworth,B,Medium,Generally reliable
+Semi-detached,2m-3m,Barnet,C,Low,Low confidence
+Semi-detached,2m-3m,Brent,C,Low,Low confidence
+Semi-detached,2m-3m,Bromley,C,Low,Low confidence
+Semi-detached,2m-3m,Camden,C,Low,Low confidence
+Semi-detached,2m-3m,Croydon,C,Low,Low confidence
+Semi-detached,2m-3m,Ealing,C,Low,Low confidence
+Semi-detached,2m-3m,Greenwich,C,Low,Low confidence
+Semi-detached,2m-3m,Hackney,C,Low,Low confidence
+Semi-detached,2m-3m,Hammersmith_and_Fulham,C,Low,Low confidence
+Semi-detached,2m-3m,Haringey,C,Low,Low confidence
+Semi-detached,2m-3m,Harrow,C,Low,Low confidence
+Semi-detached,2m-3m,Hounslow,C,Low,Low confidence
+Semi-detached,2m-3m,Islington,C,Low,Low confidence
+Semi-detached,2m-3m,Kensington_and_Chelsea,C,Low,Low confidence
+Semi-detached,2m-3m,Kingston_upon_Thames,C,Low,Low confidence
+Semi-detached,2m-3m,Lambeth,C,Low,Low confidence
+Semi-detached,2m-3m,Merton,C,Low,Low confidence
+Semi-detached,2m-3m,Richmond_upon_Thames,C,Low,Low confidence
+Semi-detached,2m-3m,Southwark,C,Low,Low confidence
+Semi-detached,2m-3m,Wandsworth,C,Low,Low confidence
+Semi-detached,2m-3m,Westminster,C,Low,Low confidence
+Semi-detached,3m-5m,Barnet,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Brent,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Camden,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Hammersmith_and_Fulham,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Haringey,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Islington,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Kensington_and_Chelsea,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Merton,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Richmond_upon_Thames,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Southwark,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Wandsworth,B,Very Low,Insufficient evidence
+Semi-detached,3m-5m,Westminster,B,Very Low,Insufficient evidence
+Semi-detached,5m+,Camden,D,Very Low,Very low confidence
+Semi-detached,5m+,Hammersmith_and_Fulham,D,Very Low,Very low confidence
+Semi-detached,5m+,Kensington_and_Chelsea,D,Very Low,Very low confidence
+Semi-detached,5m+,Richmond_upon_Thames,D,Very Low,Very low confidence
+Semi-detached,5m+,Westminster,D,Very Low,Very low confidence
+Terraced,<250k,Barking_and_Dagenham,B,Low,Limited confidence
+Terraced,<250k,Bexley,B,Low,Limited confidence
+Terraced,<250k,Brent,B,Low,Limited confidence
+Terraced,<250k,Bromley,B,Low,Limited confidence
+Terraced,<250k,Croydon,B,Low,Limited confidence
+Terraced,<250k,Ealing,B,Low,Limited confidence
+Terraced,<250k,Enfield,B,Low,Limited confidence
+Terraced,<250k,Greenwich,B,Low,Limited confidence
+Terraced,<250k,Harrow,B,Low,Limited confidence
+Terraced,<250k,Havering,B,Low,Limited confidence
+Terraced,<250k,Hillingdon,B,Low,Limited confidence
+Terraced,<250k,Merton,B,Low,Limited confidence
+Terraced,<250k,Newham,B,Low,Limited confidence
+Terraced,<250k,Redbridge,B,Low,Limited confidence
+Terraced,<250k,Sutton,B,Low,Limited confidence
+Terraced,250k-500k,Barking_and_Dagenham,A,High,Reliable
+Terraced,250k-500k,Barnet,A,Low,Limited confidence
+Terraced,250k-500k,Bexley,A,High,Reliable
+Terraced,250k-500k,Brent,A,Low,Limited confidence
+Terraced,250k-500k,Bromley,A,High,Reliable
+Terraced,250k-500k,Croydon,A,High,Reliable
+Terraced,250k-500k,Ealing,A,Medium,Reliable
+Terraced,250k-500k,Enfield,A,High,Reliable
+Terraced,250k-500k,Greenwich,A,High,Reliable
+Terraced,250k-500k,Hackney,A,High,Reliable
+Terraced,250k-500k,Hammersmith_and_Fulham,A,High,Reliable
+Terraced,250k-500k,Haringey,A,Low,Limited confidence
+Terraced,250k-500k,Harrow,A,Medium,Reliable
+Terraced,250k-500k,Havering,A,High,Reliable
+Terraced,250k-500k,Hillingdon,A,High,Reliable
+Terraced,250k-500k,Hounslow,A,Medium,Reliable
+Terraced,250k-500k,Islington,A,High,Reliable
+Terraced,250k-500k,Kingston_upon_Thames,A,Medium,Reliable
+Terraced,250k-500k,Lambeth,A,High,Reliable
+Terraced,250k-500k,Lewisham,A,Medium,Reliable
+Terraced,250k-500k,Merton,A,Medium,Reliable
+Terraced,250k-500k,Newham,A,High,Reliable
+Terraced,250k-500k,Redbridge,A,High,Reliable
+Terraced,250k-500k,Richmond_upon_Thames,B,Low,Limited confidence
+Terraced,250k-500k,Southwark,A,High,Reliable
+Terraced,250k-500k,Sutton,A,High,Reliable
+Terraced,250k-500k,Tower_Hamlets,A,High,Reliable
+Terraced,250k-500k,Waltham_Forest,A,Medium,Reliable
+Terraced,250k-500k,Wandsworth,B,Low,Limited confidence
+Terraced,500k-750k,Barking_and_Dagenham,B,High,Generally reliable
+Terraced,500k-750k,Barnet,B,Medium,Generally reliable
+Terraced,500k-750k,Bexley,B,Low,Limited confidence
+Terraced,500k-750k,Brent,B,Low,Limited confidence
+Terraced,500k-750k,Bromley,B,High,Generally reliable
+Terraced,500k-750k,Camden,B,High,Generally reliable
+Terraced,500k-750k,Croydon,B,Medium,Generally reliable
+Terraced,500k-750k,Ealing,B,Medium,Generally reliable
+Terraced,500k-750k,Enfield,B,Medium,Generally reliable
+Terraced,500k-750k,Greenwich,B,High,Generally reliable
+Terraced,500k-750k,Hackney,B,High,Generally reliable
+Terraced,500k-750k,Hammersmith_and_Fulham,B,High,Generally reliable
+Terraced,500k-750k,Haringey,B,Medium,Generally reliable
+Terraced,500k-750k,Harrow,B,Medium,Generally reliable
+Terraced,500k-750k,Havering,C,Low,Low confidence
+Terraced,500k-750k,Hillingdon,B,Medium,Generally reliable
+Terraced,500k-750k,Hounslow,B,Medium,Generally reliable
+Terraced,500k-750k,Islington,B,High,Generally reliable
+Terraced,500k-750k,Kensington_and_Chelsea,B,High,Generally reliable
+Terraced,500k-750k,Kingston_upon_Thames,B,Medium,Generally reliable
+Terraced,500k-750k,Lambeth,B,Medium,Generally reliable
+Terraced,500k-750k,Lewisham,B,High,Generally reliable
+Terraced,500k-750k,Merton,B,High,Generally reliable
+Terraced,500k-750k,Newham,B,Medium,Generally reliable
+Terraced,500k-750k,Redbridge,B,High,Generally reliable
+Terraced,500k-750k,Richmond_upon_Thames,B,Medium,Generally reliable
+Terraced,500k-750k,Southwark,C,Medium,Low confidence
+Terraced,500k-750k,Sutton,B,Medium,Generally reliable
+Terraced,500k-750k,Tower_Hamlets,C,Low,Low confidence
+Terraced,500k-750k,Waltham_Forest,B,High,Generally reliable
+Terraced,500k-750k,Wandsworth,B,Medium,Generally reliable
+Terraced,500k-750k,Westminster,B,High,Generally reliable
+Terraced,750k-1m,Barnet,C,Medium,Low confidence
+Terraced,750k-1m,Bexley,B,High,Generally reliable
+Terraced,750k-1m,Brent,C,Low,Low confidence
+Terraced,750k-1m,Bromley,B,High,Generally reliable
+Terraced,750k-1m,Camden,B,High,Generally reliable
+Terraced,750k-1m,Croydon,B,High,Generally reliable
+Terraced,750k-1m,Ealing,B,Medium,Generally reliable
+Terraced,750k-1m,Enfield,C,Low,Low confidence
+Terraced,750k-1m,Greenwich,C,Low,Low confidence
+Terraced,750k-1m,Hackney,C,Low,Low confidence
+Terraced,750k-1m,Hammersmith_and_Fulham,B,High,Generally reliable
+Terraced,750k-1m,Haringey,B,Low,Limited confidence
+Terraced,750k-1m,Harrow,B,High,Generally reliable
+Terraced,750k-1m,Havering,B,High,Generally reliable
+Terraced,750k-1m,Hillingdon,B,High,Generally reliable
+Terraced,750k-1m,Hounslow,B,High,Generally reliable
+Terraced,750k-1m,Islington,C,Low,Low confidence
+Terraced,750k-1m,Kensington_and_Chelsea,B,High,Generally reliable
+Terraced,750k-1m,Kingston_upon_Thames,B,High,Generally reliable
+Terraced,750k-1m,Lambeth,B,Medium,Generally reliable
+Terraced,750k-1m,Lewisham,B,Low,Limited confidence
+Terraced,750k-1m,Merton,B,Medium,Generally reliable
+Terraced,750k-1m,Newham,B,High,Generally reliable
+Terraced,750k-1m,Redbridge,C,Low,Low confidence
+Terraced,750k-1m,Richmond_upon_Thames,B,Medium,Generally reliable
+Terraced,750k-1m,Southwark,B,Medium,Generally reliable
+Terraced,750k-1m,Sutton,B,High,Generally reliable
+Terraced,750k-1m,Tower_Hamlets,C,Low,Low confidence
+Terraced,750k-1m,Waltham_Forest,B,Low,Limited confidence
+Terraced,750k-1m,Wandsworth,B,Medium,Generally reliable
+Terraced,750k-1m,Westminster,B,High,Generally reliable
+Terraced,1m-1.5m,Barnet,C,Low,Low confidence
+Terraced,1m-1.5m,Brent,C,Low,Low confidence
+Terraced,1m-1.5m,Bromley,B,High,Generally reliable
+Terraced,1m-1.5m,Camden,B,High,Generally reliable
+Terraced,1m-1.5m,Ealing,B,Low,Limited confidence
+Terraced,1m-1.5m,Enfield,B,High,Generally reliable
+Terraced,1m-1.5m,Greenwich,B,High,Generally reliable
+Terraced,1m-1.5m,Hackney,B,Low,Limited confidence
+Terraced,1m-1.5m,Hammersmith_and_Fulham,C,Medium,Low confidence
+Terraced,1m-1.5m,Haringey,C,Low,Low confidence
+Terraced,1m-1.5m,Harrow,B,High,Generally reliable
+Terraced,1m-1.5m,Havering,B,High,Generally reliable
+Terraced,1m-1.5m,Hillingdon,B,High,Generally reliable
+Terraced,1m-1.5m,Hounslow,B,Low,Limited confidence
+Terraced,1m-1.5m,Islington,B,Medium,Generally reliable
+Terraced,1m-1.5m,Kensington_and_Chelsea,B,High,Generally reliable
+Terraced,1m-1.5m,Kingston_upon_Thames,B,High,Generally reliable
+Terraced,1m-1.5m,Lambeth,B,Medium,Generally reliable
+Terraced,1m-1.5m,Lewisham,B,High,Generally reliable
+Terraced,1m-1.5m,Merton,B,Low,Limited confidence
+Terraced,1m-1.5m,Newham,B,High,Generally reliable
+Terraced,1m-1.5m,Redbridge,B,High,Generally reliable
+Terraced,1m-1.5m,Richmond_upon_Thames,B,Medium,Generally reliable
+Terraced,1m-1.5m,Southwark,B,Low,Limited confidence
+Terraced,1m-1.5m,Tower_Hamlets,B,High,Generally reliable
+Terraced,1m-1.5m,Waltham_Forest,B,High,Generally reliable
+Terraced,1m-1.5m,Wandsworth,B,High,Generally reliable
+Terraced,1m-1.5m,Westminster,B,High,Generally reliable
+Terraced,1.5m-2m,Barnet,C,Medium,Low confidence
+Terraced,1.5m-2m,Brent,C,Medium,Low confidence
+Terraced,1.5m-2m,Bromley,C,Medium,Low confidence
+Terraced,1.5m-2m,Camden,C,Medium,Low confidence
+Terraced,1.5m-2m,Ealing,C,Medium,Low confidence
+Terraced,1.5m-2m,Enfield,C,Medium,Low confidence
+Terraced,1.5m-2m,Greenwich,C,Medium,Low confidence
+Terraced,1.5m-2m,Hackney,C,Medium,Low confidence
+Terraced,1.5m-2m,Hammersmith_and_Fulham,D,Medium,Very low confidence
+Terraced,1.5m-2m,Haringey,C,Medium,Low confidence
+Terraced,1.5m-2m,Harrow,C,Medium,Low confidence
+Terraced,1.5m-2m,Hounslow,C,Medium,Low confidence
+Terraced,1.5m-2m,Islington,C,Medium,Low confidence
+Terraced,1.5m-2m,Kensington_and_Chelsea,C,Medium,Low confidence
+Terraced,1.5m-2m,Kingston_upon_Thames,C,Medium,Low confidence
+Terraced,1.5m-2m,Lambeth,C,Medium,Low confidence
+Terraced,1.5m-2m,Lewisham,C,Medium,Low confidence
+Terraced,1.5m-2m,Merton,C,Medium,Low confidence
+Terraced,1.5m-2m,Richmond_upon_Thames,C,Low,Low confidence
+Terraced,1.5m-2m,Southwark,C,Medium,Low confidence
+Terraced,1.5m-2m,Tower_Hamlets,C,Medium,Low confidence
+Terraced,1.5m-2m,Waltham_Forest,C,Medium,Low confidence
+Terraced,1.5m-2m,Wandsworth,C,Medium,Low confidence
+Terraced,1.5m-2m,Westminster,C,Medium,Low confidence
+Terraced,2m-3m,Barnet,C,Medium,Low confidence
+Terraced,2m-3m,Brent,C,Medium,Low confidence
+Terraced,2m-3m,Bromley,C,Medium,Low confidence
+Terraced,2m-3m,Camden,C,Medium,Low confidence
+Terraced,2m-3m,Ealing,C,Medium,Low confidence
+Terraced,2m-3m,Hackney,C,Medium,Low confidence
+Terraced,2m-3m,Hammersmith_and_Fulham,D,Low,Very low confidence
+Terraced,2m-3m,Haringey,C,Medium,Low confidence
+Terraced,2m-3m,Hounslow,C,Medium,Low confidence
+Terraced,2m-3m,Islington,C,Medium,Low confidence
+Terraced,2m-3m,Kensington_and_Chelsea,D,Low,Very low confidence
+Terraced,2m-3m,Lambeth,C,Medium,Low confidence
+Terraced,2m-3m,Merton,C,Medium,Low confidence
+Terraced,2m-3m,Richmond_upon_Thames,C,Medium,Low confidence
+Terraced,2m-3m,Southwark,C,Medium,Low confidence
+Terraced,2m-3m,Tower_Hamlets,C,Medium,Low confidence
+Terraced,2m-3m,Wandsworth,C,Medium,Low confidence
+Terraced,2m-3m,Westminster,C,Medium,Low confidence
+Terraced,3m-5m,Barnet,C,Low,Low confidence
+Terraced,3m-5m,Brent,C,Low,Low confidence
+Terraced,3m-5m,Camden,C,Low,Low confidence
+Terraced,3m-5m,Hackney,C,Low,Low confidence
+Terraced,3m-5m,Hammersmith_and_Fulham,C,Low,Low confidence
+Terraced,3m-5m,Haringey,C,Low,Low confidence
+Terraced,3m-5m,Islington,C,Low,Low confidence
+Terraced,3m-5m,Kensington_and_Chelsea,D,Low,Very low confidence
+Terraced,3m-5m,Lambeth,C,Low,Low confidence
+Terraced,3m-5m,Merton,C,Low,Low confidence
+Terraced,3m-5m,Richmond_upon_Thames,C,Low,Low confidence
+Terraced,3m-5m,Southwark,C,Low,Low confidence
+Terraced,3m-5m,Tower_Hamlets,C,Low,Low confidence
+Terraced,3m-5m,Wandsworth,C,Low,Low confidence
+Terraced,3m-5m,Westminster,C,Low,Low confidence
+Terraced,5m+,Camden,C,Low,Low confidence
+Terraced,5m+,Hammersmith_and_Fulham,C,Low,Low confidence
+Terraced,5m+,Kensington_and_Chelsea,D,Low,Very low confidence
+Terraced,5m+,Westminster,C,Low,Low confidence
