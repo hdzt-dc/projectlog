@@ -2415,4 +2415,336 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
 })();
 </script>
 
+
+<style id="projectlog-v6-style">
+.code-record details{margin-top:10px}
+.code-record summary{cursor:pointer;font-weight:700;color:var(--brand)}
+#demoPage code{background:#f3f4f6;padding:2px 5px;border-radius:5px}
+#demoPage .stat{border:1px solid var(--line);border-radius:10px;background:#fafbfc}
+#demoPage .stat strong{font-size:18px;margin-top:4px;word-break:break-word}
+#demoWarnings{white-space:pre-wrap}
+</style>
+
+<script id="projectlog-v6-patch">
+(function(){
+  const VERSION_KEY="ProjectLogLondonHousingV6";
+  const uid=()=>{try{return crypto.randomUUID()}catch(e){return String(Date.now()+Math.random())}};
+  const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+  const isCodeLog=x=>{
+    const at=Array.isArray(x?.attachments)?x.attachments:[];
+    return !!(x?.code&&String(x.code).trim()) || at.some(a=>/\.py$/i.test(a.name||"")||/python/i.test(a.type||""));
+  };
+
+  function currentState(){
+    try{return JSON.parse(localStorage.getItem("ProjectLogV2")||"null")}catch(e){return null}
+  }
+  function saveState(s){
+    localStorage.setItem("ProjectLogV2",JSON.stringify(s));
+  }
+  function londonProject(s){
+    return (s?.projects||[]).find(x=>(x.name||"").includes("London Housing")) || (s?.projects||[])[0];
+  }
+  function addNarrativeLog(p,title,date,note,problem,next,tags){
+    p.logs=p.logs||[];
+    const old=p.logs.find(x=>x.title===title);
+    const rec={id:old?.id||uid(),title,date,status:"已完成",stageId:"",tags:tags||[],note,problem,next,code:"",attachments:[],recordKind:"log"};
+    if(old) Object.assign(old,rec); else p.logs.push(rec);
+  }
+  function migrate(){
+    const s=currentState();
+    const p=londonProject(s);
+    if(!s||!p) return;
+
+    p.logs=p.logs||[];
+    p.codeRecords=p.codeRecords||[];
+
+    const narrative=[];
+    p.logs.forEach(x=>{
+      if(isCodeLog(x)){
+        const nm=(x.attachments||[])[0]?.name || x.title || "Code record";
+        if(!p.codeRecords.some(r=>r.title===nm)){
+          p.codeRecords.push({
+            id:x.id||uid(),
+            title:nm,
+            date:x.date||"2026-09-21",
+            status:x.status||"已完成",
+            note:x.note||"",
+            code:x.code||"",
+            attachments:x.attachments||[]
+          });
+        }
+      }else{
+        x.recordKind="log";
+        narrative.push(x);
+      }
+    });
+    p.logs=narrative;
+
+    p.stages=p.stages||[];
+    p.stages.forEach(sg=>(sg.tasks||[]).forEach(t=>t.done=true));
+    p.stages=p.stages.filter(sg=>sg.name!=="模型、可靠性与部署"&&sg.name!=="模型、可靠性与部署完成");
+    p.stages.push({
+      id:uid(),
+      name:"模型、可靠性与部署",
+      desc:"完成从基线模型到 Enhanced 模型、可靠性系统、独立 Final Test 与 API Demo 的工程闭环。",
+      tasks:[
+        {id:uid(),title:"完成 Ridge 与 HistGradientBoosting 基线比较",note:"确认非线性 HGB 显著优于 Ridge。",done:true},
+        {id:uid(),title:"完成 leakage-safe Postcode Sector 增强",note:"使用严格 past-only 历史地理统计，避免未来信息泄漏。",done:true},
+        {id:uid(),title:"完成 Enhanced Model Error Audit",note:"审计哪些样本改善、恶化，并拒绝只看总体指标。",done:true},
+        {id:uid(),title:"完成 Reliability Engine",note:"建立 Predictability Grade、Evidence Strength、Local Risk 与最终状态。",done:true},
+        {id:uid(),title:"完成 2022–2023 独立 Final Test",note:"冻结模型、特征和规则后一次性评估；之后不再据此调参。",done:true},
+        {id:uid(),title:"完成 Final Deployment Package",note:"打包 Control、Enhanced、历史位置统计和可靠性 lookup。",done:true},
+        {id:uid(),title:"完成 FastAPI 与 predict_house",note:"实现输入验证、fallback、warning 与可靠性输出。",done:true},
+        {id:uid(),title:"完成 End-to-End Smoke Test 与网页 Demo",note:"完整 HTTP 链路测试全部通过，并接入网站 Demo。",done:true}
+      ]
+    });
+
+    addNarrativeLog(p,
+      "完成数据清洗与 2010–2023 建模数据准备","2026-09-20",
+      "从约 280.7 万条合并记录开始，完成异常诊断、内部一致性检查、清洗验证、年份覆盖和重复分析。最终形成约 125.28 万条 2010–2023 建模记录。",
+      "低价记录、超大面积和超多房间不能简单按单列阈值机械删除。",
+      "把质量标记只用于审计，不作为模型输入。",
+      ["数据清洗","数据质量","建模准备"]
+    );
+    addNarrativeLog(p,
+      "完成 EDA 与第一轮基线建模","2026-09-20",
+      "完成房价、面积、房型、产权、建筑年代、行政区和变量关系分析。建立 Ridge baseline 与 HistGradientBoosting，并用 2021 作为 validation。",
+      "房价分布明显右偏；面积和房间数相关；线性模型难以表达复杂的房价关系。",
+      "比较 raw-price HGB 与 log-price HGB，并按价格段分析误差。",
+      ["EDA","Ridge","HistGradientBoosting"]
+    );
+    addNarrativeLog(p,
+      "确定 Raw-price HistGradientBoosting 为基础主模型","2026-09-20",
+      "Raw HGB 在 2021 validation 上取得约 MAE £119k、R² 0.824。log(price) 虽略降 MAE，但高价段绝对误差和 RMSE 更差，因此不采用 log 模型作为最终主模型。",
+      "只看单一指标会产生错误结论，尤其是豪宅市场。",
+      "继续按价格段、房型和区域分析可预测性。",
+      ["模型选择","误差分析"]
+    );
+    addNarrativeLog(p,
+      "发现豪宅市场的系统性预测困难","2026-09-21",
+      "对 £2m+ 和 £5m+ 市场单独分析后发现明显向均值回归。缺失的室内装修、景观、楼层、花园、特殊地块等 property-level 信息会限制预测能力。",
+      "高价房样本更少、异质性更强，不能通过简单调参假装解决。",
+      "把主要可靠使用范围明确为 £250k–£2m，并建立可靠性体系表达风险。",
+      ["Luxury market","模型局限"]
+    );
+    addNarrativeLog(p,
+      "建立 Predictability Grade 与 Evidence Strength","2026-09-21",
+      "将“模型在这一类房产上表现怎样”和“我们有多少验证证据”拆成两个维度。Grade 使用 MdAPE、±20% 命中率和系统性偏差；Evidence 使用样本量。",
+      "不能把样本多直接等同于模型准确，也不能因局部小样本表现差就过度降级。",
+      "继续加入 local evidence，但位置只用于确认或降级，不轻易升级。",
+      ["可靠性","Evidence"]
+    );
+    addNarrativeLog(p,
+      "加入 leakage-safe 历史地理特征","2026-09-21",
+      "使用 postcode sector → district → borough 的历史价格统计。训练某一年时只使用更早年份的信息；2021 validation 只使用 2010–2020 历史。Enhanced 模型相对 Control 进一步降低 MAE。",
+      "直接使用完整 postcode 或未来年份真实价格统计会造成位置记忆或时间泄漏。",
+      "未见过的 sector 部署时回退 Control。",
+      ["Feature engineering","Postcode","Leakage"]
+    );
+    addNarrativeLog(p,
+      "拒绝没有稳定收益的 Borough Modifier 与 Hybrid Router","2026-09-21",
+      "尝试 borough 风险修正和基于 property type + preliminary price 的路由。验证发现 Hybrid 整体弱于单独 Enhanced，因此没有因为局部结果看起来更好就增加部署复杂度。",
+      "局部切片容易过拟合 validation；复杂规则不等于更好的模型。",
+      "最终保持 Enhanced 为主，只有 unseen postcode sector 才使用 Control fallback。",
+      ["实验取舍","Router","过拟合控制"]
+    );
+    addNarrativeLog(p,
+      "完成 2022–2023 Final Test","2026-09-21",
+      "在模型架构、超参数、特征和可靠性规则全部冻结后，首次打开 2022–2023 Final Test。最终约 15.85 万条测试记录：MAE 约 £133,125，R² 约 0.8025；£250k–£2m 主市场 MAE 约 £99,450。",
+      "Final Test 只能用于最终评价，不能再拿结果反过来调模型。",
+      "把最终指标和已知局限写入项目总结与部署 metadata。",
+      ["Final Test","模型评估"]
+    );
+    addNarrativeLog(p,
+      "完成部署包、FastAPI 与输入验证","2026-09-21",
+      "冻结并打包 Control/Enhanced 模型、location statistics 与 reliability lookup。predict_house 负责输入验证、历史地理特征、fallback、reliability 和 warning；FastAPI 提供 /health 与 /predict。",
+      "模型函数能运行不代表 HTTP 服务一定可用，因此需要单独验证部署链路。",
+      "使用 deployment_validation 和 end-to-end smoke test 做部署验证。",
+      ["Deployment","FastAPI"]
+    );
+    addNarrativeLog(p,
+      "End-to-End Smoke Test 全部通过","2026-09-21",
+      "使用两个终端分别运行 Uvicorn 和 smoke test。Root、health、正常预测、缺失房间、非法面积、非法房型和未来年份 warning 全部通过。示例 E14 9GU 返回约 £606k。",
+      "本地 Demo 依赖正在运行的 API；关闭 Uvicorn 后网页无法预测。",
+      "本地开发时保持 API 终端运行；停止服务使用 Ctrl+C。以后若要公开访问，再部署云端 API。",
+      ["API","测试","Demo"]
+    );
+    addNarrativeLog(p,
+      "工程复盘：从追求更高分数转向可信的预测系统","2026-09-21",
+      "项目后期不再只追求单一 MAE，而是同时关注泄漏、时间外推、价格分段、Evidence、fallback、异常输入和部署链路。最终系统能够告诉用户预测值，也告诉用户这个预测为什么需要谨慎。",
+      "模型无法从数据中学习根本不存在的信息；复杂规则也可能只是对 validation 的过拟合。",
+      "下一阶段应使用新数据或新的验证设计做扩展，而不是继续利用已经打开的 Final Test。",
+      ["复盘","工程思维","可靠性"]
+    );
+
+    p.projectStatus="核心版本完成";
+    p.summary=p.summary||{};
+    p.summary.result="完成 London Housing Price Intelligence 核心版本：约 125 万条 2010–2023 建模记录、Enhanced Location HistGradientBoosting、可靠性系统、2022–2023 独立 Final Test、部署包、FastAPI、端到端测试和网站 Demo。";
+    p.summary.learned="实践了时间切分、目标/时间泄漏控制、EDA、非线性回归、历史位置特征、误差分层、Evidence 与 Reliability、实验取舍、模型部署和 HTTP API 测试。";
+    p.summary.improve="后续重点是云端部署、更新年份数据，以及在新的 validation 设计下扩展 property-level 特征；不使用已打开的 Final Test 继续调参。";
+
+    saveState(s);
+    localStorage.setItem(VERSION_KEY,"1");
+  }
+
+  function installDemo(){
+    if(!document.querySelector('[data-p="demo"]')){
+      const summaryBtn=document.querySelector('[data-p="summary"]');
+      if(summaryBtn){
+        const b=document.createElement("button");
+        b.dataset.p="demo";
+        b.textContent="⌂　房价预测 Demo";
+        summaryBtn.parentNode.insertBefore(b,summaryBtn);
+      }
+    }
+    if(!document.getElementById("demoPage")){
+      const page=document.createElement("section");
+      page.className="page";
+      page.id="demoPage";
+      page.innerHTML=
+        '<header class="top"><div><h1>伦敦房价预测 Demo</h1><p>调用本项目 FastAPI + Enhanced Location HGB 进行预测，并返回可靠性信息。</p></div></header>'+
+        '<div class="card panel"><div class="notice"><b>本地使用：</b>先运行 <code>python -m uvicorn api:app --reload</code>，并保持终端开启。</div>'+
+        '<div class="field full" style="margin-top:12px"><label>API 地址</label><input id="demoApiUrl" value="http://127.0.0.1:8000"></div></div>'+
+        '<div class="card panel"><div class="form">'+
+        '<div class="field"><label>年份</label><input id="demoYear" type="number" value="2023"></div>'+
+        '<div class="field"><label>Postcode</label><input id="demoPostcode" value="E14 9GU"></div>'+
+        '<div class="field"><label>Borough</label><input id="demoBorough" value="Tower_Hamlets"></div>'+
+        '<div class="field"><label>Property type</label><select id="demoPropertyType"><option value="F">Flat</option><option value="T">Terraced</option><option value="S">Semi-detached</option><option value="D">Detached</option></select></div>'+
+        '<div class="field"><label>Tenure</label><select id="demoDuration"><option value="L">Leasehold</option><option value="F">Freehold</option></select></div>'+
+        '<div class="field"><label>Floor area (m²)</label><input id="demoArea" type="number" value="70"></div>'+
+        '<div class="field"><label>Rooms（可留空）</label><input id="demoRooms" type="number" value="3"></div>'+
+        '<div class="field"><label>Current EPC</label><input id="demoCurrentEnergy" type="number" value="72"></div>'+
+        '<div class="field"><label>Potential EPC</label><input id="demoPotentialEnergy" type="number" value="82"></div>'+
+        '<div class="field full"><label>Construction age</label><input id="demoAge" value="2007 onwards"></div>'+
+        '</div><div class="actions" style="margin-top:15px"><button class="btn primary" id="demoPredictBtn">预测房价</button><button class="btn" id="demoHealthBtn">检查 API</button><span id="demoStatus" class="meta"></span></div></div>'+
+        '<div id="demoResult" class="card panel" style="display:none"><h2>预测结果</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">'+
+        '<div class="stat"><small>估计房价</small><strong id="demoPrice">—</strong></div>'+
+        '<div class="stat"><small>模型</small><strong id="demoModel">—</strong></div>'+
+        '<div class="stat"><small>可靠性等级</small><strong id="demoGrade">—</strong></div>'+
+        '<div class="stat"><small>证据强度</small><strong id="demoEvidence">—</strong></div>'+
+        '</div><div class="body"><b>Reliability Status：</b><span id="demoReliability">—</span></div>'+
+        '<div class="body"><b>Postcode Sector：</b><span id="demoSector">—</span></div>'+
+        '<div class="body"><b>历史样本数：</b><span id="demoSectorCount">—</span></div>'+
+        '<div id="demoWarnings" class="notice" style="display:none"></div></div>';
+      document.querySelector("main.main")?.appendChild(page);
+    }
+
+    const btn=document.querySelector('[data-p="demo"]');
+    if(btn){
+      btn.onclick=()=>{
+        document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="demoPage"));
+        document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x===btn));
+      };
+    }
+    const q=id=>document.getElementById(id);
+    const call=async(path,opt={})=>{
+      const base=q("demoApiUrl").value.trim().replace(/\/+$/,"");
+      const res=await fetch(base+path,opt);
+      let body={}; try{body=await res.json()}catch(e){}
+      if(!res.ok) throw new Error(body.detail||("HTTP "+res.status));
+      return body;
+    };
+    q("demoHealthBtn")?.addEventListener("click",async()=>{
+      q("demoStatus").textContent="检查中…";
+      try{const r=await call("/health");q("demoStatus").textContent="API 正常 · "+(r.status||"healthy")}
+      catch(e){q("demoStatus").textContent="无法连接 API："+e.message}
+    });
+    q("demoPredictBtn")?.addEventListener("click",async()=>{
+      const rooms=q("demoRooms").value.trim();
+      const payload={
+        year:Number(q("demoYear").value),postcode:q("demoPostcode").value.trim(),borough:q("demoBorough").value.trim(),
+        propertytype:q("demoPropertyType").value,duration:q("demoDuration").value,tfarea:Number(q("demoArea").value),
+        numberrooms:rooms===""?null:Number(rooms),current_energy_efficiency:Number(q("demoCurrentEnergy").value),
+        potential_energy_efficiency:Number(q("demoPotentialEnergy").value),construction_age_clean:q("demoAge").value.trim()
+      };
+      q("demoStatus").textContent="预测中…";
+      try{
+        const body=await call("/predict",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+        const r=body.prediction||body;
+        q("demoResult").style.display="block";
+        q("demoPrice").textContent=r.estimated_price_formatted||("£"+Number(r.estimated_price||0).toLocaleString());
+        q("demoModel").textContent=r.model_used||"—";
+        q("demoGrade").textContent=r.reliability_grade||"—";
+        q("demoEvidence").textContent=r.evidence_strength||"—";
+        q("demoReliability").textContent=r.reliability_status||"—";
+        q("demoSector").textContent=r.sector||"—";
+        q("demoSectorCount").textContent=r.sector_historical_count??"—";
+        const ws=[r.temporal_warning,r.market_warning,r.rooms_warning].filter(Boolean);
+        q("demoWarnings").style.display=ws.length?"block":"none";
+        q("demoWarnings").textContent=ws.join("\n");
+        q("demoStatus").textContent="预测完成";
+      }catch(e){
+        q("demoResult").style.display="block";
+        q("demoPrice").textContent="—";
+        q("demoWarnings").style.display="block";
+        q("demoWarnings").textContent="错误："+e.message+"\n请确认 FastAPI 正在运行。";
+        q("demoStatus").textContent="预测失败";
+      }
+    });
+  }
+
+  function installCodeView(){
+    const s=currentState(), p=londonProject(s);
+    if(!p) return;
+    p.codeRecords=p.codeRecords||[];
+    const codePage=document.getElementById("codePage");
+    if(codePage && !document.getElementById("addCodeRecordBtn")){
+      const h=codePage.querySelector(".top");
+      const a=document.createElement("div"); a.className="actions";
+      a.innerHTML='<button id="addCodeRecordBtn" class="btn primary">＋ 添加代码 / 文件</button>';
+      h?.appendChild(a);
+    }
+    window.renderCode=function(){
+      const state=currentState(), pr=londonProject(state);
+      const list=document.getElementById("codeList");
+      if(!list||!pr) return;
+      const arr=(pr.codeRecords||[]).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+      list.innerHTML=arr.length?arr.map(x=>
+        '<article class="item code-record"><div class="item-head"><div><h3>'+esc(x.title)+'</h3><div class="meta">'+esc(x.date||"")+' · '+esc(x.status||"已完成")+'</div></div></div>'+
+        (x.note?'<div class="body">'+esc(x.note)+'</div>':'')+
+        (x.code?'<details><summary>查看代码</summary><pre class="code">'+esc(x.code)+'</pre></details>':'')+
+        '</article>'
+      ).join(""):'<div class="empty">还没有代码或文件记录。</div>';
+    };
+    renderCode();
+  }
+
+  function installNarrativeLogRendering(){
+    const oldRenderLogs=window.renderLogs;
+    if(typeof oldRenderLogs!=="function") return;
+    window.renderLogs=function(){
+      const s=currentState(), p=londonProject(s);
+      if(p){
+        p.logs=(p.logs||[]).filter(x=>!isCodeLog(x));
+        saveState(s);
+      }
+      oldRenderLogs();
+    };
+  }
+
+  try{
+    migrate();
+    installDemo();
+    installNarrativeLogRendering();
+    installCodeView();
+
+    const oldRender=window.render;
+    if(typeof oldRender==="function"){
+      window.render=function(){
+        oldRender();
+        const s=currentState(), p=londonProject(s);
+        if(p){
+          const logStat=document.getElementById("logStat");
+          if(logStat) logStat.textContent=(p.logs||[]).filter(x=>!isCodeLog(x)).length;
+        }
+        try{renderCode()}catch(e){}
+      };
+      render();
+    }
+  }catch(e){
+    console.warn("ProjectLog v6 patch failed",e);
+  }
+})();
+</script>
+
 </body></html>
