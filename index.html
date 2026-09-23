@@ -3296,4 +3296,84 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
   render();
 })();
 </script>
+
+<script>
+(function(){
+  const PHASE_KEY="ProjectLogPhaseMigrationV8";
+  if(localStorage.getItem(PHASE_KEY)) return;
+
+  try{
+    const london=(S.projects||[]).find(p =>
+      p.id===S.londonProjectId || /London Housing Price Intelligence/i.test(p.name||"")
+    );
+    if(!london) return;
+
+    const makeId=()=>crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random());
+
+    london.stages=[
+      {
+        id:makeId(),
+        name:"第一阶段｜核心预测系统（已完成）",
+        desc:"完成从原始数据、清洗、EDA、建模、可靠性设计、独立 Final Test 到 FastAPI 与云端 Demo 的完整工程闭环。",
+        tasks:[
+          {id:makeId(),title:"数据整理、清洗与建模数据集",note:"完成伦敦 33 个行政区数据合并、异常诊断、清洗验证，并形成 2010–2023 建模数据。",done:true},
+          {id:makeId(),title:"EDA 与基线模型",note:"完成价格、面积、房型、区域、年份等分析，并比较 Ridge 与 HistGradientBoosting。",done:true},
+          {id:makeId(),title:"确定 Raw-price HistGradientBoosting 主模型",note:"基于 2021 validation 的多指标比较，保留 raw-price HGB 作为基础主模型。",done:true},
+          {id:makeId(),title:"加入 leakage-safe 历史地理特征",note:"使用 past-only postcode sector → district → borough 历史统计，形成 Enhanced Location HGB。",done:true},
+          {id:makeId(),title:"建立 Reliability Engine",note:"实现 Predictability Grade、Evidence Strength、status 与低证据/高风险降级逻辑。",done:true},
+          {id:makeId(),title:"完成 2022–2023 独立 Final Test",note:"冻结模型、特征和规则后一次性评估，不再使用 Final Test 调参。",done:true},
+          {id:makeId(),title:"完成部署包、FastAPI 与端到端测试",note:"完成 predict_house、API 输入验证、fallback、warning 与 smoke test。",done:true},
+          {id:makeId(),title:"部署 Render 云端 API 并接入网站 Demo",note:"Demo 已连接公开 Render API，可直接进行单套房产预测。",done:true}
+        ]
+      },
+      {
+        id:makeId(),
+        name:"第二阶段｜噪声审计与误差改进（进行中）",
+        desc:"不使用已打开的 Final Test 继续调参。先审计极端误差与数据噪声，再判断哪些改进应来自清洗、特征增强、市场分层或不确定性建模。",
+        tasks:[
+          {id:makeId(),title:"提取绝对残差最大的样本",note:"按 |Predicted − Actual| 排序，优先检查 Top 20 / 50 / 100 极端误差记录。",done:false},
+          {id:makeId(),title:"建立异常样本分类",note:"逐条区分：数据错误、真实豪宅、缺失解释变量、特殊交易、暂无法判断。",done:false},
+          {id:makeId(),title:"加强数据质量规则并复核",note:"检查价格、面积、房间数、EPC、postcode / borough 一致性及潜在匹配异常，只处理逻辑不合理记录。",done:false},
+          {id:makeId(),title:"分析豪宅市场与系统性低估",note:"重点研究 £2m+、£5m+、高价 Borough 与不同 property type 的残差结构。",done:false},
+          {id:makeId(),title:"评估可新增特征",note:"区分现有数据可构造特征与需要新数据源的 property-level 信息，如装修、楼层、景观、花园、停车与 lease。",done:false},
+          {id:makeId(),title:"研究市场分层或专门模型",note:"比较主流市场与 luxury segment 的独立分析/建模是否带来稳定收益，使用新的 validation 设计验证。",done:false},
+          {id:makeId(),title:"改进不确定性表达",note:"在现有 Reliability Grade 基础上研究 prediction interval / expected range，让输出同时表达价格和可信范围。",done:false}
+        ]
+      }
+    ];
+
+    london.projectStatus="第二阶段进行中";
+    london.summary=london.summary||{};
+    london.summary.improve="第二阶段聚焦噪声审计与误差改进：先检查极端残差和数据质量，再分析豪宅市场、可新增特征、市场分层与预测区间。不会使用已经打开的 2022–2023 Final Test 继续调参。";
+
+    const logTitle="进入第二阶段：噪声审计与误差改进";
+    if(!(london.logs||[]).some(x=>x.title===logTitle)){
+      london.logs=london.logs||[];
+      london.logs.push({
+        id:makeId(),
+        title:logTitle,
+        date:"2026-09-23",
+        status:"进行中",
+        stageId:london.stages[1].id,
+        tags:["Phase 2","Noise audit","Error analysis"],
+        note:"第一阶段核心预测系统已经完成。第二阶段开始从极端残差入手，区分脏数据、真实极端样本、缺失解释变量和不可约随机波动，再决定是否需要清洗、特征增强、市场分层或不确定性建模。",
+        problem:"离群点不能直接等同于错误数据；删除真实豪宅可能让模型评价看起来更好，但会破坏真实市场覆盖。",
+        next:"先提取绝对残差最大的 Top 20 / 50 / 100 样本，逐条回查原始字段并建立异常分类。",
+        code:"",
+        attachments:[],
+        recordKind:"log"
+      });
+    }
+
+    S.active=london.id;
+    S.londonProjectId=london.id;
+    localStorage.setItem(PHASE_KEY,"1");
+    save();
+    render();
+  }catch(e){
+    console.warn("Phase migration failed",e);
+  }
+})();
+</script>
+
 </body></html>
