@@ -23,6 +23,18 @@
 #demoPage .notice.ok{background:#eefbf4;color:#176b44}
 </style>
 
+<style id="loginGateStyle">
+html:not([data-access="workspace"]) body > :not(#loginGate):not(#readerView){display:none!important}
+#loginGate[hidden],#readerView[hidden]{display:none!important}
+#loginGate{position:fixed;inset:0;overflow:auto;z-index:99999;background:#f4f6fb;display:grid;place-items:center;padding:24px;box-sizing:border-box}
+#loginGate .login-card{background:white;width:min(100%,460px);padding:32px;border:1px solid #e2e8f0;border-radius:20px;box-sizing:border-box;box-shadow:0 16px 50px #17255412}
+#loginGate h1{font-size:32px;margin:12px 0}#loginGate p{line-height:1.7;color:#64748b}
+#loginGate label{display:block;margin:20px 0 8px}#loginGate input{width:100%;box-sizing:border-box;padding:13px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}
+#loginGate button{width:100%;padding:13px;margin-top:14px;border-radius:10px;font:inherit;cursor:pointer;border:1px solid #cbd5e1;background:white;color:#172554}
+#loginGate #sendLogin{background:#5547df;color:white;border-color:#5547df}#loginGate button:disabled{opacity:.5;cursor:wait}
+#loginStatus{min-height:44px;font-size:14px}#readerView{max-width:1100px;margin:auto;padding:28px;box-sizing:border-box}#readerView header{display:flex;align-items:center;justify-content:space-between;gap:16px}#readerView .panel{margin:20px 0;padding:24px}#readerView pre{white-space:pre-wrap;overflow:auto}
+</style>
+
 </head><body>
 <aside class="side"><div class="brand">Project<i>Log</i></div><button id="langToggle" class="lang-toggle" type="button" aria-label="Switch language">English</button><div class="now"><small>当前项目</small><b id="sideName">—</b></div><nav class="nav"><button class="active" data-p="home">◫　项目总览</button><button data-p="stages">✓　阶段与任务</button><button data-p="logs">✎　学习日志</button><button data-p="code">⌘　代码与文件</button><button data-p="experiments">⌁　实验记录</button><button data-p="issues">!　问题与方案</button><button data-p="demo">⌂　房价预测 Demo</button><button data-p="summary">▤　项目总结</button></nav><div class="hint">数据保存在当前浏览器<br>请定期导出完整备份</div></aside>
 <main class="main">
@@ -3377,5 +3389,16 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
 </script>
 
 <script>window.ProjectLog={get state(){return S}};</script>
-<script type="module" src="./cloud.js"></script>
+<section id="loginGate" aria-label="登录 / Sign in">
+ <div class="login-card"><b>ProjectLog</b><h1>欢迎回来<br><small style="font-size:20px;color:#64748b">Welcome back</small></h1>
+ <p>通过邮箱验证身份，进入你的项目工作台。<br>Verify your email to access your workspace.</p>
+ <form id="loginForm"><label for="loginEmail">邮箱 / Email</label><input id="loginEmail" type="email" autocomplete="email" required placeholder="name@example.com"><button id="sendLogin" type="submit" disabled>发送登录链接 / Send sign-in link</button></form>
+ <p id="loginStatus" role="status" aria-live="polite">正在连接登录服务。如长时间无响应，请检查网络后刷新。<br>Connecting… If this persists, check your connection and refresh.</p>
+ <button id="guestEntry" type="button" disabled>仅阅读 / Continue read-only</button>
+ <p style="font-size:13px">管理员可编辑与备份；老师经批准后可新建任务、写评价。访客只能阅读公开内容。<br>Teachers need approval. Visitors can only read published projects.</p>
+ </div>
+</section>
+<section id="readerView" hidden><header><div><h1>ProjectLog</h1><p>公开项目 · 仅阅读 / Public projects · Read-only</p></div><button class="btn" id="readerLogin">登录 / Sign in</button></header><div id="readerContent"></div></section>
+
+<script type="module" src="./cloud-login.js"></script>
 </body></html>
