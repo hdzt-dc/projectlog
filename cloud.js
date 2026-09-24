@@ -153,12 +153,12 @@ function persistPending() {
   localStorage.setItem(pendingKey, JSON.stringify([...cloud.dirty]));
 }
 function payloadFor(p, row) {
+  const work = { ...p };
+  for (const key of ["id", "name", "goal", "category", "cloudStatus",
+    "cloudDeadline", "cloudCreator", "cloudPublic"]) delete work[key];
   const payload = {
     title: p.name, category: p.category || "", status: p.cloudStatus || "in_progress",
-    work_data: {
-      stages: p.stages || [], logs: p.logs || [], experiments: p.experiments || [],
-      issues: p.issues || [], summary: p.summary || {}, projectStatus: p.projectStatus
-    }
+    work_data: work
   };
   if (!row || row.created_by === cloud.user.id) payload.requirements = p.goal || "";
   return payload;
@@ -166,6 +166,7 @@ function payloadFor(p, row) {
 function hasChanges(p, row) {
   if (!row) return true;
   const next = payloadFor(p, row);
+  const baseline = payloadFor(rowProject(row), row);
   const ordered = value => JSON.stringify(value, (key, item) =>
     item && !Array.isArray(item) && typeof item === "object"
       ? Object.fromEntries(Object.keys(item).sort().map(name => [name, item[name]]))
@@ -173,7 +174,7 @@ function hasChanges(p, row) {
   );
   return next.title !== row.title || next.category !== row.category ||
     (next.requirements !== undefined && next.requirements !== row.requirements) ||
-    ordered(next.work_data) !== ordered(row.work_data);
+    ordered(next.work_data) !== ordered(baseline.work_data);
 }
 window.save = function () {
   originalSave();
