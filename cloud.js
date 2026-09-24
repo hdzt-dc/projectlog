@@ -39,7 +39,7 @@ document.head.append(style);
 const bar = document.createElement("div");
 bar.id = "cloudBar";
 bar.className = "card";
-bar.innerHTML = '<span id="cloudIdentity"></span><div class="actions"><span id="cloudStatus"></span><button class="btn" id="cloudLogin">邮箱登录</button><button class="btn" id="cloudLogout" hidden>退出登录</button></div>';
+bar.innerHTML = '<span id="cloudIdentity"></span><div class="actions"><span id="cloudStatus"></span><button class="btn" id="cloudRetry" hidden>重试同步</button><button class="btn" id="cloudLogin">邮箱登录</button><button class="btn" id="cloudLogout" hidden>退出登录</button></div>';
 $(".main").prepend(bar);
 const page = document.createElement("section");
 page.id = "cloudPage";
@@ -66,10 +66,15 @@ $("#cloudLogin").onclick = () => {
 };
 $("#cloudLogout").onclick = async () => {
   await flush();
+  if (cloud.dirty.size) {
+    report(lang("仍有记录未同步，请先点击“重试同步”。", "Unsynced changes remain. Please retry sync before signing out."), true);
+    return;
+  }
   const { error } = await db.auth.signOut();
   if (error) report(error.message, true);
   else location.reload();
 };
+$("#cloudRetry").onclick = flush;
 
 function rowProject(row) {
   const work = row.work_data && typeof row.work_data === "object" ? row.work_data : {};
@@ -92,6 +97,7 @@ async function refresh() {
   if (profileResult.error) { report(profileResult.error.message, true); return; }
   cloud.profile = profileResult.data;
   cloud.role = cloud.profile.role;
+  $("#cloudIdentity").textContent = cloud.user.email + " · " + cloud.role;
   document.body.classList.toggle("cloud-teacher", cloud.role === "teacher");
   document.body.classList.toggle("cloud-pending", cloud.role === "pending");
   const [projects, comments] = await Promise.all([
@@ -166,9 +172,11 @@ async function flush() {
       const row = cloud.rows.find(item => item.id === projectId);
       if (row) Object.assign(row, payload, result.data);
       report(lang("已自动保存到云端", "Saved to cloud automatically"));
+      $("#cloudRetry").hidden = true;
     }
   } catch (error) {
     report(lang("云端保存失败，浏览器副本仍在。请检查网络并重试同步。", "Cloud save failed. Your browser copy remains; retry sync."), true);
+    $("#cloudRetry").hidden = false;
     console.error("ProjectLog sync", error);
   } finally { cloud.busy = false; }
 }
