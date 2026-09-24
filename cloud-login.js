@@ -49,6 +49,16 @@ function report(msg,bad=false){
   const el=$("#cloudStatus");
   if(el){el.textContent=msg;el.style.color=bad?"#b42318":"#18794e";}
 }
+function cloudErrorText(error){
+  if(!error)return lang("未知错误","Unknown error");
+  const parts=[
+    error.code,
+    error.message,
+    error.details,
+    error.hint
+  ].filter(Boolean);
+  return parts.join(" · ");
+}
 function persistPending(){
   localStorage.setItem(pendingKey,JSON.stringify([...cloud.dirty]));
 }
@@ -221,7 +231,8 @@ async function flush(){
     drawArchive();
   }catch(error){
     console.error("ProjectLog shared cloud",error);
-    report(lang("共享云端保存失败；浏览器本地副本仍然安全。","Shared cloud save failed; the browser copy is still safe."),true);
+    const detail=cloudErrorText(error);
+    report(lang("共享云端保存失败：","Shared cloud save failed: ")+detail,true);
     $("#cloudRetry").hidden=false;
   }finally{
     cloud.busy=false;
@@ -289,7 +300,7 @@ async function pullLatest(){
     await refreshRows({merge:true});
   }catch(error){
     console.error("ProjectLog shared refresh",error);
-    report(lang("刷新失败，请检查网络或云端权限设置。","Refresh failed. Check the network or cloud access policy."),true);
+    report(lang("刷新失败：","Refresh failed: ")+cloudErrorText(error),true);
   }
 }
 
@@ -323,7 +334,7 @@ async function initialize(){
     else report(lang("共享云端已连接","Shared cloud connected"));
   }catch(error){
     console.error("ProjectLog shared cloud initialization",error);
-    report(lang("共享云端暂不可用；网站仍可在当前浏览器正常编辑。","Shared cloud is unavailable; the site still works in this browser."),true);
+    report(lang("共享云端暂不可用：","Shared cloud unavailable: ")+cloudErrorText(error),true);
     $("#cloudRetry").hidden=false;
   }
   drawArchive();
