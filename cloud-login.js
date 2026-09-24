@@ -51,18 +51,23 @@ $("#cloudLogout").before(passwordButton);
 passwordButton.onclick = () => $("#passwordPanel").hidden = false;
 const passwordPanel = document.createElement("form");
 passwordPanel.id = "passwordPanel"; passwordPanel.className = "card panel"; passwordPanel.hidden = true;
-passwordPanel.innerHTML = `<label>设置登录密码（至少 8 位） / Set password (8+ characters)<input name="password" type="password" minlength="8" autocomplete="new-password" required></label><button class="btn primary">保存密码 / Save password</button><button class="btn" type="button" id="cancelPassword">取消 / Cancel</button><span id="passwordStatus" role="status"></span>`;
+passwordPanel.innerHTML = `<label>设置登录密码（至少 8 位） / Set password (8+ characters)<input name="password" type="password" minlength="8" autocomplete="new-password" required></label><button class="btn primary" type="submit">保存密码 / Save password</button><button class="btn" type="button" id="cancelPassword">取消 / Cancel</button><span id="passwordStatus" role="status"></span>`;
 bar.after(passwordPanel);
 $("#cancelPassword").onclick = () => { passwordPanel.hidden = true; passwordPanel.reset(); };
 passwordPanel.onsubmit = async event => {
   event.preventDefault();
   if (!cloud.user || !["admin", "teacher"].includes(cloud.role)) return;
-  const button = passwordPanel.querySelector("button[type=submit]"); button.disabled = true;
+  const button = passwordPanel.querySelector("button[type=submit]");
+  const status = $("#passwordStatus");
+  button.disabled = true;
+  status.textContent = "正在保存密码… / Saving password…";
   try {
-    const { error } = await db.auth.updateUser({ password: passwordPanel.elements.password.value });
-    $("#passwordStatus").textContent = error ? error.message : "密码已保存。以后可以直接用邮箱和密码登录。 / Password saved.";
-  } catch (error) { $("#passwordStatus").textContent = "无法连接，请稍后再试。 / Connection failed."; }
-  finally { passwordPanel.reset(); button.disabled = false; }
+    const password = passwordPanel.querySelector("input[name=password]").value;
+    const { error } = await db.auth.updateUser({ password });
+    status.textContent = error ? `保存失败：${error.message} / Could not save password.` : "密码已保存。下次可以直接用邮箱和密码登录。 / Password saved. You can sign in with it next time.";
+    if (!error) passwordPanel.reset();
+  } catch (error) { status.textContent = "保存失败，请检查网络后重试。 / Could not save password. Check your connection."; }
+  finally { button.disabled = false; }
 };
 const page = document.createElement("section");
 page.id = "cloudPage";
