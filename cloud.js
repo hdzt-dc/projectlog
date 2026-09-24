@@ -5,7 +5,9 @@ const db = createClient(
   "sb_publishable_Fz_z5YgMpqCrCZnNIUeJ3g_FVGzhdNw"
 );
 const adminEmail = "hdzt_dc@outlook.com";
-const cloud = { user: null, role: null, rows: [], comments: [], profile: null, busy: false, dirty: new Set(), timer: null };
+const pendingKey = "ProjectLogCloudPendingV1";
+const pendingFromDisk = (() => { try { return JSON.parse(localStorage.getItem(pendingKey)) || []; } catch { return []; } })();
+const cloud = { user: null, role: null, rows: [], comments: [], profile: null, busy: false, dirty: new Set(pendingFromDisk), conflicts: new Set(), timer: null };
 const $ = (selector) => document.querySelector(selector);
 const escapeHTML = (value = "") => String(value).replace(/[&<>"']/g, char => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -39,15 +41,15 @@ document.head.append(style);
 const bar = document.createElement("div");
 bar.id = "cloudBar";
 bar.className = "card";
-bar.innerHTML = '<span id="cloudIdentity"></span><div class="actions"><span id="cloudStatus"></span><button class="btn" id="cloudRetry" hidden>重试同步</button><button class="btn" id="cloudLogin">邮箱登录</button><button class="btn" id="cloudLogout" hidden>退出登录</button></div>';
+bar.innerHTML = '<span id="cloudIdentity"></span><div class="actions"><span id="cloudStatus"></span><button class="btn" id="cloudRetry" hidden>重试同步</button><button class="btn" id="cloudLogin">登录并开启备份</button><button class="btn" id="cloudLogout" hidden>退出登录</button></div>';
 $(".main").prepend(bar);
 const page = document.createElement("section");
 page.id = "cloudPage";
 page.className = "page";
-page.innerHTML = '<header class="top"><div><h1>云端项目与评价</h1><p id="cloudSubtitle">登录后查看老师布置的项目、批注和评价。</p></div></header><div id="cloudContent"></div>';
+page.innerHTML = '<header class="top"><div><h1>任务与评价</h1><p id="cloudSubtitle">老师可以布置项目和批注作品；项目仍在原来的项目中心。</p></div></header><div id="cloudContent"></div>';
 $(".main").append(page);
 const nav = document.createElement("button");
-nav.type = "button"; nav.dataset.p = "cloud"; nav.textContent = "☁　云端项目";
+nav.type = "button"; nav.dataset.p = "cloud"; nav.textContent = "✎　任务与评价";
 $(".nav").prepend(nav);
 nav.addEventListener("click", () => {
   window.showPage("cloud");
@@ -112,13 +114,27 @@ async function refresh() {
   cloud.comments = comments.data;
   if (cloud.role === "admin") {
     let changed = false;
+    cloud.conflicts.clear();
     for (const row of cloud.rows) {
+      if (row.status === "archived") continue;
       const i = state().projects.findIndex(p => p.id === row.id);
       if (i >= 0) {
-        if (!cloud.dirty.has(row.id)) { state().projects[i] = rowProject(row); changed = true; }
+        // Never silently overwrite browser work with a cloud snapshot.
+        if (!cloud.dirty.has(row.id) && hasChanges(state().projects[i], row)) cloud.conflicts.add(row.id);
       } else { state().projects.push(rowProject(row)); changed = true; }
     }
     if (changed) { localStorage.setItem("ProjectLogV2", JSON.stringify(state())); window.render(); }
+    // Keep the existing project center; projects with no cloud copy are backed up here.
+    for (const p of state().projects) {
+      if (!cloud.rows.some(row => row.id === p.id)) cloud.dirty.add(p.id);
+    }
+    persistPending();
+    if (cloud.dirty.size) {
+      report(lang("正在备份浏览器项目到云端…", "Backing up browser projects…"));
+      await flush();
+    } else if (cloud.conflicts.size) {
+      report(lang("发现本地与云端版本不同，请到“备份与评价”选择保留哪一份。", "Browser and cloud versions differ; choose which copy to keep in Backup and reviews."), true);
+    } else report(lang("项目已在云端备份", "Projects backed up to cloud"));
   }
   draw();
 }
@@ -133,18 +149,43 @@ async function initialize() {
 }
 
 const originalSave = window.save;
+function persistPending() {
+  localStorage.setItem(pendingKey, JSON.stringify([...cloud.dirty]));
+}
+function payloadFor(p, row) {
+  const payload = {
+    title: p.name, category: p.category || "", status: p.cloudStatus || "in_progress",
+    work_data: {
+      stages: p.stages || [], logs: p.logs || [], experiments: p.experiments || [],
+      issues: p.issues || [], summary: p.summary || {}, projectStatus: p.projectStatus
+    }
+  };
+  if (!row || row.created_by === cloud.user.id) payload.requirements = p.goal || "";
+  return payload;
+}
+function hasChanges(p, row) {
+  if (!row) return true;
+  const next = payloadFor(p, row);
+  const ordered = value => JSON.stringify(value, (key, item) =>
+    item && !Array.isArray(item) && typeof item === "object"
+      ? Object.fromEntries(Object.keys(item).sort().map(name => [name, item[name]]))
+      : item
+  );
+  return next.title !== row.title || next.category !== row.category ||
+    (next.requirements !== undefined && next.requirements !== row.requirements) ||
+    ordered(next.work_data) !== ordered(row.work_data);
+}
 window.save = function () {
   originalSave();
   if (cloud.role !== "admin" || !cloud.user) return;
   let touched = false;
-  for (const row of cloud.rows) {
-    const p = state().projects.find(project => project.id === row.id);
-    if (!p) continue;
-    if (p.id === state().active || p.name !== row.title || p.category !== row.category) {
-      cloud.dirty.add(p.id); touched = true;
-    }
+  for (const p of state().projects) {
+    if (cloud.conflicts.has(p.id)) continue;
+    const row = cloud.rows.find(item => item.id === p.id);
+    if (hasChanges(p, row)) { cloud.dirty.add(p.id); touched = true; }
   }
   if (!touched) return;
+  persistPending();
   report(lang("已在浏览器保存，正在同步云端…", "Saved locally, syncing to cloud…"));
   clearTimeout(cloud.timer);
   cloud.timer = setTimeout(flush, 1000);
@@ -159,18 +200,21 @@ async function flush() {
       const projectId = cloud.dirty.values().next().value;
       cloud.dirty.delete(projectId);
       const p = state().projects.find(item => item.id === projectId);
-      if (!p) continue;
-      const payload = {
-        title: p.name, category: p.category || "", status: p.cloudStatus || "in_progress",
-        work_data: {
-          stages: p.stages, logs: p.logs, experiments: p.experiments,
-          issues: p.issues, summary: p.summary, projectStatus: p.projectStatus
-        }
-      };
-      const result = await db.from("projects").update(payload).eq("id", projectId).select("id,updated_at").single();
-      if (result.error) { cloud.dirty.add(projectId); throw result.error; }
+      if (!p) { persistPending(); continue; }
+      if (cloud.conflicts.has(projectId)) { persistPending(); continue; }
       const row = cloud.rows.find(item => item.id === projectId);
-      if (row) Object.assign(row, payload, result.data);
+      if (!hasChanges(p, row)) { persistPending(); continue; }
+      const payload = payloadFor(p, row);
+      const result = row
+        ? await db.from("projects").update(payload).eq("id", projectId).select("*").single()
+        : await db.from("projects").insert({
+          ...payload, id: projectId, created_by: cloud.user.id,
+          assigned_to: cloud.user.id, is_public: false
+        }).select("*").single();
+      if (result.error) { cloud.dirty.add(projectId); throw result.error; }
+      if (row) Object.assign(row, result.data);
+      else cloud.rows.push(result.data);
+      persistPending();
       report(lang("已自动保存到云端", "Saved to cloud automatically"));
       $("#cloudRetry").hidden = true;
     }
@@ -184,19 +228,10 @@ window.addEventListener("online", flush);
 window.addEventListener("beforeunload", event => {
   if (cloud.dirty.size) { event.preventDefault(); event.returnValue = ""; }
 });
-const editLocalProject = window.projectModal;
-window.projectModal = function (projectId) {
-  if (!projectId && cloud.role === "admin") {
-    window.showPage("cloud");
-    draw().then(() => $("#cloudCreate [name=title]")?.focus());
-    return;
-  }
-  editLocalProject(projectId);
-};
 const removeLocalProject = window.deleteProject;
 window.deleteProject = function (projectId) {
   if (cloud.rows.some(row => row.id === projectId)) {
-    alert(lang("云端项目不能通过浏览器的“删除”按钮移除。数据与批注已归档保留。", "Cloud projects cannot be removed with the browser delete button; work and comments are archived."));
+    alert(lang("为防止误删，已备份项目暂不支持直接删除。你可以先导出 JSON 备份。", "To prevent accidental loss, backed-up projects cannot be deleted directly. Export a JSON backup first."));
     return;
   }
   removeLocalProject(projectId);
@@ -216,25 +251,6 @@ async function createAssignment(event) {
   if (error) return report(error.message, true);
   form.reset();
   report(lang("项目已创建并自动保存。", "Project created and saved."));
-  await refresh();
-}
-async function uploadLocal(projectId) {
-  const p = state().projects.find(item => item.id === projectId);
-  if (!p || cloud.role !== "admin") return;
-  if (!confirm(lang("先导出 JSON 备份了吗？确认后会将此项目复制到云端，旧浏览器记录继续保留。", "Exported a JSON backup? This copies the project to cloud; browser data remains."))) return;
-  const { data, error } = await db.from("projects").insert({
-    title: p.name, requirements: p.goal || "", category: p.category || "",
-    created_by: cloud.user.id, assigned_to: cloud.user.id,
-    status: "in_progress", is_public: false,
-    work_data: {
-      stages: p.stages || [], logs: p.logs || [], experiments: p.experiments || [],
-      issues: p.issues || [], summary: p.summary || {}, projectStatus: p.projectStatus
-    }
-  }).select().single();
-  if (error) return report(error.message, true);
-  // Retain the old ID and browser copy as a fallback until the user exports a backup.
-  cloud.rows.push(data);
-  report(lang("项目已复制到云端。原浏览器版本仍保留。", "Project copied to cloud; original browser copy remains."));
   await refresh();
 }
 async function approve(userId) {
@@ -271,6 +287,40 @@ async function replyTo(projectId, parentId) {
   });
   if (error) return report(error.message, true);
   await refresh();
+}
+function restoreOne(projectId) {
+  if (cloud.role !== "admin") return;
+  const row = cloud.rows.find(item => item.id === projectId);
+  if (!row) return;
+  const current = state().projects.find(item => item.id === projectId);
+  const label = current
+    ? lang("这会用云端备份替换当前浏览器里的同名项目。", "This replaces the browser copy with the cloud backup.")
+    : lang("这会将备份添加回项目中心。", "This adds the backup to the project center.");
+  if (!confirm(`${row.title}\n${label}\n${lang("系统会先自动下载当前浏览器的 JSON 备份。继续？", "A JSON backup of your browser data will download first. Continue?")}`)) return;
+  window.exportData();
+  const recovered = rowProject(row);
+  const index = state().projects.findIndex(item => item.id === projectId);
+  if (index < 0) state().projects.push(recovered);
+  else state().projects[index] = recovered;
+  state().active = projectId;
+  cloud.dirty.delete(projectId);
+  cloud.conflicts.delete(projectId);
+  persistPending();
+  localStorage.setItem("ProjectLogV2", JSON.stringify(state()));
+  window.render();
+  report(lang("已从云端恢复，原浏览器数据已下载为 JSON。", "Restored from cloud; the old browser data was downloaded as JSON."));
+}
+async function uploadLocalVersion(projectId) {
+  if (cloud.role !== "admin") return;
+  const row = cloud.rows.find(item => item.id === projectId);
+  if (!row || !state().projects.some(item => item.id === projectId)) return;
+  if (!confirm(lang(`将本地版本覆盖“${row.title}”的云端备份？数据库会保留旧版历史，但其他设备上的改动可能被覆盖。`,
+    `Replace the cloud backup of "${row.title}" with this browser copy? Database history is retained, but changes from another device may be replaced.`))) return;
+  cloud.conflicts.delete(projectId);
+  cloud.dirty.add(projectId);
+  persistPending();
+  await flush();
+  await draw();
 }
 function renderComments(row) {
   const group = cloud.comments.filter(comment => comment.project_id === row.id);
@@ -315,15 +365,24 @@ function workPreview(p, projectId) {
 }
 
 async function draw() {
-  nav.textContent = lang("☁　云端项目", "☁  Cloud projects");
+  $("#cloudLogin").textContent = lang("登录并开启备份", "Sign in for backup");
+  $("#cloudLogout").textContent = lang("退出登录", "Sign out");
+  $("#cloudRetry").textContent = lang("重试同步", "Retry sync");
+  nav.textContent = cloud.role === "teacher"
+    ? lang("✎　布置任务与评价", "✎  Assignments and reviews")
+    : lang("☁　备份与评价", "☁  Backup and reviews");
+  $("#cloudPage h1").textContent = lang("备份与评价", "Backup and reviews");
   if (!cloud.user) {
-    $("#cloudContent").innerHTML = `<div class="card panel">${lang("登录后可查看云端项目。现有浏览器记录不会自动上传。", "Sign in to view cloud projects. Browser records are not uploaded automatically.")}</div>`;
+    $("#cloudContent").innerHTML = `<div class="card panel">${lang("项目仍在左侧“项目中心”。管理员登录后会在后台自动备份；教师登录后可以布置任务和评价。", "Projects stay in Project center. Admin sign-in enables automatic backups; teachers can assign and review.")}</div>`;
     return;
   }
   $("#cloudSubtitle").textContent = cloud.role === "pending"
     ? lang("账号已注册，正在等待管理员批准教师权限。", "Account registered; awaiting teacher approval.")
-    : lang("项目由老师布置；作品由你维护；老师可批注和评价。", "Teachers assign projects and provide comments; you maintain your work.");
-  const items = cloud.rows.map(row => {
+    : lang("项目在原来的项目中心；本页只管理备份、教师权限和评价。", "Projects stay in Project center; this page manages backups, teacher access, and reviews.");
+  const visibleRows = cloud.role === "admin"
+    ? cloud.rows.filter(row => cloud.comments.some(comment => comment.project_id === row.id))
+    : cloud.rows;
+  const items = visibleRows.map(row => {
     const p = rowProject(row);
     const count = p.stages.reduce((n, s) => n + (s.tasks || []).length, 0);
     return `<article class="card cloud-card">
@@ -332,12 +391,12 @@ async function draw() {
       <h3>${escapeHTML(row.title)}</h3><div class="body">${escapeHTML(row.requirements || lang("尚未填写要求", "No requirements yet"))}</div>
       <p class="meta">${count} ${lang("条内容", "items")} · ${p.logs.length} ${lang("条日志", "logs")}</p>
       ${cloud.role === "admin" ? `<button class="btn primary" data-open="${row.id}">${lang("进入项目", "Open project")}</button>` : ""}
-      ${workPreview(p, row.id)}
+      ${cloud.role === "teacher" ? workPreview(p, row.id) : ""}
       ${renderComments(row)}
     </article>`;
   }).join("");
   let html = "";
-  if (cloud.role === "admin" || cloud.role === "teacher") {
+  if (cloud.role === "teacher") {
     html += `<div class="card panel"><h2>${lang("新建项目任务", "Create assignment")}</h2>
       <form id="cloudCreate" class="cloud-form">
         <input name="title" maxlength="160" required placeholder="项目标题 / Project title">
@@ -354,19 +413,23 @@ async function draw() {
         ${escapeHTML(p.display_name)} · ${escapeHTML(p.email)} · ${escapeHTML(p.role)}
         ${p.role === "pending" ? `<button class="btn small" data-approve="${p.id}">批准教师</button>` : `<button class="btn small" data-revoke="${p.id}">撤销权限</button>`}
       </div>`).join("") || lang("暂时没有教师申请。", "No teacher applications yet.")}</div>`;
-    const localOnly = state().projects.filter(p => !cloud.rows.some(row => row.id === p.id));
-    html += `<div class="card panel"><h2>${lang("导入浏览器项目到云端", "Copy browser projects to cloud")}</h2>
-      <p class="muted">${lang("先点击页面“数据管理”里的“导出 JSON”备份，再逐个复制。原浏览器记录会保留。", "Export a JSON backup first, then copy each project. Browser copies are retained.")}</p>
-      ${localOnly.map(p => `<div class="item">${escapeHTML(p.name)}
-        <button class="btn small" data-upload="${p.id}">${lang("复制到云端", "Copy to cloud")}</button></div>`).join("") || lang("所有项目均已关联云端。", "All projects linked.")}</div>`;
+    html += `<div class="card panel"><h2>${lang("云端备份与恢复", "Cloud backup and restore")}</h2>
+      <p class="muted">${lang("项目保留在原项目中心；下方是备份状态。需要恢复时，系统会先下载当前浏览器的 JSON 备份。", "Projects stay in Project center. Before restoring, your current browser data is downloaded as JSON.")}</p>
+      ${cloud.rows.map(row => `<div class="item"><b>${escapeHTML(row.title)}</b>
+        <span class="meta"> · ${lang("云端保存于", "Cloud saved")} ${new Date(row.updated_at).toLocaleString()}</span>
+        <button class="btn small" data-restore="${row.id}">${lang("从备份恢复", "Restore backup")}</button>
+        ${cloud.conflicts.has(row.id) ? `<button class="btn small" data-keep-local="${row.id}">${lang("以浏览器版本更新云端", "Keep browser version")}</button>` : ""}
+      </div>`).join("") || lang("尚无备份。登录后将自动保存当前浏览器项目。", "No backups yet; signing in backs up browser projects.")}</div>`;
   }
-  html += `<div class="cloud-grid">${items || `<div class="card empty">${lang("还没有云端项目。", "No cloud projects yet.")}</div>`}</div>`;
+  html += `<h2 style="margin:24px 0 12px">${lang("教师批注与评价", "Teacher comments and reviews")}</h2>
+    <div class="cloud-grid">${items || `<div class="card empty">${lang("暂无批注或任务。", "No comments or assignments yet.")}</div>`}</div>`;
   $("#cloudContent").innerHTML = html;
   $("#cloudCreate")?.addEventListener("submit", createAssignment);
   $("#cloudContent").querySelectorAll(".cloud-comment").forEach(form => form.addEventListener("submit", sendComment));
   $("#cloudContent").querySelectorAll("[data-approve]").forEach(button => button.onclick = () => approve(button.dataset.approve));
   $("#cloudContent").querySelectorAll("[data-revoke]").forEach(button => button.onclick = () => revoke(button.dataset.revoke));
-  $("#cloudContent").querySelectorAll("[data-upload]").forEach(button => button.onclick = () => uploadLocal(button.dataset.upload));
+  $("#cloudContent").querySelectorAll("[data-restore]").forEach(button => button.onclick = () => restoreOne(button.dataset.restore));
+  $("#cloudContent").querySelectorAll("[data-keep-local]").forEach(button => button.onclick = () => uploadLocalVersion(button.dataset.keepLocal));
   $("#cloudContent").querySelectorAll("[data-reply]").forEach(button => button.onclick = () => replyTo(button.dataset.project, button.dataset.reply));
   $("#cloudContent").querySelectorAll("[data-annotate]").forEach(button => button.onclick = () => {
     const form = [...$("#cloudContent").querySelectorAll(".cloud-comment")]
