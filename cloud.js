@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const db = createClient(
-  "https://uluimdlelbgijzefvdsw.supabase.co",
+  "https://uluimdlelbqjjzefvdsw.supabase.co",
   "sb_publishable_Fz_z5YgMpqCrCZnNIUeJ3g_FVGzhdNw"
 );
 const adminEmail = "hdzt_dc@outlook.com";
