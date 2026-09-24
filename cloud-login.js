@@ -348,6 +348,83 @@ for (const name of ["projectModal", "deleteProject", "stageModal", "taskModal", 
   };
 }
 
+
+// Keep publication next to the project's own edit controls.
+const originalProjectModal = window.projectModal;
+window.projectModal = function (projectId) {
+  if (cloud.role !== "admin") return;
+  originalProjectModal(projectId);
+  const current = state().projects.find(project => project.id === projectId);
+  const backedUp = cloud.rows.find(row => row.id === projectId);
+  const field = document.createElement("label");
+  field.className = "field full";
+  field.style.cssText = "display:flex;gap:10px;align-items:flex-start;cursor:pointer";
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.id = "projectPublic";
+  checkbox.checked = Boolean(backedUp?.is_public ?? current?.cloudPublic);
+  checkbox.style.cssText = "width:auto;margin-top:4px";
+  const label = document.createElement("span");
+  label.textContent = lang(
+    "公开项目：允许访客阅读此项目已备份的标题、要求、日志、代码和附件",
+    "Public project: visitors may read backed-up titles, requirements, logs, code and attachments"
+  );
+  field.append(checkbox, label);
+  document.querySelector("#modalRoot .form")?.append(field);
+  const saveButton = document.querySelector("#modalRoot #saveBtn");
+  const saveProject = saveButton.onclick;
+  saveButton.onclick = () => {
+    const desired = checkbox.checked;
+    const wasPublic = Boolean(backedUp?.is_public ?? current?.cloudPublic);
+    if (desired && !wasPublic && !confirm(lang(
+      "确定公开该项目？访客可以阅读项目内已备份的日志、代码和附件。",
+      "Publish this project? Visitors may read backed-up logs, code and attachments."
+    ))) return;
+    saveProject();
+    // Validation errors leave the edit dialog open.
+    if (document.querySelector("#modalRoot #saveBtn") === saveButton) return;
+    const savedId = projectId || state().active;
+    if (desired !== wasPublic) setProjectVisibility(savedId, desired);
+  };
+};
+
+async function setProjectVisibility(projectId, isPublic) {
+  if (cloud.role !== "admin" || !cloud.user) return;
+  const project = state().projects.find(item => item.id === projectId);
+  if (!project) return;
+  if (cloud.conflicts.has(projectId)) {
+    report(lang("本地与云端版本冲突。请先在备份与评价中选择保留哪个版本。", "Resolve the browser/cloud version conflict before changing visibility."), true);
+    return;
+  }
+  report(lang("正在保存项目和公开设置…", "Saving project and visibility…"));
+  cloud.dirty.add(projectId);
+  persistPending();
+  if (cloud.busy) {
+    while (cloud.busy) await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  await flush();
+  if (cloud.dirty.has(projectId)) {
+    report(lang("云端备份失败，公开状态尚未更改；本地内容仍在浏览器中。", "Backup failed; visibility was not changed. Your browser copy remains."), true);
+    return;
+  }
+  const row = cloud.rows.find(item => item.id === projectId);
+  if (!row) {
+    report(lang("未找到云端备份，公开设置尚未保存。", "Cloud backup missing; visibility was not saved."), true);
+    return;
+  }
+  const { data, error } = await db.from("projects").update({ is_public: isPublic }).eq("id", projectId).select("id,is_public").single();
+  if (error) {
+    report(lang("公开设置保存失败：", "Could not save visibility: ") + error.message, true);
+    return;
+  }
+  row.is_public = data.is_public;
+  project.cloudPublic = data.is_public;
+  report(data.is_public
+    ? lang("项目已公开，访客可仅阅读。", "Project is public and readable by visitors.")
+    : lang("项目已设为私密。", "Project is private."));
+  draw();
+}
+
 async function createAssignment(event) {
   event.preventDefault();
   const form = event.currentTarget;
@@ -533,7 +610,6 @@ async function draw() {
       <p class="muted">${lang("项目保留在原项目中心；下方是备份状态。需要恢复时，系统会先下载当前浏览器的 JSON 备份。", "Projects stay in Project center. Before restoring, your current browser data is downloaded as JSON.")}</p>
       ${cloud.rows.map(row => `<div class="item"><b>${escapeHTML(row.title)}</b>
         <span class="meta"> · ${lang("云端保存于", "Cloud saved")} ${new Date(row.updated_at).toLocaleString()}</span>
-        <button class="btn small" data-publish="${row.id}">${row.is_public ? lang("取消公开", "Make private") : lang("公开供访客阅读", "Publish for visitors")}</button>
         <button class="btn small" data-restore="${row.id}">${lang("从备份恢复", "Restore backup")}</button>
         ${cloud.conflicts.has(row.id) ? `<button class="btn small" data-keep-local="${row.id}">${lang("以浏览器版本更新云端", "Keep browser version")}</button>` : ""}
       </div>`).join("") || lang("尚无备份。登录后将自动保存当前浏览器项目。", "No backups yet; signing in backs up browser projects.")}</div>`;
@@ -541,16 +617,6 @@ async function draw() {
   html += `<h2 style="margin:24px 0 12px">${lang("教师批注与评价", "Teacher comments and reviews")}</h2>
     <div class="cloud-grid">${items || `<div class="card empty">${lang("暂无批注或任务。", "No comments or assignments yet.")}</div>`}</div>`;
   $("#cloudContent").innerHTML = html;
-  $("#cloudContent").querySelectorAll("[data-publish]").forEach(button => button.onclick = async () => {
-    if (cloud.role !== "admin") return;
-    const row = cloud.rows.find(item => item.id === button.dataset.publish);
-    if (!row) return;
-    if (!row.is_public && !confirm(lang("公开后，访客可以阅读此项目的标题、要求、日志、代码和附件等已备份内容。确定公开？", "Visitors will be able to read all backed-up content, including logs, code and attachments. Publish?"))) return;
-    const { error } = await db.from("projects").update({ is_public: !row.is_public }).eq("id", row.id);
-    if (error) return report(error.message, true);
-    row.is_public = !row.is_public;
-    await draw();
-  });
   $("#cloudCreate")?.addEventListener("submit", createAssignment);
   $("#cloudContent").querySelectorAll(".cloud-comment").forEach(form => form.addEventListener("submit", sendComment));
   $("#cloudContent").querySelectorAll("[data-approve]").forEach(button => button.onclick = () => approve(button.dataset.approve));
