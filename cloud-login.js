@@ -82,7 +82,7 @@ $("#loginForm").onsubmit = async event => {
   } catch (error) { gateStatus.textContent = "无法连接，请检查网络后重试。 / Connection failed. Please retry."; }
   finally { button.disabled = false; }
 };
-$("#guestEntry").onclick = async () => {
+async function loadPublicProjects() {
   // Guest rendering never reads the administrator's browser records.
   enterMode("reader");
   const content = $("#readerContent");
@@ -92,8 +92,22 @@ $("#guestEntry").onclick = async () => {
     if (error) throw error;
     content.innerHTML = data.length ? data.map(row => `<article class="card panel"><h2>${escapeHTML(row.title)}</h2><p>${escapeHTML(row.requirements)}</p>${workPreview(rowProject(row), row.id)}</article>`).join("") : "暂时没有公开项目。私有备份不会在这里显示。 / No public projects yet.";
     content.querySelectorAll("[data-annotate]").forEach(button => button.remove());
-  } catch (error) { content.textContent = "公开项目加载失败，请返回登录页后重试。 / Could not load public projects. Please retry."; }
-};
+  } catch (error) {
+    console.error("ProjectLog public projects", error);
+    const permission = error.code === "42501";
+    content.replaceChildren();
+    const message = document.createElement("p");
+    message.textContent = permission
+      ? "公开项目读取权限尚未修复，请联系站点管理员。 / Public access needs a database permission fix."
+      : "暂时无法加载公开项目，请检查网络并重试。 / Could not load public projects. Check your connection and retry.";
+    const detail = document.createElement("p");
+    detail.textContent = [error.code, error.message].filter(Boolean).join(" · ");
+    const retry = document.createElement("button");
+    retry.className = "btn"; retry.textContent = "重试 / Retry"; retry.onclick = loadPublicProjects;
+    content.append(message, detail, retry);
+  }
+}
+$("#guestEntry").onclick = loadPublicProjects;
 $("#cloudLogout").onclick = async () => {
   await flush();
   if (cloud.dirty.size) {
