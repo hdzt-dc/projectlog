@@ -154,9 +154,7 @@ async function flush(){
         result=await db.from("projects")
           .insert({
             ...payload,
-            id:crypto.randomUUID(),
-            created_by:null,
-            assigned_to:null
+            id:crypto.randomUUID()
           })
           .select("*")
           .single();
