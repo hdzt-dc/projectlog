@@ -239,6 +239,65 @@ async function flush(){
   }
 }
 
+
+function installSharedDelete(){
+  const originalDelete=window.deleteProject;
+  if(typeof originalDelete!=="function"||originalDelete.__sharedDeleteWrapped)return;
+
+  const sharedDelete=async function(projectId){
+    const s=state();
+    const project=s?.projects?.find(p=>p.id===projectId);
+    if(!project)return;
+    if((s.projects||[]).length===1){
+      alert(lang("至少保留一个项目","Keep at least one project"));
+      return;
+    }
+
+    if(!confirm(lang(
+      "确定删除“"+project.name+"”及其全部记录吗？",
+      'Delete "'+project.name+'" and all of its records?'
+    ))) return;
+
+    let row=cloud.rows.find(r=>localIdFromRow(r)===projectId);
+    if(!row){
+      const key=projectIdentity(project);
+      row=cloud.rows.find(r=>rowIdentity(r)===key);
+    }
+
+    if(row){
+      if(!confirm(lang(
+        "这是共享项目。继续后会从共享云端永久删除，其他人刷新后也会消失。确定继续吗？",
+        "This is a shared project. Continuing permanently deletes it from the shared cloud, and it will disappear for everyone after refresh. Continue?"
+      ))) return;
+
+      report(lang("正在从共享云端删除…","Deleting from shared cloud…"));
+      try{
+        const {error}=await db.from("projects").delete().eq("id",row.id);
+        if(error)throw error;
+        cloud.rows=cloud.rows.filter(r=>r.id!==row.id);
+      }catch(error){
+        console.error("ProjectLog shared delete",error);
+        report(lang("共享云端删除失败：","Shared cloud delete failed: ")+cloudErrorText(error),true);
+        return;
+      }
+    }
+
+    cloud.dirty.delete(projectId);
+    persistPending();
+    s.projects=s.projects.filter(p=>p.id!==projectId);
+    if(s.active===projectId)s.active=s.projects[0]?.id||null;
+    localStorage.setItem("ProjectLogV2",JSON.stringify(s));
+    window.render?.();
+    drawArchive();
+    report(row
+      ? lang("项目已从共享云端删除","Project deleted from shared cloud")
+      : lang("项目已删除","Project deleted")
+    );
+  };
+  sharedDelete.__sharedDeleteWrapped=true;
+  window.deleteProject=sharedDelete;
+}
+
 function wrapSave(){
   const original=window.save;
   if(typeof original!=="function"||original.__sharedCloudWrapped)return;
@@ -314,6 +373,7 @@ window.addEventListener("beforeunload",e=>{if(cloud.dirty.size){e.preventDefault
 
 async function initialize(){
   wrapSave();
+  installSharedDelete();
   try{
     report(lang("正在连接共享云端数据库…","Connecting shared cloud database…"));
 
