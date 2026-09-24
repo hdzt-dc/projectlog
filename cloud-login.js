@@ -64,8 +64,13 @@ passwordPanel.onsubmit = async event => {
   try {
     const password = passwordPanel.querySelector("input[name=password]").value;
     const { error } = await db.auth.updateUser({ password });
-    status.textContent = error ? `保存失败：${error.message} / Could not save password.` : "密码已保存。下次可以直接用邮箱和密码登录。 / Password saved. You can sign in with it next time.";
-    if (!error) passwordPanel.reset();
+    if (error) status.textContent = `保存失败：${error.message} / Could not save password.`;
+    else {
+      passwordPanel.reset();
+      passwordPanel.hidden = true;
+      status.textContent = "";
+      report(lang("密码已保存，下次可用邮箱和密码登录。", "Password saved. Sign in with your email and password next time."));
+    }
   } catch (error) { status.textContent = "保存失败，请检查网络后重试。 / Could not save password. Check your connection."; }
   finally { button.disabled = false; }
 };
