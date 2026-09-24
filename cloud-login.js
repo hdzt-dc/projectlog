@@ -10,7 +10,6 @@ const state = () => window.ProjectLog?.state;
 const lang = (zh,en) => localStorage.getItem("ProjectLogLang")==="en" ? en : zh;
 const pendingKey = "ProjectLogSharedCloudPendingV2";
 const cloud = {
-  user:null,
   rows:[],
   busy:false,
   loading:false,
@@ -112,14 +111,6 @@ function mergeCloudIntoBrowser(){
   if(changed)saveBrowserState();
 }
 
-async function ensureAnonymousUser(){
-  const {data:{session}}=await db.auth.getSession();
-  if(session?.user){cloud.user=session.user;return true;}
-  const {data,error}=await db.auth.signInAnonymously();
-  if(error)throw error;
-  cloud.user=data.user;
-  return Boolean(cloud.user);
-}
 async function refreshRows({merge=true}={}){
   if(cloud.loading)return;
   cloud.loading=true;
@@ -139,7 +130,7 @@ async function refreshRows({merge=true}={}){
 }
 async function flush(){
   clearTimeout(cloud.timer);
-  if(cloud.busy||!cloud.ready||!cloud.user||!cloud.dirty.size)return;
+  if(cloud.busy||!cloud.ready||!cloud.dirty.size)return;
   cloud.busy=true;
   try{
     while(cloud.dirty.size){
@@ -164,8 +155,8 @@ async function flush(){
           .insert({
             ...payload,
             id:crypto.randomUUID(),
-            created_by:cloud.user.id,
-            assigned_to:cloud.user.id
+            created_by:null,
+            assigned_to:null
           })
           .select("*")
           .single();
@@ -267,8 +258,7 @@ window.addEventListener("beforeunload",e=>{if(cloud.dirty.size){e.preventDefault
 async function initialize(){
   wrapSave();
   try{
-    report(lang("正在连接共享云端…","Connecting shared cloud…"));
-    await ensureAnonymousUser();
+    report(lang("正在连接共享云端数据库…","Connecting shared cloud database…"));
 
     // Pull first. This prevents a new browser's default local content from overwriting shared data.
     await refreshRows({merge:true});
