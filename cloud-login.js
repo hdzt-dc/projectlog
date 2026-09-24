@@ -21,7 +21,7 @@ const report = (message, bad = false) => {
 
 const style = document.createElement("style");
 style.textContent = `
-#cloudBar{margin:0 0 18px;padding:12px 16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+#passwordPanel[hidden]{display:none!important}#passwordPanel{margin:0 0 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}#passwordPanel input{margin:0 10px;padding:8px;max-width:260px}\n#cloudBar{margin:0 0 18px;padding:12px 16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
 #cloudBar .actions{align-items:center}#cloudStatus{font-size:12px}
 #cloudPage .cloud-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
 #cloudPage .cloud-card{padding:17px}#cloudPage .cloud-card h3{margin:4px 0}
@@ -43,6 +43,27 @@ bar.id = "cloudBar";
 bar.className = "card";
 bar.innerHTML = '<span id="cloudIdentity"></span><div class="actions"><span id="cloudStatus"></span><button class="btn" id="cloudRetry" hidden>重试同步</button><button class="btn" id="cloudLogin">登录并开启备份</button><button class="btn" id="cloudLogout" hidden>退出登录</button></div>';
 $(".main").prepend(bar);
+const passwordButton = document.createElement("button");
+passwordButton.id = "setPassword"; passwordButton.className = "btn";
+passwordButton.textContent = "设置密码 / Set password";
+passwordButton.hidden = true;
+$("#cloudLogout").before(passwordButton);
+passwordButton.onclick = () => $("#passwordPanel").hidden = false;
+const passwordPanel = document.createElement("form");
+passwordPanel.id = "passwordPanel"; passwordPanel.className = "card panel"; passwordPanel.hidden = true;
+passwordPanel.innerHTML = `<label>设置登录密码（至少 8 位） / Set password (8+ characters)<input name="password" type="password" minlength="8" autocomplete="new-password" required></label><button class="btn primary">保存密码 / Save password</button><button class="btn" type="button" id="cancelPassword">取消 / Cancel</button><span id="passwordStatus" role="status"></span>`;
+bar.after(passwordPanel);
+$("#cancelPassword").onclick = () => { passwordPanel.hidden = true; passwordPanel.reset(); };
+passwordPanel.onsubmit = async event => {
+  event.preventDefault();
+  if (!cloud.user || !["admin", "teacher"].includes(cloud.role)) return;
+  const button = passwordPanel.querySelector("button[type=submit]"); button.disabled = true;
+  try {
+    const { error } = await db.auth.updateUser({ password: passwordPanel.elements.password.value });
+    $("#passwordStatus").textContent = error ? error.message : "密码已保存。以后可以直接用邮箱和密码登录。 / Password saved.";
+  } catch (error) { $("#passwordStatus").textContent = "无法连接，请稍后再试。 / Connection failed."; }
+  finally { passwordPanel.reset(); button.disabled = false; }
+};
 const page = document.createElement("section");
 page.id = "cloudPage";
 page.className = "page";
@@ -59,6 +80,7 @@ nav.addEventListener("click", () => {
 const gate = document.getElementById("loginGate");
 const gateStatus = document.getElementById("loginStatus");
 $("#sendLogin").disabled = false;
+$("#passwordLogin").disabled = false;
 $("#guestEntry").disabled = false;
 let authBusy = false;
 function enterMode(mode) {
@@ -70,16 +92,30 @@ $("#cloudLogin").onclick = () => enterMode("login");
 $("#readerLogin").onclick = () => enterMode("login");
 $("#loginForm").onsubmit = async event => {
   event.preventDefault();
+  const button = $("#passwordLogin");
+  button.disabled = true;
+  gateStatus.textContent = "正在登录… / Signing in…";
+  try {
+    const { error } = await db.auth.signInWithPassword({
+      email: $("#loginEmail").value.trim(), password: $("#loginPassword").value
+    });
+    if (error) gateStatus.textContent = "无法登录：请检查邮箱和密码。首次使用请先点击下方邮件链接验证。 / Check your email and password, or verify your email first.";
+    else { $("#loginPassword").value = ""; await initialize(); }
+  } catch (error) { gateStatus.textContent = "无法连接，请检查网络后重试。 / Connection failed. Please retry."; }
+  finally { button.disabled = false; }
+};
+$("#sendLogin").onclick = async () => {
+  const email = $("#loginEmail");
+  if (!email.reportValidity()) return;
   const button = $("#sendLogin");
   button.disabled = true;
-  gateStatus.textContent = "正在发送 / Sending…";
+  gateStatus.textContent = "正在发送… / Sending…";
   try {
     const { error } = await db.auth.signInWithOtp({
-      email: $("#loginEmail").value.trim(),
-      options: { emailRedirectTo: "https://hdzt-dc.github.io/projectlog/" }
+      email: email.value.trim(), options: { emailRedirectTo: "https://hdzt-dc.github.io/projectlog/" }
     });
-    gateStatus.textContent = error ? error.message : "登录邮件已发送，请打开邮箱点击链接完成验证。 / Check your inbox and open the sign-in link.";
-  } catch (error) { gateStatus.textContent = "无法连接，请检查网络后重试。 / Connection failed. Please retry."; }
+    gateStatus.textContent = error ? error.message : "请打开邮箱里的登录链接。进入工作台后可设置密码。 / Open the email link, then set a password in the workspace.";
+  } catch (error) { gateStatus.textContent = "邮件发送失败，请稍后重试。 / Could not send email. Retry later."; }
   finally { button.disabled = false; }
 };
 async function loadPublicProjects() {
@@ -141,6 +177,7 @@ async function refresh() {
   if (profileResult.error) { report(profileResult.error.message, true); return; }
   cloud.profile = profileResult.data;
   cloud.role = cloud.profile.role;
+  $("#setPassword").hidden = !["admin", "teacher"].includes(cloud.role);
   enterMode("workspace");
   $("#cloudIdentity").textContent = cloud.user.email + " · " + cloud.role;
   document.body.classList.toggle("cloud-teacher", cloud.role === "teacher");
