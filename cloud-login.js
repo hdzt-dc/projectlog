@@ -84,6 +84,46 @@ function rowProject(row){
   delete w.__localProjectId;
   return {...w,id,name:row.title,goal:row.requirements||"",category:row.category||w.category||lang("工程项目","Project")};
 }
+function textKey(v=""){
+  return String(v).trim().toLowerCase().replace(/\s+/g," ");
+}
+function projectIdentity(p){
+  return [
+    textKey(p?.name),
+    textKey(p?.category),
+    textKey(p?.goal)
+  ].join("||");
+}
+function rowIdentity(row){
+  return [
+    textKey(row?.title),
+    textKey(row?.category || row?.work_data?.category),
+    textKey(row?.requirements || row?.work_data?.goal)
+  ].join("||");
+}
+function dedupeRows(rows){
+  const out=[];
+  const seen=new Set();
+  for(const row of [...rows].sort((a,b)=>String(b.updated_at||"").localeCompare(String(a.updated_at||"")))){
+    const key=rowIdentity(row);
+    if(key && seen.has(key)) continue;
+    if(key) seen.add(key);
+    out.push(row);
+  }
+  return out;
+}
+function dedupeBrowserProjects(){
+  if(!state()?.projects)return;
+  const out=[];
+  const seen=new Set();
+  for(const p of state().projects){
+    const key=projectIdentity(p);
+    if(key && seen.has(key)) continue;
+    if(key) seen.add(key);
+    out.push(p);
+  }
+  state().projects=out;
+}
 function saveBrowserState(){
   localStorage.setItem("ProjectLogV2",JSON.stringify(state()));
   window.render?.();
@@ -93,9 +133,14 @@ function mergeCloudIntoBrowser(){
   let changed=false;
   for(const row of cloud.rows){
     const incoming=rowProject(row);
-    const i=state().projects.findIndex(p=>p.id===incoming.id);
+    let i=state().projects.findIndex(p=>p.id===incoming.id);
+    if(i<0){
+      const key=rowIdentity(row);
+      i=state().projects.findIndex(p=>projectIdentity(p)===key);
+    }
     if(i>=0){
-      if(!cloud.dirty.has(incoming.id)){
+      const previousId=state().projects[i].id;
+      if(!cloud.dirty.has(previousId) && !cloud.dirty.has(incoming.id)){
         state().projects[i]=incoming;
         changed=true;
       }
@@ -104,6 +149,9 @@ function mergeCloudIntoBrowser(){
       changed=true;
     }
   }
+  const before=state().projects.length;
+  dedupeBrowserProjects();
+  if(state().projects.length!==before) changed=true;
   if(!state().projects.some(p=>p.id===state().active) && state().projects[0]){
     state().active=state().projects[0].id;
     changed=true;
@@ -119,7 +167,7 @@ async function refreshRows({merge=true}={}){
       .select("*")
       .order("updated_at",{ascending:false});
     if(error)throw error;
-    cloud.rows=data||[];
+    cloud.rows=dedupeRows(data||[]);
     if(merge)mergeCloudIntoBrowser();
     cloud.ready=true;
     report(lang("已读取共享云端最新数据","Shared cloud data is up to date"));
@@ -262,8 +310,13 @@ async function initialize(){
     await refreshRows({merge:true});
 
     // Only browser projects that do not yet exist in shared cloud are uploaded.
+    dedupeBrowserProjects();
+    saveBrowserState();
     for(const p of state()?.projects||[]){
-      if(!cloud.rows.some(r=>localIdFromRow(r)===p.id))cloud.dirty.add(p.id);
+      const hasCloudMatch=cloud.rows.some(r=>
+        localIdFromRow(r)===p.id || rowIdentity(r)===projectIdentity(p)
+      );
+      if(!hasCloudMatch)cloud.dirty.add(p.id);
     }
     persistPending();
     if(cloud.dirty.size)await flush();
