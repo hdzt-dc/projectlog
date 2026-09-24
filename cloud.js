@@ -172,8 +172,8 @@ function hasChanges(p, row) {
       ? Object.fromEntries(Object.keys(item).sort().map(name => [name, item[name]]))
       : item
   );
-  return next.title !== row.title || next.category !== row.category ||
-    (next.requirements !== undefined && next.requirements !== row.requirements) ||
+  return next.title !== baseline.title || next.category !== baseline.category ||
+    (next.requirements !== undefined && next.requirements !== baseline.requirements) ||
     ordered(next.work_data) !== ordered(baseline.work_data);
 }
 window.save = function () {
