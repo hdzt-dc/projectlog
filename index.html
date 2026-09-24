@@ -3388,7 +3388,7 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
 })();
 </script>
 
-<script>window.ProjectLog={get state(){return S}};</script>
+<script>window.ProjectLog={get state(){return S},replaceState(next){S=next}};</script>
 <section id="loginGate" aria-label="登录 / Sign in">
  <div class="login-card"><b>ProjectLog</b><h1>欢迎回来<br><small style="font-size:20px;color:#64748b">Welcome back</small></h1>
  <p>邮箱与密码登录。首次使用请通过邮件验证一次，然后在工作台设置密码。<br>Sign in with email and password. Verify your email once to set a password.</p>
@@ -3400,5 +3400,5 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
 </section>
 <section id="readerView" hidden><header><div><h1>ProjectLog</h1><p>公开项目 · 仅阅读 / Public projects · Read-only</p></div><button class="btn" id="readerLogin">登录 / Sign in</button></header><div id="readerContent"></div></section>
 
-<script type="module" src="./cloud-login.js?v=project-visibility-20260924-4"></script>
+<script type="module" src="./cloud-login.js?v=guest-workspace-20260924-5"></script>
 </body></html>
