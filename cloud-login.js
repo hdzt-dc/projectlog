@@ -14,6 +14,7 @@ const escapeHTML = (value = "") => String(value).replace(/[&<>"']/g, char => ({
 })[char]);
 const lang = (zh, en) => localStorage.getItem("ProjectLogLang") === "en" ? en : zh;
 const state = () => window.ProjectLog.state;
+let originalBrowserState = null;
 const report = (message, bad = false) => {
   const el = $("#cloudStatus");
   if (el) { el.textContent = message; el.style.color = bad ? "#b42318" : "#18794e"; }
@@ -32,6 +33,9 @@ style.textContent = `
 #cloudPage .cloud-discussion{border-top:1px solid #e5e7eb;padding:10px 0}
 #cloudPage .cloud-discussion:first-child{border:0}
 #cloudPage .cloud-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+body.cloud-reader .project-card.add,body.cloud-reader button[onclick*="Modal("],body.cloud-reader button[onclick*="deleteProject("],body.cloud-reader button[onclick*="remove("],body.cloud-reader button[onclick*="removeStage("],body.cloud-reader button[onclick*="removeTask("],body.cloud-reader button[onclick*="removeCodeRecord("],body.cloud-reader button[onclick*="saveSummary("],body.cloud-reader button[onclick*="importFile.click("],body.cloud-reader button[onclick*="exportData("],body.cloud-reader #passwordPanel,body.cloud-reader .nav button[data-p="cloud"],body.cloud-reader .hint{display:none!important}
+body.cloud-reader input[type="checkbox"],body.cloud-reader textarea{pointer-events:none}
+body.cloud-reader #cloudPage{display:none!important}
 body.cloud-teacher .main>.page:not(#cloudPage),body.cloud-pending .main>.page:not(#cloudPage){display:none!important}
 body.cloud-teacher .nav button:not([data-p="cloud"]),body.cloud-pending .nav button:not([data-p="cloud"]){display:none!important}
 body.cloud-teacher .now,body.cloud-pending .now{display:none}
@@ -98,8 +102,14 @@ function enterMode(mode) {
   gate.hidden = mode !== "login";
   document.getElementById("readerView").hidden = mode !== "reader";
 }
-$("#cloudLogin").onclick = () => enterMode("login");
-$("#readerLogin").onclick = () => enterMode("login");
+function leaveGuestForLogin() {
+  if (originalBrowserState) window.ProjectLog.replaceState(originalBrowserState);
+  originalBrowserState = null;
+  document.body.classList.remove("cloud-reader");
+  enterMode("login");
+}
+$("#cloudLogin").onclick = leaveGuestForLogin;
+$("#readerLogin").onclick = leaveGuestForLogin;
 $("#loginForm").onsubmit = async event => {
   event.preventDefault();
   const button = $("#passwordLogin");
@@ -129,21 +139,33 @@ $("#sendLogin").onclick = async () => {
   finally { button.disabled = false; }
 };
 async function loadPublicProjects() {
-  // Guest rendering never reads the administrator's browser records.
+  // A guest sees only rows allowed by database policy. Browser data stays untouched.
   enterMode("reader");
   const content = $("#readerContent");
   content.textContent = "正在读取公开项目… / Loading public projects…";
   try {
     const { data, error } = await db.from("projects").select("*").eq("is_public", true).order("updated_at", { ascending: false });
     if (error) throw error;
-    content.innerHTML = data.length ? data.map(row => `<article class="card panel"><h2>${escapeHTML(row.title)}</h2><p>${escapeHTML(row.requirements)}</p>${workPreview(rowProject(row), row.id)}</article>`).join("") : "暂时没有公开项目。私有备份不会在这里显示。 / No public projects yet.";
-    content.querySelectorAll("[data-annotate]").forEach(button => button.remove());
+    if (!originalBrowserState) originalBrowserState = state();
+    const projects = data.map(rowProject);
+    window.ProjectLog.replaceState({ projects, active: projects[0]?.id || null });
+    document.body.classList.add("cloud-reader");
+    $("#cloudIdentity").textContent = lang("访客 · 仅阅读", "Visitor · Read-only");
+    $("#cloudStatus").textContent = lang("正在浏览公开项目", "Browsing public projects");
+    $("#cloudLogin").textContent = lang("登录", "Sign in");
+    if (projects.length) window.showPage("projects");
+    else {
+      window.renderProjects();
+      document.querySelectorAll(".main > .page").forEach(el => el.classList.toggle("active", el.id === "projectsPage"));
+      document.querySelectorAll(".nav button").forEach(el => el.classList.toggle("active", el.dataset.p === "projects"));
+      $("#projectGrid").insertAdjacentHTML("afterbegin", '<div class="card panel">暂时没有公开项目 / No public projects yet.</div>');
+    }
+    enterMode("workspace");
   } catch (error) {
     console.error("ProjectLog public projects", error);
-    const permission = error.code === "42501";
     content.replaceChildren();
     const message = document.createElement("p");
-    message.textContent = permission
+    message.textContent = error.code === "42501"
       ? "公开项目读取权限尚未修复，请联系站点管理员。 / Public access needs a database permission fix."
       : "暂时无法加载公开项目，请检查网络并重试。 / Could not load public projects. Check your connection and retry.";
     const detail = document.createElement("p");
@@ -350,6 +372,11 @@ for (const name of ["projectModal", "deleteProject", "stageModal", "taskModal", 
 
 
 // Keep publication next to the project's own edit controls.
+const originalOpenProject = window.openProject;
+window.openProject = function (projectId) {
+  if (document.body.classList.contains("cloud-reader") && !state().projects.some(project => project.id === projectId)) return;
+  return originalOpenProject(projectId);
+};
 const originalProjectModal = window.projectModal;
 window.projectModal = function (projectId) {
   if (cloud.role !== "admin") return;
