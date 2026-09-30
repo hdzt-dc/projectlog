@@ -3371,6 +3371,83 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
 })();
 </script>
 
+<script>
+(function(){
+  const FINAL_KEY="ProjectLogLondonCompletionV9";
+  if(localStorage.getItem(FINAL_KEY)) return;
+  try{
+    const london=(S.projects||[]).find(p =>
+      p.id===S.londonProjectId || /London Housing Price Intelligence/i.test(p.name||"")
+    );
+    if(!london) return;
+    const makeId=()=>crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random());
+
+    const phase2=(london.stages||[]).find(s => /第二阶段/.test(s.name||""));
+    if(phase2){
+      phase2.name="第二阶段｜噪声审计、豪宅改进与最终验证（已完成）";
+      phase2.desc="完成极端残差审计、豪宅系统性低估分析、Luxury Specialist、Learned Router、冻结评估，以及新增 2024 数据的 out-of-time 最终测试。";
+      (phase2.tasks||[]).forEach(t=>t.done=true);
+      if(!(phase2.tasks||[]).some(t=>/2024/.test(t.title||""))){
+        phase2.tasks.push({
+          id:makeId(),
+          title:"完成 2011–2023 训练 / 2024 Out-of-Time 最终测试",
+          note:"使用新增 2024 数据作为新的独立时间外测试集。N=40,548；MAE £126,696.97；RMSE £297,600.17；R² 0.8260；MdAPE 12.56%；±20% 内 69.92%；±30% 内 84.45%。",
+          done:true
+        });
+      }
+    }
+
+    london.projectStatus="已完成";
+    london.summary=london.summary||{};
+    london.summary.result="完成从数据清洗、时间验证、leakage-safe 地理特征、可靠性体系到 Phase 2 Luxury Specialist + Learned Router 的完整建模闭环。最终 2024 out-of-time 测试：40,548 条，MAE £126,696.97，RMSE £297,600.17，R² 0.8260，MdAPE 12.56%，69.92% 预测落在真实成交价 ±20% 内，84.45% 落在 ±30% 内。";
+    london.summary.learned="时间切分与数据泄漏控制；HistGradientBoosting；历史地理统计特征；残差审计；市场分层；LogisticRegression Router；豪宅专门模型；模型冻结与独立 out-of-time evaluation；FastAPI 部署。";
+    london.summary.improve="豪宅和超豪宅仍明显更难预测；2024 整体出现轻微高估倾向；模型缺少装修、楼层、景观、花园、停车、lease 细节和特殊交易背景。2024 已作为最终测试打开，不再根据结果调参。";
+    london.summary.links=(london.summary.links||"") + (london.summary.links?"\n":"") + "GitHub: https://github.com/hdzt-dc/projectlog/tree/main/projects/london-housing";
+
+    london.logs=london.logs||[];
+    const logs=[
+      {
+        title:"Phase 2：完成 Luxury Specialist 与 Learned Router",
+        date:"2026-09-29",
+        status:"已完成",
+        tags:["Phase 2","Luxury","Router"],
+        note:"开发阶段确认豪宅专门模型能显著降低 £2m+ 误差。最终冻结 LogisticRegression Router：class_weight={0:1,1:5}，threshold=0.90。2022–2023 冻结评估中 Overall MAE £131,621；Luxury MAE £933,070；Ultra Luxury MAE £2.422m。",
+        problem:"统一模型对高价房产存在系统性向均值回归与低估。",
+        next:"获取真正新的时间数据进行最终 out-of-time 验证。"
+      },
+      {
+        title:"完成 2024 Out-of-Time 最终验证",
+        date:"2026-10-01",
+        status:"已完成",
+        tags:["Final Test","2024","Out-of-Time"],
+        note:"使用新增 2024 London 数据作为最终时间外测试集。Train=2011–2023，Test=2024，N=40,548。MAE £126,696.97；RMSE £297,600.17；R² 0.8260；MdAPE 12.56%；±10% 41.32%；±20% 69.92%；±30% 84.45%。Router precision 75.46%，recall 80.61%。",
+        problem:"豪宅市场仍有更高绝对误差；整体 mean signed error 为 +£32,637，表现为轻微高估倾向。",
+        next:"停止模型调参，更新部署包、API、网站说明与仓库结构。"
+      },
+      {
+        title:"整理 GitHub 仓库并完成项目归档",
+        date:"2026-10-01",
+        status:"已完成",
+        tags:["GitHub","Documentation","ProjectLog"],
+        note:"建立 projects/london-housing/ 独立目录，将 London Housing 的研究脚本、总结和完成清单归档；根目录改为 ProjectLog 多项目入口，并新增 PROJECTS.md，避免未来项目文件混杂。",
+        problem:"原仓库根目录同时放置 ProjectLog 平台文件与 London Housing 项目文件，未来新增项目时归属不清晰。",
+        next:"以后每个新项目都在 projects/<project-slug>/ 下建立独立 README、docs 和 research 目录。"
+      }
+    ];
+    for(const x of logs){
+      if(!london.logs.some(l=>l.title===x.title)){
+        london.logs.push({id:makeId(),stageId:phase2?.id||"",attachments:[],code:"",recordKind:"log",...x});
+      }
+    }
+
+    localStorage.setItem(FINAL_KEY,"1");
+    save();
+    render();
+  }catch(e){
+    console.warn("London completion migration failed",e);
+  }
+})();
+</script>
 <script>window.ProjectLog={get state(){return S},replaceState(next){S=next}};</script>
 <script type="module" src="./shared-cloud.js?v=shared-clean-20260924-7"></script>
 </body></html>
