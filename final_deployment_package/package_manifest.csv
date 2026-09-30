@@ -1,0 +1,9 @@
+file,size_bytes,size_mb
+allowed_values.json,1055,0.0010061264038085938
+base_reliability_lookup.csv,1603,0.0015287399291992188
+local_reliability_lookup.csv,41166,0.03925895690917969
+location_statistics.joblib,34999,0.033377647399902344
+luxury_specialist_model.joblib,531033,0.5064325332641602
+model_metadata.json,1144,0.00109100341796875
+router_model.joblib,10385,0.009903907775878906
+unified_model.joblib,957233,0.9128885269165039
