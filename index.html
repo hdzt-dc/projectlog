@@ -97,12 +97,17 @@
 <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
 <div class="stat"><small>估计房价</small><strong id="demoPrice">—</strong></div>
 <div class="stat"><small>模型</small><strong id="demoModel">—</strong></div>
+<div class="stat"><small>2024 典型误差</small><strong id="demoAccuracy">—</strong></div>
+<div class="stat"><small>±20% 内比例</small><strong id="demoWithin20">—</strong></div>
+<div class="stat"><small>Router 豪宅概率</small><strong id="demoRouterProb">—</strong></div>
 <div class="stat"><small>可靠性等级</small><strong id="demoGrade">—</strong></div>
 <div class="stat"><small>证据强度</small><strong id="demoEvidence">—</strong></div>
 </div>
 <div class="body" style="margin-top:14px"><b>Reliability Status：</b><span id="demoReliability">—</span></div>
+<div class="body"><b>路由结果：</b><span id="demoRoute">—</span></div>
 <div class="body"><b>Postcode Sector：</b><span id="demoSector">—</span></div>
 <div class="body"><b>历史样本数：</b><span id="demoSectorCount">—</span></div>
+<div class="body meta" style="margin-top:8px">精度数字来自独立 2024 out-of-time 测试，是历史总体表现，不代表单套房产有同等概率落入该误差范围。</div>
 <div id="demoWarnings" class="notice" style="margin-top:12px;display:none"></div>
 </div>
 </section>
@@ -2573,13 +2578,18 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
         $("demoResult").style.display="block";
         $("demoPrice").textContent=r.estimated_price_formatted || ("£"+Number(r.estimated_price||0).toLocaleString());
         $("demoModel").textContent=r.model_used || "—";
+        const acc=r.historical_accuracy||{};
+        $("demoAccuracy").textContent=(acc.median_percentage_error==null?"—":Number(acc.median_percentage_error).toFixed(2)+"%");
+        $("demoWithin20").textContent=(acc.within_20pct==null?"—":Number(acc.within_20pct).toFixed(2)+"%");
+        $("demoRouterProb").textContent=(r.router_probability_pct==null?"—":Number(r.router_probability_pct).toFixed(2)+"%");
+        $("demoRoute").textContent=r.routed_to_specialist?"Luxury Specialist":"Unified Model";
         $("demoGrade").textContent=r.reliability_grade || "—";
         $("demoEvidence").textContent=r.evidence_strength || "—";
         $("demoReliability").textContent=r.reliability_status || "—";
-        $("demoSector").textContent=r.sector || "—";
+        $("demoSector").textContent=r.postcode_sector || "—";
         $("demoSectorCount").textContent=(r.sector_historical_count ?? "—");
 
-        const warnings=[r.temporal_warning,r.market_warning,r.rooms_warning].filter(Boolean);
+        const warnings=[r.temporal_warning,r.market_warning,r.luxury_warning,r.rooms_warning].filter(Boolean);
         $("demoWarnings").style.display=warnings.length?"block":"none";
         $("demoWarnings").innerHTML=warnings.map(x=>"• "+String(x)).join("<br>");
         $("demoStatus").textContent="预测完成";
@@ -2588,6 +2598,10 @@ document.head.insertAdjacentHTML("beforeend","<style>#roadmap .progress{display:
         $("demoResult").style.display="block";
         $("demoPrice").textContent="—";
         $("demoModel").textContent="—";
+        $("demoAccuracy").textContent="—";
+        $("demoWithin20").textContent="—";
+        $("demoRouterProb").textContent="—";
+        $("demoRoute").textContent="—";
         $("demoGrade").textContent="—";
         $("demoEvidence").textContent="—";
         $("demoReliability").textContent="—";

@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Optional
+import json
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,28 +9,25 @@ from pydantic import BaseModel, Field
 from predict_house import predict_house
 
 
-# ============================================================
-# 1. FastAPI App
-# ============================================================
+PROJECT_FOLDER = Path(__file__).resolve().parent
+METADATA_FILE = (
+    PROJECT_FOLDER
+    / "final_deployment_package"
+    / "model_metadata.json"
+)
+
+with open(METADATA_FILE, "r", encoding="utf-8") as f:
+    MODEL_METADATA = json.load(f)
+
 
 app = FastAPI(
     title="London Housing Price Intelligence API",
     description=(
-        "Prediction API for the London Housing Price "
-        "Intelligence Project."
+        "Final 2024-tested London residential property "
+        "price prediction API."
     ),
-    version="1.0.0",
+    version="3.0.0",
 )
-
-
-# ============================================================
-# 2. CORS
-#
-# 目前开发阶段先允许本地前端调用。
-#
-# 以后真正部署网站时，
-# 再把 allow_origins 改成正式网站域名。
-# ============================================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -40,145 +38,63 @@ app.add_middleware(
 )
 
 
-# ============================================================
-# 3. API Input Schema
-# ============================================================
-
 class HousePredictionRequest(BaseModel):
-
-    year: int = Field(
-        ...,
-        examples=[2023],
-        description="Prediction year",
-    )
-
-    postcode: str = Field(
-        ...,
-        examples=["E14 9GU"],
-        description="UK postcode",
-    )
-
-    borough: str = Field(
-        ...,
-        examples=["Tower_Hamlets"],
-        description="London borough",
-    )
-
-    propertytype: str = Field(
-        ...,
-        examples=["F"],
-        description=(
-            "F=Flat, T=Terraced, "
-            "S=Semi-detached, D=Detached"
-        ),
-    )
-
-    duration: str = Field(
-        ...,
-        examples=["L"],
-        description="F=Freehold, L=Leasehold",
-    )
-
-    tfarea: float = Field(
-        ...,
-        examples=[70],
-        description="Total floor area in square metres",
-    )
-
-    numberrooms: Optional[float] = Field(
-        default=None,
-        examples=[3],
-        description=(
-            "Number of rooms. "
-            "Can be null if unavailable."
-        ),
-    )
-
-    current_energy_efficiency: float = Field(
-        ...,
-        examples=[72],
-        description="Current EPC efficiency score",
-    )
-
-    potential_energy_efficiency: float = Field(
-        ...,
-        examples=[82],
-        description="Potential EPC efficiency score",
-    )
-
+    year: int = Field(..., examples=[2024])
+    postcode: str = Field(..., examples=["E14 9GU"])
+    borough: str = Field(..., examples=["Tower_Hamlets"])
+    propertytype: str = Field(..., examples=["F"])
+    duration: str = Field(..., examples=["L"])
+    tfarea: float = Field(..., examples=[70])
+    numberrooms: Optional[float] = Field(default=None, examples=[3])
+    current_energy_efficiency: float = Field(..., examples=[72])
+    potential_energy_efficiency: float = Field(..., examples=[82])
     construction_age_clean: str = Field(
         ...,
         examples=["2007 onwards"],
-        description="Construction age category",
     )
 
 
-# ============================================================
-# 4. Health Check
-#
-# 用来确认 API 是否启动成功。
-# ============================================================
-
 @app.get("/")
 def root():
-
     return {
         "status": "ok",
-        "service": (
-            "London Housing Price "
-            "Intelligence API"
+        "service": "London Housing Price Intelligence API",
+        "version": "3.0.0",
+        "model_version": MODEL_METADATA.get(
+            "model_version",
+            "3.0-final-2024-tested",
         ),
-        "version": "1.0.0",
     }
 
 
 @app.get("/health")
 def health():
-
     return {
-        "status": "healthy"
+        "status": "healthy",
+        "model_version": MODEL_METADATA.get("model_version"),
     }
 
 
-# ============================================================
-# 5. Prediction Endpoint
-# ============================================================
-
 @app.post("/predict")
-def predict(
-    request: HousePredictionRequest
-):
-
+def predict(request: HousePredictionRequest):
     try:
-
         result = predict_house(
-
             year=request.year,
-
             postcode=request.postcode,
-
             borough=request.borough,
-
-            propertytype=
-                request.propertytype,
-
-            duration=
-                request.duration,
-
-            tfarea=
-                request.tfarea,
-
-            numberrooms=
-                request.numberrooms,
-
-            current_energy_efficiency=
-                request.current_energy_efficiency,
-
-            potential_energy_efficiency=
-                request.potential_energy_efficiency,
-
-            construction_age_clean=
-                request.construction_age_clean,
+            propertytype=request.propertytype,
+            duration=request.duration,
+            tfarea=request.tfarea,
+            numberrooms=request.numberrooms,
+            current_energy_efficiency=(
+                request.current_energy_efficiency
+            ),
+            potential_energy_efficiency=(
+                request.potential_energy_efficiency
+            ),
+            construction_age_clean=(
+                request.construction_age_clean
+            ),
         )
 
         return {
@@ -187,69 +103,67 @@ def predict(
         }
 
     except ValueError as e:
-
         raise HTTPException(
             status_code=400,
             detail=str(e),
         )
 
     except Exception as e:
-
-        print(
-            "Unexpected API error:",
-            repr(e)
-        )
-
+        print("Unexpected API error:", repr(e))
         raise HTTPException(
             status_code=500,
-            detail=(
-                "Internal prediction error."
-            ),
+            detail="Internal prediction error.",
         )
 
-
-# ============================================================
-# 6. Optional Metadata Endpoint
-#
-# 前端以后可以用它显示说明。
-# ============================================================
 
 @app.get("/model-info")
 def model_info():
+    metrics = MODEL_METADATA.get(
+        "2024_out_of_time_metrics",
+        {},
+    )
+
+    router = MODEL_METADATA.get(
+        "2024_router_metrics",
+        {},
+    )
 
     return {
-        "primary_model":
-            "Enhanced Location HGB",
-
-        "fallback_model":
-            "Control HGB",
-
-        "tested_period":
-            "2022-2023",
-
-        "training_period":
-            "2011-2021",
-
-        "main_market":
-            "£250k-£2m",
-
-        "final_test": {
-            "MAE_GBP":
-                133125,
-
-            "RMSE_GBP":
-                411840,
-
-            "R2":
-                0.8025,
-
-            "median_percentage_error":
-                12.28,
+        "model_version": MODEL_METADATA.get("model_version"),
+        "architecture": MODEL_METADATA.get("architecture"),
+        "training_period": MODEL_METADATA.get("training_period"),
+        "historical_location_period": MODEL_METADATA.get(
+            "historical_location_period"
+        ),
+        "independent_test_period": MODEL_METADATA.get(
+            "independent_test_period"
+        ),
+        "luxury_definition_gbp": MODEL_METADATA.get(
+            "luxury_definition_gbp"
+        ),
+        "router_threshold": MODEL_METADATA.get(
+            "router_probability_threshold"
+        ),
+        "final_2024_test": {
+            "rows": metrics.get("rows"),
+            "MAE_GBP": metrics.get("mae_gbp"),
+            "RMSE_GBP": metrics.get("rmse_gbp"),
+            "R2": metrics.get("r2"),
+            "median_percentage_error": metrics.get(
+                "median_percentage_error"
+            ),
+            "within_10pct": metrics.get("within_10pct"),
+            "within_20pct": metrics.get("within_20pct"),
+            "within_30pct": metrics.get("within_30pct"),
         },
-
+        "router_2024": {
+            "precision_pct": router.get("precision_pct"),
+            "recall_pct": router.get("recall_pct"),
+            "routed_share_pct": router.get("routed_share_pct"),
+        },
         "important_note": (
-            "Predictions outside the independently "
-            "tested 2022-2023 period may have "
-            "additional temporal uncertainty."
+            "2024 metrics are historical out-of-time test results. "
+            "They are not a guarantee of accuracy for an individual "
+            "future property."
         ),
     }
