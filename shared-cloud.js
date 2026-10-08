@@ -1,4 +1,5 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// Pin the SDK version so CDN updates cannot change shared-cloud behavior.
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/+esm";
 
 const db = createClient(
   "https://uluimdlelbqjjzefvdsw.supabase.co",
